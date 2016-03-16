@@ -2,6 +2,7 @@ import pymongo
 import json
 from pymongo import MongoClient
 from filters import location, currency, operation, filter_or
+from mongo_update import data_active
 location = 'Киев'
 currency = 'USD'
 
