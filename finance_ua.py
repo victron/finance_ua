@@ -1,11 +1,17 @@
 
 # from sh import curl
 # import sh
-import requests
-from ast import literal_eval
-import parameters, filters
 import json
+from ast import literal_eval
+from datetime import datetime
+
+import requests
+
+import filters
+import parameters
+from common_spider import current_datetime_tz, date_handler
 from tables import print_table_as_is, reform_table_fix_columns_sizes
+
 # constants and vars
 # USD, EUR, PLN, GBP, RUB
 currency = filters.currency.upper()
@@ -102,15 +108,18 @@ conv_dict_orig = {'id':'bid',
                   'priority' : 'priority',}
 location_dict_orig = {2 : 'Киев'}
 
-def convertor_finance_ua(id: int) -> dict:
+def convertor_finance_ua(id: int, current_date: datetime) -> dict:
     out_dic = {conv_dict_orig[key] : data[key][id] for key in conv_dict_orig}
     out_dic['operation'] = conv_operation_orig[out_dic['operation']]
     # out_dic['id'] = id
     out_dic['location'] = location_dict_orig.get(out_dic['location'], 'None')
     out_dic['source'] = 'f'
+    time = out_dic['time'].split(':')
+    out_dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
     return out_dic
 
-data_conv = [ convertor_finance_ua(i) for i in range(data_len)]
+current_date = current_datetime_tz()
+data_api_finance_ua = [convertor_finance_ua(i, current_date) for i in range(data_len)]
 # ============================================================
 
 # corect new data format to old
@@ -156,9 +165,13 @@ table = [ (data['time'][Id], data['currency'][Id], conv_operation_orig[data['typ
 
 
 
+
 if __name__ == '__main__':
     table = reform_table_fix_columns_sizes(table, parameters.table_column_size)
-    print(json.dumps(data_conv, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False))
+    print(json.dumps(data_api_finance_ua, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
+                     default=date_handler))
+    # print(json.dumps(data_api_finance_ua, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False, default=json_util.default))
+    # print(data_api_finance_ua)
     print_table_as_is(table)
 
 

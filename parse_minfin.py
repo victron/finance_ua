@@ -8,6 +8,8 @@ from tables import reform_table_fix_columns_sizes, print_table_as_is
 from check_proxy import proxy_is_used
 import json
 import parameters, filters
+from datetime import datetime
+from common_spider import current_datetime_tz, date_handler
 import secret
 # user settings
 currency = filters.currency
@@ -75,14 +77,18 @@ for cur in ['rub', 'eur', 'usd']:
     for oper in ['sell', 'buy']:
         data.update(get_triple_data(cur, oper)[0])
 
-def convertor_minfin(dic: dict, id: int) -> dict:
+def convertor_minfin(dic: dict, current_date: datetime, id: int) -> dict:
     dic['bid'] = dic['id']
+    del dic['id']
     # dic['id'] = id
     dic['currency'] = dic['currency'].upper()
     dic['source'] = 'm'
+    time = dic['time'].split(':')
+    dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
     return dic
 
-data_conv = [convertor_minfin(value, index) for index, value in enumerate(data.values())]
+current_date = current_datetime_tz()
+data_api_minfin = [convertor_minfin(value, current_date, index) for index, value in enumerate(data.values())]
 data, responce_get = get_triple_data(currency, operation)
 def filter_data_json(data: dict, keyword: str) -> list:
     """
@@ -152,6 +158,7 @@ table =  [(data[Id]['time'], data[Id]['currency'], data[Id]['operation'], data[I
 
 if __name__ == '__main__':
     table = reform_table_fix_columns_sizes(table, parameters.table_column_size)
-    print(json.dumps(data_conv, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False))
+    print(json.dumps(data_api_minfin, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
+                     default=date_handler))
     print_table_as_is(table)
 

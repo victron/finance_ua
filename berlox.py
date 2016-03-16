@@ -10,6 +10,8 @@ from tables import reform_table_fix_columns_sizes, print_table_as_is
 import parameters
 import filters
 import secret
+from common_spider import current_datetime_tz, date_handler
+from datetime import datetime
 
 
 
@@ -120,27 +122,27 @@ conv_dict_orig = {'d' : 'd',
                 'pr': 'pr',
                 'cm': 'comment'}
 
-def convertor_berlox(id: int, dic: dict) -> dict:
+def convertor_berlox(id: int, dic: dict, current_date: datetime) -> dict:
     out_dic = {}
     for key, item in dic.items():
         out_dic[conv_dict_orig[key]] = item
     out_dic['operation'] = conv_operation_orig[out_dic['operation']]
     # out_dic['id'] = id
     out_dic['source'] = 'b'
+    try:
+        out_dic['time'] = datetime.strptime(out_dic['time'], '%Y-%m-%dT%H:%M:%S')
+        out_dic['time'] = out_dic['time'].replace(tzinfo=current_date.tzinfo)
+    except ValueError:
+        try:
+            out_dic['time'] = datetime.strptime(out_dic['time'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        except ValueError:
+            out_dic['time'] = datetime.strptime(out_dic['time'][:19], '%Y-%m-%dT%H:%M:%S')
+            out_dic['time'] = out_dic['time'].replace(tzinfo=current_date.tzinfo)
     return out_dic
 
-# data_conv = [convertor_berlox(index, dic) for index, dic in enumerate(data['Deals'])]
-
-def data_api_berlox() -> list:
-    """
-    send data outside
-    :return: list of dicts
-    """
-    data = json.loads(decrypt_data(current_key(), Vector, get_belox_data(proxy_is_used)).decode())
-    data = [convertor_berlox(index, dic) for index, dic in enumerate(data['Deals'])]
-    return data
-
-data_conv = data_api_berlox()
+current_date = current_datetime_tz()
+print(len(data['Deals']))
+data_api_berlox = [convertor_berlox(index, dic, current_date) for index, dic in enumerate(data['Deals'])]
 
 def filter_data_json(data: dict, keyword: str) -> list:
     """
@@ -184,5 +186,6 @@ table = [(data['Deals'][list_id][conv_dict['time']][11:-3], data['Deals'][list_i
 
 if __name__ == '__main__':
     table = reform_table_fix_columns_sizes(table, parameters.table_column_size)
-    print(json.dumps(data_conv, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False))
+    print(json.dumps(data_api_berlox, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
+                     default=date_handler))
     print_table_as_is(table)
