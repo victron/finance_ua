@@ -17,15 +17,12 @@ from datetime import datetime
 
 # user settings
 currency = filters.currency
-currency = currency.upper()
 conv_operation = {'buy' : 0,
                   'sell' : 1}
 conv_operation_orig = {0 : 'buy',
                        1 : 'sell'}
 operation = conv_operation[filters.operation]
-conv_loacation = {'kiev' : 'Киев',
-                  }
-location = conv_loacation[filters.location]
+location = filters.location
 ################  filter data  ################
 filter_or = filters.filter_or
 proxies = parameters.proxies

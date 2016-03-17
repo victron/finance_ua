@@ -12,9 +12,12 @@ from datetime import datetime
 from common_spider import current_datetime_tz, date_handler
 import secret
 # user settings
-currency = filters.currency
+currency = filters.currency.lower()
 operation = filters.operation
-location = filters.location
+location_orig = filters.location
+location_dict = {'Киев': 'kiev',
+                 }
+location = location_dict[location_orig]
 ################  filter data  ################
 filter_or = filters.filter_or
 
@@ -82,6 +85,7 @@ def convertor_minfin(dic: dict, current_date: datetime, id: int) -> dict:
     del dic['id']
     # dic['id'] = id
     dic['currency'] = dic['currency'].upper()
+    dic['location'] = location_orig
     dic['source'] = 'm'
     time = dic['time'].split(':')
     dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)

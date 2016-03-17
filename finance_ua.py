@@ -9,12 +9,13 @@ import requests
 
 import filters
 import parameters
+
 from common_spider import current_datetime_tz, date_handler
 from tables import print_table_as_is, reform_table_fix_columns_sizes
 
 # constants and vars
 # USD, EUR, PLN, GBP, RUB
-currency = filters.currency.upper()
+currency = filters.currency
 # buy -> 0
 # sell -> 1
 conv_operation = {'buy' : 0,
@@ -32,8 +33,7 @@ conv_operation_orig = {0 : 'buy',
 # Київ -> [2, {}]
 # location = (u'Київ', [2, {}])
 location = filters.location
-location_dict = {'kiev' : 2}
-
+location_dict = {'Киев': 2}
 
 filter_or = filters.filter_or
 

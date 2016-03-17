@@ -5,6 +5,7 @@ filter_or = u'нов дарн левоб шуля нивки больш побе
 # currently not works
 filter_and = u''
 
-currency = 'usd'
+currency = 'USD'
 operation = 'sell'
-location = 'kiev'
+location = 'Киев'
+

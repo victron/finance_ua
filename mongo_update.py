@@ -5,6 +5,10 @@ from finance_ua import data_api_finance_ua
 from parse_minfin import data_api_minfin
 from berlox import data_api_berlox
 from common_spider import current_datetime_tz, datetime
+from filters import location, currency, operation, filter_or
+
+# TODO:
+# - delete some fields, before saving into history
 
 client = MongoClient()
 # client = MongoClient('localhost', 27017)
@@ -50,6 +54,7 @@ data_active.create_index([('bid', pymongo.ASCENDING),
                           ('source', pymongo.ASCENDING)], name='acctive_key')
 
 data_active.create_index([('time_update', pymongo.ASCENDING)], name='update_time_key')
+data_active.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')
 
 update_time = current_datetime_tz()
 for doc_set in [data_api_finance_ua, data_api_minfin, data_api_berlox]:
@@ -58,3 +63,9 @@ for doc_set in [data_api_finance_ua, data_api_minfin, data_api_berlox]:
 
 result = data_active.delete_many({'time_update': {'$lt': update_time }})
 print('deleted from active={}'.format(result.deleted_count))
+
+if __name__ == '__main__':
+    result = data_active.find({'location': location, 'currency': currency, 'operation': operation,
+                               '$text': {'$search': filter_or}})
+    for p in result:
+        print(p)
