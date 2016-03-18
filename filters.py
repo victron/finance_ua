@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ################  filter settings  ################
-filter_or = u'нов дарн левоб шуля нивки больш побед кпи жит берест'
+filter_or = u'новые юность черниговская'
 
 # currently not works
 filter_and = u''
