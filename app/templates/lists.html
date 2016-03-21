@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<form action=""  method="post">
+    {{form_update.hidden_tag()}}
+    {{form_update.db}}
+    <!--<input type="submit" value="Update">-->
+</form>
+
+<form action="" method="post" name="filter">
+    {{form_filter.hidden_tag()}}
+    <p>
+        filter:<br>
+        City: {{form_filter.locations}}
+        Currency: {{form_filter.currencies}}
+        Operation: {{form_filter.operations}}
+        Sources: {{form_filter.sources}}<br>
+        {{form_filter.text(size=50)}}
+        {% for error in form_filter.errors.text %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}<br>
+        <input type="submit" value="Filter">
+    </p>
+</form>
+
+{% for res in result %}
+<div><p>{{res.source}} {{res.location}} <b>{{res.operation}} {{res.currency}} {{res.amount}} {{res.rate}}  {{res.time}}</b> {{res.phone}} {{res.comment}}</p></div>
+{% endfor %}
+{% endblock %}

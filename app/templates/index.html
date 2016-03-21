@@ -4,4 +4,7 @@
 {% for post in posts %}
 <div><p>{{post.author.nickname}} says: <b>{{post.body}}</b></p></div>
 {% endfor %}
+{% for res in result %}
+<div><p>{{res.location}} <b>{{res.rate}}</b></p></div>
+{% endfor %}
 {% endblock %}

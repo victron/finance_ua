@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Установка путей
-import os, sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# import os, sys
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask.ext.script import Manager, Server
-from app import app #originaly shoud be, manage.py should be outside working dir
-# from app import app
+from app import app
+
 
 manager = Manager(app)
 
@@ -13,7 +13,7 @@ manager = Manager(app)
 manager.add_command("runserver", Server(
     use_debugger = True,
     use_reloader = True,
-    host = '0.0.0.0')
+    host = '127.0.0.1')
 )
 
 if __name__ == "__main__":

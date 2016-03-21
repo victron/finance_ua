@@ -1,5 +1,4 @@
-import pymongo
-from pymongo import MongoClient
+from mongo_start import data_active, records
 from pymongo.errors import DuplicateKeyError
 from finance_ua import data_api_finance_ua
 from parse_minfin import data_api_minfin
@@ -9,14 +8,7 @@ from filters import location, currency, operation, filter_or
 
 # TODO:
 # - delete some fields, before saving into history
-
-client = MongoClient()
-# client = MongoClient('localhost', 27017)
-# client = MongoClient('mongodb://localhost:27017/')
-
-db = client['fin_ua']
-records = db['records']
-data_active = db['data_active']
+# - delete from data_active all records without "time_update"
 
 
 def mongo_insert_history(docs: list):
@@ -45,24 +37,30 @@ def mongo_update_active(docss: list, time: datetime):
             raise
 
 
-records.create_index([('bid', pymongo.ASCENDING),
-                      ('time', pymongo.ASCENDING),
-                      ('source', pymongo.ASCENDING)], unique=True, name='unique_keys')
+def update_db() -> int:
+    update_time = current_datetime_tz()
+    for doc_set in [data_api_finance_ua, data_api_minfin, data_api_berlox]:
+        mongo_insert_history(doc_set)
+        mongo_update_active(doc_set, update_time)
 
-data_active.create_index([('bid', pymongo.ASCENDING),
-                          ('time', pymongo.ASCENDING),
-                          ('source', pymongo.ASCENDING)], name='acctive_key')
+    result = data_active.delete_many({'time_update': {'$lt': update_time }})
+    return result.deleted_count
 
-data_active.create_index([('time_update', pymongo.ASCENDING)], name='update_time_key')
-data_active.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')
 
-update_time = current_datetime_tz()
-for doc_set in [data_api_finance_ua, data_api_minfin, data_api_berlox]:
-    mongo_insert_history(doc_set)
-    mongo_update_active(doc_set, update_time)
+def get_selection() -> (set, set, set):
+    result = data_active.find({}, {'location': 1, 'operation': 1, 'currency': 1, 'source': 1, '_id': 0})
+    locations = set()
+    operations = set()
+    currencies = set()
+    sources = set()
+    for i in result:
+        locations.add(i.get('location', 'None'))
+        operations.add(i.get('operation', 'None'))
+        currencies.add(i.get('currency', 'None'))
+        sources.add(i.get('source', 'None'))
+    return locations, operations, currencies, sources
 
-result = data_active.delete_many({'time_update': {'$lt': update_time }})
-print('deleted from active={}'.format(result.deleted_count))
+
 
 if __name__ == '__main__':
     result = data_active.find({'location': location, 'currency': currency, 'operation': operation,

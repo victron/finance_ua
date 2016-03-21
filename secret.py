@@ -5,7 +5,8 @@ import hashlib, random, struct, types, sys
 # ----------------- the encrypted file name -------------
 file_with_code = 'secret_data.pye'
 # ======================================================
-password = input('please enter password:').encode()
+# password = input('please enter password:').encode()
+from password import password
 key = hashlib.sha256(password).digest()
 
 def deccryp_file(key, in_file, out_file=None, chunksize=64*1024):

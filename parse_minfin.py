@@ -80,6 +80,7 @@ for cur in ['rub', 'eur', 'usd']:
     for oper in ['sell', 'buy']:
         data.update(get_triple_data(cur, oper)[0])
 
+
 def convertor_minfin(dic: dict, current_date: datetime, id: int) -> dict:
     dic['bid'] = dic['id']
     del dic['id']
