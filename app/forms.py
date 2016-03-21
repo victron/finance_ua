@@ -15,10 +15,11 @@ class Update_db(Form):
 class Filter(Form):
     locations, operations, currencies, sources = get_selection()
     text = StringField('text', validators=[Optional()])
-    locations = SelectField('locations', choices=[(city, city) for city in locations.union({'all'})], default='Киев')
-    operations = SelectField('operations', choices=[(operation, operation) for operation in operations.union({'all'})],
-                             default='sell')
-    currencies = SelectField('currencies', choices=[(currency, currency) for currency in currencies.union({'all'})],
-                             default='USD')
-    sources = SelectField('currencies', choices=[(source, source) for source in sources.union({'all'})], default='all')
+    all_options = [('all', 'all')]
+    locations = SelectField('locations', choices=all_options + [(city, city) for city in locations], default='Киев')
+    operations = SelectField('operations', choices=all_options +
+                                                   [(operation, operation) for operation in operations], default='sell')
+    currencies = SelectField('currencies', choices=all_options +
+                                                   [(currency, currency) for currency in currencies], default='USD')
+    sources = SelectField('sources', choices=all_options + [(source, source) for source in sources], default='all')
 

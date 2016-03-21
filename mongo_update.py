@@ -8,7 +8,7 @@ from filters import location, currency, operation, filter_or
 
 # TODO:
 # - delete some fields, before saving into history
-# - delete from data_active all records without "time_update"
+# + delete from data_active all records without "time_update"
 
 
 def mongo_insert_history(docs: list):
@@ -42,8 +42,8 @@ def update_db() -> int:
     for doc_set in [data_api_finance_ua, data_api_minfin, data_api_berlox]:
         mongo_insert_history(doc_set)
         mongo_update_active(doc_set, update_time)
-
-    result = data_active.delete_many({'time_update': {'$lt': update_time }})
+    # delete old records and records without 'time_update'
+    result = data_active.delete_many({'$or': [{'time_update': {'$lt': update_time}}, {'time_update': None}]})
     return result.deleted_count
 
 
@@ -59,7 +59,6 @@ def get_selection() -> (set, set, set):
         currencies.add(i.get('currency', 'None'))
         sources.add(i.get('source', 'None'))
     return locations, operations, currencies, sources
-
 
 
 if __name__ == '__main__':
