@@ -1,12 +1,15 @@
 from app import app
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, url_for, request, abort
 from .forms import LoginForm, Update_db, Filter
 from mongo_start import data_active
 from mongo_update import update_db
 from filters import location, currency, operation, filter_or
+from flask.ext.login import login_user, logout_user, login_required
+from .user import User, load_user
 
 @app.route('/')
 @app.route('/index')
+@login_required
 def index():
     user = { 'nickname': 'Miguel' } # выдуманный пользователь
     posts = [ # список выдуманных постов
@@ -29,6 +32,7 @@ def index():
                            result=result)
 
 @app.route('/lists', methods= ['GET', 'POST'])
+@login_required
 def lists():
     form_update = Update_db()
     form_filter = Filter()
@@ -61,13 +65,24 @@ def lists():
                            form_filter=form_filter,
                            result=result)
 
-@app.route('/login', methods = ['GET', 'POST'])
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Login requested for OpenID="' + form.openid.data + '", remember_me=' + str(form.remember_me.data))
-        return redirect('/index')
-    return render_template('login.html',
-                            title = 'Sign In',
-                            form = form,
-                            providers = app.config['OPENID_PROVIDERS'])
+        user = app.config['USERS_COLLECTION'].find_one({"_id": form.username.data})
+        if user and User.validate_login(user['password'], form.password.data):
+            user_obj = User(user['_id'])
+            login_user(user_obj)
+            flash("Logged in successfully", category='success')
+            # next = request.args.get('next')
+            # if not next_is_valid(next):
+            #     return abort(400)
+            return redirect('/index')
+        flash("Wrong username or password", category='error')
+    return render_template('login.html', title='login', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))

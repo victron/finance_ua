@@ -1,6 +1,9 @@
+from pymongo import MongoClient
+
 CSRF_ENABLED = True
+# WTF_CSRF_ENABLED = True
 SECRET_KEY = 'you-will-never-guess'
-MONGODB_SETTINGS = {'DB': "my_tumble_log"}
+# MONGODB_SETTINGS = {'DB': "my_tumble_log"}
 
 OPENID_PROVIDERS = [
     { 'name': 'Google', 'url': 'https://www.google.com/accounts/o8/id' },
@@ -8,3 +11,12 @@ OPENID_PROVIDERS = [
     { 'name': 'AOL', 'url': 'http://openid.aol.com/<username>' },
     { 'name': 'Flickr', 'url': 'http://www.flickr.com/<username>' },
     { 'name': 'MyOpenID', 'url': 'https://www.myopenid.com' }]
+
+DB_NAME = 'users'
+DATABASE = MongoClient()[DB_NAME]
+USERS_COLLECTION = DATABASE['users']
+
+DEBUG = True
+
+
+

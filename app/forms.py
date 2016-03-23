@@ -1,16 +1,19 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, BooleanField, StringField, HiddenField, FieldList, SelectField, SubmitField
+from wtforms import TextField, BooleanField, StringField, SelectField, SubmitField, PasswordField
 from wtforms.validators import Required, DataRequired, AnyOf, Optional
 from mongo_update import get_selection
 
-class LoginForm(Form):
-    openid = StringField('openid', validators = [DataRequired()])
-    remember_me = BooleanField('remember_me', default = False)
+
+# class LoginFormoid(Form):
+#     openid = StringField('openid', validators = [DataRequired()])
+#     remember_me = BooleanField('remember_me', default = False)
+
 
 class Update_db(Form):
     # db_value = 'update'
     # db = HiddenField('db', validators=[AnyOf([db_value])], default=db_value)
     db = SubmitField('Update')
+
 
 class Filter(Form):
     locations, operations, currencies, sources = get_selection()
@@ -23,3 +26,7 @@ class Filter(Form):
                                                    [(currency, currency) for currency in currencies], default='USD')
     sources = SelectField('sources', choices=all_options + [(source, source) for source in sources], default='all')
 
+
+class LoginForm(Form):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])

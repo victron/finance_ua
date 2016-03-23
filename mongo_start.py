@@ -1,6 +1,8 @@
 from pymongo import MongoClient
 import pymongo
 
+# TODO:
+# - move DBs init in config
 
 client = MongoClient()
 # client = MongoClient('localhost', 27017)
