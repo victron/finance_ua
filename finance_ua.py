@@ -4,14 +4,12 @@
 import json
 from ast import literal_eval
 from datetime import datetime
-
 import requests
-
 import filters
 import parameters
-
 from common_spider import current_datetime_tz, date_handler
 from tables import print_table_as_is, reform_table_fix_columns_sizes
+import types
 
 # constants and vars
 # USD, EUR, PLN, GBP, RUB
@@ -34,12 +32,23 @@ conv_operation_orig = {0 : 'buy',
 # location = (u'Київ', [2, {}])
 location = filters.location
 location_dict = {'Киев': 2}
+location_dict_orig = {2 : 'Киев'}
 
-filter_or = filters.filter_or
 
 proxies = parameters.proxies
 user_agent = parameters.user_agent
 headers = {'user-agent': user_agent}
+
+conv_dict_orig = {'id':'bid',
+                  'location': 'location',
+                  'time': 'time',
+                  'currency': 'currency',
+                  'type': 'operation',
+                  'rate': 'rate',
+                  'amount': 'amount',
+                  'phone': 'phone',
+                  'comment': 'comment',
+                  'priority' : 'priority',}
 
 # old url
 # url = 'http://tables.finance.ua/ua/currency/order/data?for=grid'
@@ -80,35 +89,23 @@ def print_result(id_list):
 #   raw_data = input_data.read()
 #
 # ------ fetch via requests ---------
-try:
-    responce_get = requests.get(url, headers=headers, timeout=3)
-    proxy_is_used = False
-except requests.exceptions.ConnectTimeout:
-    responce_get = requests.get(url, headers=headers, timeout = 3,proxies=proxies)
-  
+def fetch_data():
+    if parameters.proxy_is_used == False:
+        responce_get = requests.get(url, headers=headers)
+    else:
+        responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
+    if responce_get.status_code != requests.codes.ok:
+        return None
+    start_dict = responce_get.text.find('({')
+    end_dict = responce_get.text.find('})')
+    data = responce_get.text[start_dict+1 : end_dict+1]
 
-start_dict = responce_get.text.find('({')
-end_dict = responce_get.text.find('})')
-data = responce_get.text[start_dict+1 : end_dict+1]
+    # data = eval(data)
+    data = literal_eval(data)
+    return data
 
-# data = eval(data)
-data = literal_eval(data)
-data_len = len(data['location'])
 
-# -------- convert in general format --------
-conv_dict_orig = {'id':'bid',
-                  'location': 'location',
-                  'time': 'time',
-                  'currency': 'currency',
-                  'type': 'operation',
-                  'rate': 'rate',
-                  'amount': 'amount',
-                  'phone': 'phone',
-                  'comment': 'comment',
-                  'priority' : 'priority',}
-location_dict_orig = {2 : 'Киев'}
-
-def convertor_finance_ua(id: int, current_date: datetime) -> dict:
+def convertor_finance_ua(id: int, current_date: datetime, data) -> dict:
     out_dic = {conv_dict_orig[key] : data[key][id] for key in conv_dict_orig}
     out_dic['operation'] = conv_operation_orig[out_dic['operation']]
     # out_dic['id'] = id
@@ -118,16 +115,25 @@ def convertor_finance_ua(id: int, current_date: datetime) -> dict:
     out_dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
     return out_dic
 
-current_date = current_datetime_tz()
-data_api_finance_ua = [convertor_finance_ua(i, current_date) for i in range(data_len)]
-# ============================================================
 
-# corect new data format to old
-for index, val in  enumerate(data['location']):
-  if val == location_dict[location]:
-    data['location'][index] = location
-  else:
-    data['location'][index] = u'other'
+# @fetch_data
+def data_api_finance_ua(fn):
+    data = fn()
+    data_len = len(data['location'])
+    current_date = current_datetime_tz()
+    return [convertor_finance_ua(i, current_date, data) for i in range(data_len)]
+
+
+def table_api_finance_ua(fn):
+    filter_or = filters.filter_or
+    data = fn()
+    data_len = len(data['location'])
+    # corect new data format to old
+    for index, val in  enumerate(data['location']):
+        if val == location_dict[location]:
+            data['location'][index] = location
+        else:
+            data['location'][index] = u'other'
 
 
 # for python2
@@ -138,37 +144,42 @@ for index, val in  enumerate(data['location']):
 #     if key == 'comment':
 #       data[key][i] = data[key][i].lower()
 
-for i in range(data_len):
-  data['amount'][i] = data['amount'][i].replace(' ', '')
-  data['amount'][i] = float(data['amount'][i])
+    for i in range(data_len):
+        data['amount'][i] = data['amount'][i].replace(' ', '')
+        data['amount'][i] = float(data['amount'][i])
 # ---------------------------------
 # filter by contract contract_type
-contract_list = []
-for i in range(data_len):
-  if data['type'][i] == contract_type:
-    contract_list.append(i)
-    
+    contract_list = []
+    for i in range(data_len):
+        if data['type'][i] == contract_type:
+            contract_list.append(i)
+
 # filter by currency
-filtered_list = filter_data(contract_list, data['currency'],  currency)
-filtered_list = filter_data(filtered_list, data['location'],  location)
+    filtered_list = filter_data(contract_list, data['currency'],  currency)
+    filtered_list = filter_data(filtered_list, data['location'],  location)
 
 # filter by keywords
-filter_or = filter_or.lower()
-filter_or = filter_or.split()
-filtered_set = set()
-for filter_  in  filter_or:
-  filtered_set = filtered_set.union(set(filter_data(filtered_list, data['comment'],  filter_)))
+    filter_or = filter_or.lower()
+    filter_or = filter_or.split()
+    filtered_set = set()
+    for filter_  in  filter_or:
+        filtered_set = filtered_set.union(set(filter_data(filtered_list, data['comment'],  filter_)))
 
 
-table = [ (data['time'][Id], data['currency'][Id], conv_operation_orig[data['type'][Id]], data['rate'][Id],
-           data['amount'][Id], data['location'][Id], data['comment'][Id], data['phone'][Id], 'f' ) for Id in filtered_set ]
+    return  [ (data['time'][Id], data['currency'][Id], conv_operation_orig[data['type'][Id]], data['rate'][Id],
+               data['amount'][Id], data['location'][Id], data['comment'][Id], data['phone'][Id], 'f' ) for Id in filtered_set ]
 
 
-
+# ============================================================
 
 if __name__ == '__main__':
+
+    table = table_api_finance_ua(fetch_data)
+
+
     table = reform_table_fix_columns_sizes(table, parameters.table_column_size)
-    print(json.dumps(data_api_finance_ua, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
+
+    print(json.dumps(data_api_finance_ua(fetch_data), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
                      default=date_handler))
     # print(json.dumps(data_api_finance_ua, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False, default=json_util.default))
     # print(data_api_finance_ua)

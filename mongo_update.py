@@ -1,6 +1,7 @@
 from mongo_start import data_active, records
 from pymongo.errors import DuplicateKeyError
-from finance_ua import data_api_finance_ua
+import finance_ua
+# from finance_ua import data_api_finance_ua
 from parse_minfin import data_api_minfin
 from berlox import data_api_berlox
 from common_spider import current_datetime_tz, datetime
@@ -39,7 +40,8 @@ def mongo_update_active(docss: list, time: datetime):
 
 def update_db() -> int:
     update_time = current_datetime_tz()
-    for doc_set in [data_api_finance_ua, data_api_minfin, data_api_berlox]:
+    for doc_set in [finance_ua.data_api_finance_ua(finance_ua.fetch_data),
+                    data_api_minfin, data_api_berlox]:
         mongo_insert_history(doc_set)
         mongo_update_active(doc_set, update_time)
     # delete old records and records without 'time_update'
