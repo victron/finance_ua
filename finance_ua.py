@@ -95,7 +95,7 @@ def fetch_data():
     else:
         responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
     if responce_get.status_code != requests.codes.ok:
-        return None
+        return []
     start_dict = responce_get.text.find('({')
     end_dict = responce_get.text.find('})')
     data = responce_get.text[start_dict+1 : end_dict+1]
@@ -119,6 +119,8 @@ def convertor_finance_ua(id: int, current_date: datetime, data) -> dict:
 # @fetch_data
 def data_api_finance_ua(fn):
     data = fn()
+    if len(data) == 0:
+        return []
     data_len = len(data['location'])
     current_date = current_datetime_tz()
     return [convertor_finance_ua(i, current_date, data) for i in range(data_len)]

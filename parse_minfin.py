@@ -27,6 +27,7 @@ headers = {'user-agent': user_agent}
 proxies = parameters.proxies
 
 
+
 def get_triple_data(currency: str, operation: str) -> dict:
 
     # minfin_urls = {'usd_sell' : 'http://minfin.com.ua/currency/auction/usd/sell/kiev/?presort=&sort=time&order=desc',
@@ -73,44 +74,30 @@ def get_triple_data(currency: str, operation: str) -> dict:
             data[key]['id'] = i.find('span', class_ = "au-dealer-phone").a['data-bid-id']
         except KeyError:
             pass
-
+    # print('----------------- fetch -------------------------')
     return data, responce_get
-data = {}
-for cur in ['rub', 'eur', 'usd']:
-    for oper in ['sell', 'buy']:
-        data.update(get_triple_data(cur, oper)[0])
 
 
-def convertor_minfin(dic: dict, current_date: datetime, id: int) -> dict:
-    dic['bid'] = dic['id']
-    del dic['id']
-    # dic['id'] = id
-    dic['currency'] = dic['currency'].upper()
-    dic['location'] = location_orig
-    dic['source'] = 'm'
-    time = dic['time'].split(':')
-    dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
-    return dic
+def data_api_minfin(fn):
+    def convertor_minfin(dic: dict, current_date: datetime, id: int) -> dict:
+        dic['bid'] = dic['id']
+        del dic['id']
+        # dic['id'] = id
+        dic['currency'] = dic['currency'].upper()
+        dic['location'] = location_orig
+        dic['source'] = 'm'
+        time = dic['time'].split(':')
+        dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
+        return dic
 
-current_date = current_datetime_tz()
-data_api_minfin = [convertor_minfin(value, current_date, index) for index, value in enumerate(data.values())]
-data, responce_get = get_triple_data(currency, operation)
-def filter_data_json(data: dict, keyword: str) -> list:
-    """
+    data = {}
+    for cur in ['rub', 'eur', 'usd']:
+        for oper in ['sell', 'buy']:
+            data.update(fn(cur, oper)[0])
 
-    :type data: {'11898627': {'amount': '2000',
-                                         'comment': 'М. Дворец Украины,       целиком, От 1 тыс.',
-                                         'currency': 'usd',
-                                         'id': '11898627',
-                                         'operation': 'sell',
-                                         'phone': '067xxx-x6-98',
-                                         'rate': '27,14',
-                                         'time': '13:10'}}
-    """
-    return [key for key, val in data.items() if val['comment'].find(keyword) != -1 and val['operation'] == operation ]
+    current_date = current_datetime_tz()
+    return [convertor_minfin(value, current_date, index) for index, value in enumerate(data.values())]
 
-
-bid_to_payload = secret.bid_to_payload
 
 def get_contacts(bid: str, cookies: str, data_func, proxy_is_used: bool = False) -> requests:
     # --------- curl method -----------------
@@ -136,34 +123,47 @@ def get_contacts(bid: str, cookies: str, data_func, proxy_is_used: bool = False)
         return requests.post(form_urlencoded, params=payload, headers=headers, data=data, cookies=cookies,
                              proxies=proxies)
     # return r.json()['data']
-# ----------------------------------------------
-
-# filter by keywords
-filter_or = filter_or.lower()
-filter_or = filter_or.split()
-filtered_set = set()
-for filter_  in  filter_or:
-    filtered_set = filtered_set.union(set(filter_data_json(data, filter_)))
 
 
+def table_api_minfin(fn_data, fn_contacts):
+    def filter_data_json(data: dict, keyword: str) -> list:
+        """
 
-for bid in filtered_set:
-    r = get_contacts(bid, responce_get.cookies, bid_to_payload, proxy_is_used)
-    data[bid]['phone'] = data[bid]['phone'].replace('xxx-x', r.json()['data'] )
-    responce_get.cookies['minfin_sessions'] = r.cookies['minfin_sessions']
-    sleep(0.5)
+        :type data: {'11898627': {'amount': '2000',
+                                             'comment': 'М. Дворец Украины,       целиком, От 1 тыс.',
+                                             'currency': 'usd',
+                                             'id': '11898627',
+                                             'operation': 'sell',
+                                             'phone': '067xxx-x6-98',
+                                             'rate': '27,14',
+                                             'time': '13:10'}}
+        """
+        return [key for key, val in data.items() if val['comment'].find(keyword) != -1 and val['operation'] == operation ]
 
 
-print (u'----- results for {currency} {contract} ------'.format(contract=location, currency=currency))
-print (u'=== filter: location= {location}, filter= {filtered}'.format(location=location,
-                                                                      filtered=u' '.join(filter_or)))
-print('=' * 80)
-table =  [(data[Id]['time'], data[Id]['currency'], data[Id]['operation'], data[Id]['rate'], data[Id]['amount'],
-           location, data[Id]['comment'], data[Id]['phone'], 'm') for Id in filtered_set]
+    data, responce_get = fn_data(currency, operation)
+    bid_to_payload = secret.bid_to_payload
+    # filter by keywords
+    filter_or = filters.filter_or.lower()
+    filter_or = filter_or.split()
+    filtered_set = set()
+    for filter_  in  filter_or:
+        filtered_set = filtered_set.union(set(filter_data_json(data, filter_)))
+
+    for bid in filtered_set:
+        r = fn_contacts(bid, responce_get.cookies, bid_to_payload, proxy_is_used)
+        data[bid]['phone'] = data[bid]['phone'].replace('xxx-x', r.json()['data'] )
+        responce_get.cookies['minfin_sessions'] = r.cookies['minfin_sessions']
+        sleep(0.5)
+    return [(data[Id]['time'], data[Id]['currency'], data[Id]['operation'], data[Id]['rate'], data[Id]['amount'],
+               location, data[Id]['comment'], data[Id]['phone'], 'm') for Id in filtered_set]
 
 if __name__ == '__main__':
-    table = reform_table_fix_columns_sizes(table, parameters.table_column_size)
-    print(json.dumps(data_api_minfin, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
+    table = reform_table_fix_columns_sizes(table_api_minfin(get_triple_data, get_contacts), parameters.table_column_size)
+    print(json.dumps(data_api_minfin(get_triple_data), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
                      default=date_handler))
+    print (u'----- results for {currency} {contract} ------'.format(contract=location, currency=currency))
+    print (u'=== filter: location= {location}, filter= {filtered}'.format(location=location,
+                                                                          filtered=u' '.join(filter_or)))
     print_table_as_is(table)
 

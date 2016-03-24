@@ -13,8 +13,10 @@ table_column_size = parameters.table_column_size
 
 
 while True:
-    fin_ua = finance_ua.table_api_finance_ua(finance_ua.fetch_data)
-    table = fin_ua + parse_minfin.table + berlox.table
+
+    table = finance_ua.table_api_finance_ua(finance_ua.fetch_data) + \
+            parse_minfin.table_api_minfin(parse_minfin.get_triple_data, parse_minfin.get_contacts) + \
+            berlox.table
     table = reform_table_fix_columns_sizes(table, table_column_size)
     print_table_as_is(table)
     for i in range(parameters.sleep_time, 0, -1):
