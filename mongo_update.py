@@ -1,8 +1,9 @@
-from mongo_start import data_active, records
+from mongo_start import data_active, records, news
 from pymongo.errors import DuplicateKeyError
 import finance_ua
 import berlox
 import parse_minfin
+from news_minfin import minfin_headlines
 # from finance_ua import data_api_finance_ua
 # from parse_minfin import data_api_minfin
 
@@ -17,17 +18,24 @@ from filters import location, currency, operation, filter_or
 # - for minfin, if time grate then current - set yesterday date
 
 
-def mongo_insert_history(docs: list):
+def mongo_insert_history(docs: list, collection):
+    dublicate_count = 0
+    inserted_count = 0
     for d in docs:
         # The document to insert. Must be a mutable mapping type.
         # If the document does not have an _id field one will be added automatically.
         # temp dictionary for insert_one
         temp_doc = dict(d)
         try:
-            result = records.insert_one(temp_doc)
+            result = collection.insert_one(temp_doc)
+            inserted_count += 1
             print('history insert={}'.format(result.acknowledged))
         except DuplicateKeyError as e:
-            print('duplcate found={}'.format(str(e)))
+            dublicate_count += 1
+            print('duplicate found={}'.format(str(e)))
+    return inserted_count, dublicate_count
+
+
 
 
 def mongo_update_active(docss: list, time: datetime):
@@ -48,7 +56,8 @@ def update_db() -> int:
     for doc_set in [finance_ua.data_api_finance_ua(finance_ua.fetch_data),
                     parse_minfin.data_api_minfin(parse_minfin.get_triple_data),
                     berlox.data_api_berlox(berlox.fetch_data)]:
-        mongo_insert_history(doc_set)
+        mongo_insert_history(doc_set, records)
+        mongo_insert_history(minfin_headlines(), news)
         mongo_update_active(doc_set, update_time)
     # delete old records and records without 'time_update'
     result = data_active.delete_many({'$or': [{'time_update': {'$lt': update_time}}, {'time_update': None}]})

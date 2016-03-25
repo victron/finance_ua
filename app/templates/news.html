@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<form action=""  method="post">
+
+    {{form_update.db}}
+    <!--<input type="submit" value="Update">-->
+</form>
+{% for res in result %}
+<div><p>{{res.source}} <b>{{res.time}}</b><a href={{res.href}}> {{res.headline}} </a></p></div>
+{% endfor %}
+{% endblock %}

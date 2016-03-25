@@ -2,10 +2,13 @@ from app import app
 from flask import render_template, flash, redirect, url_for, request, abort
 from .forms import LoginForm, Update_db, Filter
 from mongo_start import data_active
-from mongo_update import update_db
+from mongo_start import news as news_db
+from mongo_update import update_db, mongo_insert_history
 from filters import location, currency, operation, filter_or
 from flask.ext.login import login_user, logout_user, login_required
 from .user import User, load_user
+from news_minfin import minfin_headlines
+import pymongo
 
 @app.route('/')
 @app.route('/index')
@@ -65,6 +68,20 @@ def lists():
                            form_filter=form_filter,
                            result=result)
 
+
+@app.route('/news', methods=['GET', 'POST'])
+@login_required
+def news():
+    form_update = Update_db()
+    if form_update.db.data:
+        inserted_count, duplicate_count = mongo_insert_history(minfin_headlines(), news_db)
+        flash('inserted: {}, duplicated: {}'.format(inserted_count, duplicate_count))
+    mongo_request = {}
+    result = news_db.find(mongo_request, sort=([('time', pymongo.DESCENDING)]))
+    return render_template('news.html',
+                           title='News',
+                           result=result,
+                           form_update=form_update)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
