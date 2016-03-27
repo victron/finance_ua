@@ -158,6 +158,29 @@ def table_api_minfin(fn_data, fn_contacts):
     return [(data[Id]['time'], data[Id]['currency'], data[Id]['operation'], data[Id]['rate'], data[Id]['amount'],
                location, data[Id]['comment'], data[Id]['phone'], 'm') for Id in filtered_set]
 
+
+def minfin_history(currency: str, today: datetime) -> json:
+    """
+    data available for USD and EUR
+    :param currency:
+    :param today: in datetime, in url should be example 2016-03-27 == 160327 in request
+    :return:
+    """
+    params = {'v': today.strftime('%y%m%d')}
+    url = 'http://minfin.com.ua/data/currency/auction/' + currency.lower() + '.0.median.daily.json'
+    data = []
+    for key, val in requests.get(url, params=params).json().items():
+        document = {}
+        document['time'] = datetime.strptime(key, '%Y-%m-%d %H:%M:%S')
+        document['currency'] = currency
+        document['source'] = 'm'
+        document['buy'] = val['b']
+        document['sell'] = val['s']
+        data.append(document)
+    return data
+
+
+
 if __name__ == '__main__':
     table = reform_table_fix_columns_sizes(table_api_minfin(get_triple_data, get_contacts), parameters.table_column_size)
     print(json.dumps(data_api_minfin(get_triple_data), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
@@ -166,4 +189,6 @@ if __name__ == '__main__':
     print (u'=== filter: location= {location}, filter= {filtered}'.format(location=location,
                                                                           filtered=u' '.join(filter_or)))
     print_table_as_is(table)
+    # print(json.dumps(minfin_history('USD', datetime.now()), sort_keys=True, indent=4, separators=(',', ': '),
+    #                  ensure_ascii=False, default=date_handler))
 

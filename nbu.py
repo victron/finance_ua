@@ -42,7 +42,8 @@ def auction_get_dates(year: str) -> list:
         return None
 
 
-def auction_results(date: str) -> dict:
+def auction_results(date: datetime) -> dict:
+    date = date.strftime('%d.%m.%Y')
     year = date.split('.')[2]
     url = 'http://www.bank.gov.ua/control/uk/auction/details?date=' + date + '&year=' + year
     if not proxy_is_used:
@@ -93,13 +94,37 @@ def auction_results(date: str) -> dict:
     return document
 
 
+class NbuJson():
+    """
+    http://www.bank.gov.ua/control/uk/publish/article?art_id=25327817&cat_id=25365601
+    """
+    def __init__(self):
+        self.url = 'http://bank.gov.ua/NBUStatService/v1/statdirectory/exchange'
+
+    def rates_current(self) -> json:
+        return requests.get(self.url, params='json').json()
+
+    def rates_date(self,date: datetime) -> json:
+        params = {'date': date.strftime('%Y%m%d'), 'json': ''}
+        return requests.get(self.url, params=params).json()
+
+    def rate_currency_date(self, currency: str, date: datetime) -> json:
+        params = {'valcode': currency, 'date': date.strftime('%Y%m%d'), 'json': ''}
+        document = {}
+        recieved_doc = requests.get(self.url, params=params).json()[0]
+        document['currency'] = recieved_doc['cc']
+        document['time'] = datetime.strptime(recieved_doc['exchangedate'], '%d.%m.%Y')
+        document['rate'] = recieved_doc['rate']
+        return document
+
+
 if __name__ == '__main__':
     year = '2016'
     for i in auction_get_dates(year):
         print(json.dumps(auction_results(i), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
                          default=date_handler))
         sleep(10)
-    print(json.dumps(auction_results('23.03.2016'), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
-                         default=date_handler))
+    print(json.dumps(auction_results(datetime.strptime('23.03.2016', '%d.%m.%Y')), sort_keys=True, indent=4,
+                     separators=(',', ': '), ensure_ascii=False, default=date_handler))
 
 
