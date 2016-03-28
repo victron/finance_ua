@@ -36,8 +36,6 @@ def mongo_insert_history(docs: list, collection):
     return inserted_count, dublicate_count
 
 
-
-
 def mongo_update_active(docss: list, time: datetime):
     for document in docss:
         document['time_update'] = time

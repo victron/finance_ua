@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# TODO:
+# + minfin_history return data in float
 # from sh import curl
 # import sh
 import requests
@@ -159,7 +161,7 @@ def table_api_minfin(fn_data, fn_contacts):
                location, data[Id]['comment'], data[Id]['phone'], 'm') for Id in filtered_set]
 
 
-def minfin_history(currency: str, today: datetime) -> json:
+def minfin_history(currency: str, today: datetime) -> list:
     """
     data available for USD and EUR
     :param currency:
@@ -171,11 +173,12 @@ def minfin_history(currency: str, today: datetime) -> json:
     data = []
     for key, val in requests.get(url, params=params).json().items():
         document = {}
-        document['time'] = datetime.strptime(key, '%Y-%m-%d %H:%M:%S')
+        document['time'] = datetime.strptime(key, '%Y-%m-%d %H:%M:%S')\
+            .replace(hour=17, minute=0, microsecond=0, tzinfo=current_datetime_tz().tzinfo)
         document['currency'] = currency
         document['source'] = 'm'
-        document['buy'] = val['b']
-        document['sell'] = val['s']
+        document['buy'] = float(val['b'])
+        document['sell'] = float(val['s'])
         data.append(document)
     return data
 

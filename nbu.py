@@ -2,13 +2,16 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 import requests
 from parameters import proxy_is_used, headers, proxies
-from common_spider import current_datetime_tz, date_handler
+from common_spider import current_datetime_tz, date_handler, local_tz
 from datetime import datetime
 import json
 from time import sleep
 # from check_proxy import proxy_requests
 
 # TODO:
+# - correct offten call current_datetime_tz
+# + check nbu_rate in weekend
+
 # from http://www.bank.gov.ua/control/uk/publish/article?art_id=25327817&cat_id=25365601
 #  Розміщення облігацій по валюті (можливі значення UAH / USD / EUR, регістр значення не має):
 # http://bank.gov.ua/NBUStatService/v1/statdirectory/ovdp?valcode=usd&json
@@ -26,20 +29,22 @@ from time import sleep
 # http://www.bank.gov.ua/control/uk/auction/details
 
 
-def auction_get_dates(year: str) -> list:
+def auction_get_dates(year: datetime) -> set:
+    year = year.strftime('%Y')
     url = 'http://www.bank.gov.ua/control/uk/auction/details?date=25.03.2016&year=' + year
     if not proxy_is_used:
         responce_get = requests.get(url, headers=headers)
     else:
         responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
     soup = BeautifulSoup(responce_get.text, "html.parser")
-    if year == soup.body.table.find(attrs={'name': 'year', 'onchange': 'this.form.submit();'}).find('option', attrs={'selected': ''})['value']:
-        dates = []
-        for date in soup.body.table.find('select',attrs={'name': 'date'}).find_all('option'):
-            dates.append(date['value'])
-        return dates
-    else:
-        return None
+    # if year == soup.body.table.find(attrs={'name': 'year', 'onchange': 'this.form.submit();'}).find('option', attrs={'selected': ''})['value']:
+    dates = set()
+    for date in soup.body.table.find('select',attrs={'name': 'date'}).find_all('option'):
+        dates.add(datetime.strptime(date['value'], '%d.%m.%Y')
+                  .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz))
+    return dates
+    # else:
+    #     return None
 
 
 def auction_results(date: datetime) -> dict:
@@ -55,7 +60,9 @@ def auction_results(date: datetime) -> dict:
     #     return None
     document = {}
     get_float = lambda tag: float(tag.find('td', attrs={'class': 'cell_c'}).get_text(strip=True))
-    document['date'] = datetime.strptime(date, '%d.%m.%Y').replace(tzinfo=current_datetime_tz().tzinfo)
+    document['time'] = datetime.strptime(date, '%d.%m.%Y')\
+        .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
+    document['source'] = 'nbu_auction'
     for field in soup.body.table.find('table', attrs={'border': '0', 'width': '650px'}).find_all('tr'):
         if isinstance(field.td, type(None)):
             continue
@@ -108,23 +115,31 @@ class NbuJson():
         params = {'date': date.strftime('%Y%m%d'), 'json': ''}
         return requests.get(self.url, params=params).json()
 
-    def rate_currency_date(self, currency: str, date: datetime) -> json:
+    def rate_currency_date(self, currency: str, date: datetime) -> dict:
         params = {'valcode': currency, 'date': date.strftime('%Y%m%d'), 'json': ''}
         document = {}
-        recieved_doc = requests.get(self.url, params=params).json()[0]
+        try:
+            recieved_doc = requests.get(self.url, params=params).json()[0]
+        except IndexError:
+            return {}
         document['currency'] = recieved_doc['cc']
-        document['time'] = datetime.strptime(recieved_doc['exchangedate'], '%d.%m.%Y')
-        document['rate'] = recieved_doc['rate']
+        document['time'] = datetime.strptime(recieved_doc['exchangedate'], '%d.%m.%Y')\
+            .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
+        document['nbu_rate'] = recieved_doc['rate']
+        document['source'] = 'nbu'
         return document
 
 
 if __name__ == '__main__':
     year = '2016'
-    for i in auction_get_dates(year):
-        print(json.dumps(auction_results(i), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
-                         default=date_handler))
-        sleep(10)
-    print(json.dumps(auction_results(datetime.strptime('23.03.2016', '%d.%m.%Y')), sort_keys=True, indent=4,
-                     separators=(',', ': '), ensure_ascii=False, default=date_handler))
+    # for i in auction_get_dates(datetime.strptime(year, '%Y')):
+    #     print(json.dumps(auction_results(i), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
+    #                      default=date_handler))
+    #     sleep(10)
+    # print(json.dumps(auction_results(datetime.strptime('23.03.2016', '%d.%m.%Y')), sort_keys=True, indent=4,
+    #                  separators=(',', ': '), ensure_ascii=False, default=date_handler))
+    # print(json.dumps(NbuJson().rate_currency_date('USD', datetime.strptime('27.03.2016', '%d.%m.%Y')),
+    #                  sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
+    print(NbuJson().rate_currency_date('USD', datetime.strptime('27.03.2016', '%d.%m.%Y')))
 
 

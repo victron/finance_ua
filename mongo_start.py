@@ -12,6 +12,7 @@ db = client['fin_ua']
 records = db['records']
 data_active = db['data_active']
 news = db['news']
+history = db['history']
 
 
 records.create_index([('bid', pymongo.ASCENDING),
@@ -25,4 +26,5 @@ data_active.create_index([('bid', pymongo.ASCENDING),
 data_active.create_index([('time_update', pymongo.ASCENDING)], name='update_time_key')
 data_active.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')
 news.create_index([('time', pymongo.ASCENDING)], name='news_time', unique=True)
+history.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
 
