@@ -3,6 +3,7 @@ from flask import render_template, flash, redirect, url_for, request, abort, jso
 from .forms import LoginForm, Update_db, Filter
 from mongo_start import data_active, history
 from mongo_start import news as news_db
+from mongo_start import db
 from mongo_update import update_db, mongo_insert_history
 from filters import location, currency, operation, filter_or
 from flask.ext.login import login_user, logout_user, login_required
@@ -10,7 +11,7 @@ from .user import User, load_user
 from news_minfin import minfin_headlines
 import pymongo
 from datetime import datetime
-from common_spider import flatten
+from common_spider import time_string
 
 @app.route('/')
 @app.route('/index')
@@ -88,27 +89,25 @@ def news():
 @app.route('/charts')
 @login_required
 def charts():
+    # TODO: load data to js via api
     # from mongo_start import history
-    mongo_request = {}
-    cursor = history.find(mongo_request, {'_id': 0,}, sort=([('time', pymongo.ASCENDING)]))
-    octothorpe = lambda x, dictionary: x * -1 if dictionary['nbu_auction']['operation'] == 'buy' else x
     out_dict = {}
-    for data in cursor:
-        for key, val in data.items():
-            time = data['time'].strftime('%Y-%m-%d')
-            if key == 'time':
-                continue
-            out_dict[key] = out_dict.get(key, []) # TODO:  check code secure
-            output_dict = {}
-            output_dict['time'] = time
-            output_dict['buy'] = val.get('buy', 'null')
-            output_dict['sell'] = val.get('sell', 'null')
-            if val.get('nbu_rate') != None:
-                output_dict['nbu_rate'] = val['nbu_rate']
-            if val.get('nbu_auction') != None:
-                output_dict['amount_requested'] = octothorpe(val['nbu_auction']['amount_requested'], val)
-                output_dict['amount_accepted_all'] = octothorpe(val['nbu_auction']['amount_accepted_all'], val)
-            out_dict[key].append(output_dict)
+    projection = {'_id': False, 'time': True, 'sell': True, 'buy': True, 'nbu_rate': True,
+                  'nbu_auction.amount_requested': True, 'nbu_auction.amount_accepted_all': True,
+                  'nbu_auction.operation': True}
+    octothorpe = lambda x, dictionary: x * -1 if dictionary['nbu_auction']['operation'] == 'buy' else x
+
+    def nbu_flat_auction(doc):
+        if 'nbu_auction' in doc:
+            doc['amount_requested'] = octothorpe(doc['nbu_auction'].pop('amount_requested'), doc)
+            doc['amount_accepted_all'] = octothorpe(doc['nbu_auction'].pop('amount_accepted_all'), doc)
+            del doc['nbu_auction']
+        return doc
+
+    for currency in ['USD', 'EUR', 'RUB']:
+        mongo_request = {}
+        cursor = db[currency].find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
+        out_dict[currency] = [time_string(nbu_flat_auction(doc)) for doc in cursor]
     return render_template('charts.html',
                            usd=out_dict.get('USD'),
                            eur= out_dict.get('EUR'),
@@ -138,8 +137,25 @@ def logout():
 
 
 # json output
-@app.route('/api/history')
-def history_json(): #later set what data need
-    mongo_request = {}
-    cursor = history.find(mongo_request, {'_id': 0}, sort=([('time', pymongo.DESCENDING)]))
-    return jsonify(history=[{'time': data['time'].strftime('%Y-%m-%d'), 'value': data['USD']['buy']} for data in cursor])
+@app.route('/api/history/<currency>')
+@login_required
+def history_json(currency):
+    currency = currency.upper()
+    if currency in ['USD', 'EUR', 'RUB']:
+        mongo_request = {}
+        db_request = db[currency]
+        cursor = db_request.find(mongo_request, {'_id': 0}, sort=([('time', pymongo.DESCENDING)]))
+        # return file
+        # data = {currency: [{'time': data['time'].strftime('%Y-%m-%d'),
+        #                     'value': data.get(currency, {}).get('buy', None)}
+        #                    for data in cursor]}
+        data = {currency: [ time_string(doc) for doc in cursor]} # dict for transfere parameter currency in json
+        file = jsonify(data)
+        file.headers['Content-Disposition'] = 'attachment;filename=' + currency + '.json'
+        return file
+        #return in HTTP
+        # return jsonify(USD=[{'time': data['time'].strftime('%Y-%m-%d'),
+        #                          'value': data.get('USD', {}).get('buy', None)}
+        #                         for data in cursor])
+    else:
+        abort(404)

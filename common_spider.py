@@ -31,3 +31,8 @@ def flatten(dictionary):
         else:
             result["/".join(path )] = current
     return result
+
+
+def time_string(doc):
+    doc['time'] = doc['time'].strftime('%Y-%m-%d')
+    return doc

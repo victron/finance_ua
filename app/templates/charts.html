@@ -144,7 +144,8 @@ var chartConfig = {
 				showBalloon: true,
 				fillAlphas: 1,
                 lineColor: "blue",
-                useDataSetColors: false
+                useDataSetColors: false,
+                periodValue: "Sum"
 			},
                 {
                 title: "accepted_all",
@@ -153,7 +154,8 @@ var chartConfig = {
 				showBalloon: true,
 				fillAlphas: 1,
                 lineColor: "green",
-                useDataSetColors: false
+                useDataSetColors: false,
+                periodValue: "Sum"
 			}
             ],
 
@@ -174,7 +176,12 @@ var chartConfig = {
         cursorAlpha:0.1,
         valueLineEnabled: true,
         valueLineBalloonEnabled: true,
+        animationDuration: 0
 	},
+
+     balloon: {
+        animationDuration: 0
+    },
 
 	periodSelector: {
         position: "left",

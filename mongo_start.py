@@ -27,4 +27,7 @@ data_active.create_index([('time_update', pymongo.ASCENDING)], name='update_time
 data_active.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')
 news.create_index([('time', pymongo.ASCENDING)], name='news_time', unique=True)
 history.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
+for currency in ['USD', 'EUR', 'RUB']:
+    DB = db[currency]
+    DB.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
 
