@@ -1,7 +1,7 @@
 from app import app
-from flask import render_template, flash, redirect, url_for, request, abort
+from flask import render_template, flash, redirect, url_for, request, abort, jsonify
 from .forms import LoginForm, Update_db, Filter
-from mongo_start import data_active
+from mongo_start import data_active, history
 from mongo_start import news as news_db
 from mongo_update import update_db, mongo_insert_history
 from filters import location, currency, operation, filter_or
@@ -9,6 +9,8 @@ from flask.ext.login import login_user, logout_user, login_required
 from .user import User, load_user
 from news_minfin import minfin_headlines
 import pymongo
+from datetime import datetime
+from common_spider import flatten
 
 @app.route('/')
 @app.route('/index')
@@ -83,6 +85,36 @@ def news():
                            result=result,
                            form_update=form_update)
 
+@app.route('/charts')
+@login_required
+def charts():
+    # from mongo_start import history
+    mongo_request = {}
+    cursor = history.find(mongo_request, {'_id': 0,}, sort=([('time', pymongo.ASCENDING)]))
+    octothorpe = lambda x, dictionary: x * -1 if dictionary['nbu_auction']['operation'] == 'buy' else x
+    out_dict = {}
+    for data in cursor:
+        for key, val in data.items():
+            time = data['time'].strftime('%Y-%m-%d')
+            if key == 'time':
+                continue
+            out_dict[key] = out_dict.get(key, []) # TODO:  check code secure
+            output_dict = {}
+            output_dict['time'] = time
+            output_dict['buy'] = val.get('buy', 'null')
+            output_dict['sell'] = val.get('sell', 'null')
+            if val.get('nbu_rate') != None:
+                output_dict['nbu_rate'] = val['nbu_rate']
+            if val.get('nbu_auction') != None:
+                output_dict['amount_requested'] = octothorpe(val['nbu_auction']['amount_requested'], val)
+                output_dict['amount_accepted_all'] = octothorpe(val['nbu_auction']['amount_accepted_all'], val)
+            out_dict[key].append(output_dict)
+    return render_template('charts.html',
+                           usd=out_dict.get('USD'),
+                           eur= out_dict.get('EUR'),
+                           rub= out_dict.get('RUB'),
+                           title='Charts')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -103,3 +135,11 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+# json output
+@app.route('/api/history')
+def history_json(): #later set what data need
+    mongo_request = {}
+    cursor = history.find(mongo_request, {'_id': 0}, sort=([('time', pymongo.DESCENDING)]))
+    return jsonify(history=[{'time': data['time'].strftime('%Y-%m-%d'), 'value': data['USD']['buy']} for data in cursor])

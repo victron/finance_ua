@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     {% if title %}
     <title>{{title}} - microblog</title>
+        {% if title == 'Charts' %}
+        <script src="../static/amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="../static/amcharts/serial.js" type="text/javascript"></script>
+        <script src="../static/amcharts/amstock.js" type="text/javascript"></script>
+        <script src="../static/amcharts/plugins/dataloader/dataloader.min.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="../static/amcharts/style.css" type="text/css">
+        {% endif %}
     {% else %}
     <title>microblog</title>
     {% endif %}
@@ -12,6 +19,7 @@
     <div>Microblog:
         <a href="/index">Home</a>
         <a href="/lists">Lists</a>  <a href="/news">News</a>
+        <a href="/charts">Charts</a> <a href="/api/history">Json_history</a>
         <a href="/login">Login</a> <a href="/logout">Logout</a>
 
     </div>

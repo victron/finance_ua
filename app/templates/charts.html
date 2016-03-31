@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% block content %}
+<script type="text/javascript">
+// DEFINE CHART PLUGINS
+AmCharts.averageGraphs = 0;
+AmCharts.addMovingAverage = function (dataSet, panel, field, graph) {
+    // update dataset
+    var avgField = "avg"+AmCharts.averageGraphs;
+    dataSet.fieldMappings.push({
+        fromField: avgField,
+        toField: avgField});
+
+    // calculate moving average
+    var fc = 0;
+    var sum = 0;
+    for (var i = 0; i < dataSet.dataProvider.length; i++) {
+        var dp = dataSet.dataProvider[i];
+        if (dp[field] !== undefined) {
+            sum += dp[field];
+            fc++;
+            dp[avgField] = Math.round(sum / fc * 10) / 10;
+        }
+    }
+
+    // create a graph
+    graph.valueField = avgField;
+    panel.stockGraphs.push(graph);
+
+    // increment average graph count
+    AmCharts.averageGraphs++;
+}
+
+// CHART DATA
+var usd ={{usd|safe}};
+var eur ={{eur|safe}};
+//var chartData ={{rub|safe}};
+// CHART CONFIG
+var chartConfig = {
+	type: "stock",
+    "theme": "none",
+//    pathToImages: "http://www.amcharts.com/lib/3/images/",
+    dataDateFormat: "YYYY-MM-DD",
+	dataSets: [{
+        title: "USD",
+        fieldMappings: [{
+            fromField: "buy",
+            toField: "buy"
+        }, {
+            fromField: "sell",
+            toField: "sell"
+        }, {
+            fromField: "nbu_rate",
+            toField: "nbu_rate"
+        }, {
+            fromField: "amount_requested",
+            toField: "amount_requested"
+        }, {
+            fromField: "amount_accepted_all",
+            toField: "amount_accepted_all"
+        }],
+			dataProvider: usd,
+            categoryField: "time"
+
+    }, {
+        "title": "EUR",
+        "fieldMappings": [ {
+            "fromField": "sell",
+            "toField": "sell"
+        }, {
+            "fromField": "buy",
+            "toField": "buy"
+        }, {
+                fromField: "nbu_rate",
+                toField: "nbu_rate"
+        }],
+          "dataProvider": eur,
+          "categoryField": "time"
+    }],
+
+	panels: [{
+
+			showCategoryAxis: false,
+			title: "Cash",
+			percentHeight: 70,
+
+			stockGraphs: [{
+				id: "Cash",
+                title: "buy",
+				valueField: "buy",
+				comparable: true,
+				compareField: "buy",
+				balloonText: "<b>[[value]]</b>",
+				compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
+                periodValue: "Average",
+                lineColor: "green",
+                useDataSetColors: false,
+                precision: 2
+
+			},
+            {
+                id: "sell",
+				valueField: "sell",
+                title: "sell",
+				type: "line",
+                comparable: true,
+				compareField: "sell",
+                compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
+				showBalloon: true,
+				fillAlphas: 0,
+                lineColor: "red",
+                useDataSetColors: false,
+                periodValue: "Average",
+                precision: 2
+			},
+            {
+				valueField: "nbu_rate",
+                title: "NBU",
+				type: "line",
+				showBalloon: true,
+				fillAlphas: 0,
+                lineColor: "blue",
+                useDataSetColors: false,
+                periodValue: "Average",
+                precision: 2,
+                connect: false,
+                hidden: true
+
+			}],
+
+			stockLegend: {
+				periodValueTextComparing: "[[percents.value.close]]%",
+				periodValueTextRegular: "[[value]]",
+                labelText: "[[title]]"
+			}
+		},
+
+		{
+			title: "auction",
+			percentHeight: 30,
+			stockGraphs: [{
+                title: "requested",
+				valueField: "amount_requested",
+				type: "column",
+				showBalloon: true,
+				fillAlphas: 1,
+                lineColor: "blue",
+                useDataSetColors: false
+			},
+                {
+                title: "accepted_all",
+				valueField: "amount_accepted_all",
+				type: "column",
+				showBalloon: true,
+				fillAlphas: 1,
+                lineColor: "green",
+                useDataSetColors: false
+			}
+            ],
+
+
+			stockLegend: {
+				periodValueTextRegular: "[[value]]"
+			}
+		}
+	],
+
+	chartScrollbarSettings: {
+		graph: "sell"
+	},
+
+	chartCursorSettings: {
+		valueBalloonsEnabled: true,
+        fullWidth:true,
+        cursorAlpha:0.1,
+        valueLineEnabled: true,
+        valueLineBalloonEnabled: true,
+	},
+
+	periodSelector: {
+        position: "left",
+		periods: [{
+			period: "WW",
+			selected: true,
+			count: 1,
+			label: "week"
+		},{
+			period: "MM",
+			selected: false,
+			count: 1,
+			label: "1 month"
+		}, {
+			period: "YYYY",
+			count: 1,
+			label: "1 year"
+		}, {
+			period: "YTD",
+			label: "YTD"
+		}, {
+			period: "MAX",
+			label: "MAX"
+		}]
+	},
+
+    dataSetSelector: {
+    position: "left" }
+}
+
+// ADD INDICATORS
+//AmCharts.addMovingAverage(chartConfig.dataSets[0], chartConfig.panels[0], 'value', {
+//    useDataSetColors: false,
+//    color: "#ccffcc",
+//    title: "Moving average"
+//})
+
+// CREATE CHART
+var chart = AmCharts.makeChart("chartdiv", chartConfig);
+
+</script>
+<div id="chartdiv" style="width:100%; height:700px;"></div>
+{% endblock %}

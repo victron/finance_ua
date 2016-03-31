@@ -42,7 +42,7 @@ if __name__ == '__main__':
     auction_dates = set()
     for year in ['2014', '2015', '2016']:
         auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
-    for doc in minfin_history('USD', datetime(2016, 3, 27)):
+    for doc in minfin_history('EUR', datetime(2016, 3, 30)):
         insert_history(doc)
         insert_history(NbuJson().rate_currency_date(doc['currency'], doc['time']))
         if doc['time'] in auction_dates:

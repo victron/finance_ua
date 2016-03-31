@@ -17,3 +17,17 @@ local_tz = current_datetime_tz().tzinfo
 def date_handler(obj):
     return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
+def flatten(dictionary):
+    stack = [((), dictionary)]
+    result = {}
+    while stack:
+        path, current = stack.pop()
+        if isinstance(current, dict):
+            if len(current) != 0:
+                for k, v in current.items():
+                    stack.append((path + (k,), v))
+            else:
+                result["/".join(path )] = ""
+        else:
+            result["/".join(path )] = current
+    return result
