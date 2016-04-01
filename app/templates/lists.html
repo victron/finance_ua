@@ -23,6 +23,9 @@
 </form>
 
 {% for res in result %}
-<div><p>{{res.source}} {{res.location}} <b>{{res.operation}} {{res.currency}} {{res.amount}} {{res.rate}}  {{res.time}}</b> {{res.phone}} {{res.comment}}</p></div>
+<div><p>
+    {{res.source}}
+    <!--{{res.location}} <b>{{res.operation}} {{res.currency}} -->
+    <b>{{res.time}}</b> {{res.amount}} <b>{{res.rate}}</b>  {{res.phone}} {{res.comment}}</p></div>
 {% endfor %}
 {% endblock %}

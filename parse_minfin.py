@@ -10,7 +10,7 @@ from tables import reform_table_fix_columns_sizes, print_table_as_is
 from check_proxy import proxy_is_used
 import json
 import parameters, filters
-from datetime import datetime
+from datetime import datetime, timedelta
 from common_spider import current_datetime_tz, date_handler
 import secret
 # user settings
@@ -90,6 +90,8 @@ def data_api_minfin(fn):
         dic['source'] = 'm'
         time = dic['time'].split(':')
         dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
+        if dic['time'] > current_date:
+            dic['time'] = dic['time'] - timedelta(days=1)
         return dic
 
     data = {}

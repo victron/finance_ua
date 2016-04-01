@@ -1,5 +1,7 @@
 from pymongo import MongoClient
 import pymongo
+from bson.codec_options import CodecOptions
+from common_spider import local_tz
 
 # TODO:
 # - move DBs init in config
@@ -10,10 +12,13 @@ client = MongoClient()
 
 db = client['fin_ua']
 records = db['records']
-data_active = db['data_active']
-news = db['news']
 history = db['history']
 
+aware_times = lambda collection: db[collection].with_options(codec_options=CodecOptions(tz_aware=True, tzinfo=local_tz))
+# data_active = db['data_active']
+data_active = aware_times('data_active') # pymongo 3.2.2
+# news = db['news']
+news = aware_times('news')
 
 records.create_index([('bid', pymongo.ASCENDING),
                       ('time', pymongo.ASCENDING),
@@ -30,4 +35,3 @@ history.create_index([('time', pymongo.DESCENDING)], name='history_time', unique
 for currency in ['USD', 'EUR', 'RUB']:
     DB = db[currency]
     DB.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
-

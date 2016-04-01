@@ -13,6 +13,8 @@ import pymongo
 from datetime import datetime
 from common_spider import time_string
 
+
+
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -61,9 +63,9 @@ def lists():
               'text={text}'.format(text=filter_recieved['$text'], city=filter_recieved['location'],
                                    operation=filter_recieved['operation'], currency=filter_recieved['currency'],
                                    source=filter_recieved['source']))
-        result = data_active.find(mongo_request)
+        result = data_active.find(mongo_request, sort=([('time', pymongo.DESCENDING)]))
     else:
-        result = data_active.find(mongo_request)
+        result = data_active.find(mongo_request, sort=([('time', pymongo.DESCENDING)]))
 
     return render_template('lists.html',
                            title='Lists',
