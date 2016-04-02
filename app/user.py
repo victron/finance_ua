@@ -1,6 +1,5 @@
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from app import login_manager, app
-
 
 class User():
 
@@ -31,3 +30,4 @@ def load_user(username):
         return None
     return User(u['_id'])
 
+# USERS_COLLECTION.insert_one({'_id': 'test', 'password': generate_password_hash('test', 'sha256')})

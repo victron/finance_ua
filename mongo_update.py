@@ -9,7 +9,7 @@ from news_minfin import minfin_headlines
 
 # from berlox import data_api_berlox
 
-from common_spider import current_datetime_tz, datetime
+from common_spider import current_datetime_tz, datetime, local_tz
 from filters import location, currency, operation, filter_or
 
 # TODO:
@@ -17,6 +17,7 @@ from filters import location, currency, operation, filter_or
 # + delete from data_active all records without "time_update"
 # - for minfin, if time grate then current - set yesterday date
 
+time_periods = range(8, 20)
 
 def mongo_insert_history(docs: list, collection):
     dublicate_count = 0
@@ -74,6 +75,7 @@ def get_selection() -> (set, set, set):
         currencies.add(i.get('currency', 'None'))
         sources.add(i.get('source', 'None'))
     return locations, operations, currencies, sources
+
 
 
 if __name__ == '__main__':

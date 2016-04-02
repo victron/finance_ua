@@ -90,6 +90,7 @@ def data_api_minfin(fn):
         dic['source'] = 'm'
         time = dic['time'].split(':')
         dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
+        dic['rate'] = float(dic['rate'].replace(',', '.'))
         if dic['time'] > current_date:
             dic['time'] = dic['time'] - timedelta(days=1)
         return dic

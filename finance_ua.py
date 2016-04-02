@@ -111,6 +111,7 @@ def convertor_finance_ua(id: int, current_date: datetime, data) -> dict:
     # out_dic['id'] = id
     out_dic['location'] = location_dict_orig.get(out_dic['location'], 'None')
     out_dic['source'] = 'f'
+    out_dic['rate'] = float(out_dic['rate'])
     time = out_dic['time'].split(':')
     out_dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
     return out_dic
