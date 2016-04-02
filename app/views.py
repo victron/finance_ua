@@ -11,7 +11,7 @@ from .user import User, load_user
 from news_minfin import minfin_headlines
 import pymongo
 from datetime import datetime
-from common_spider import time_string
+from common_spider import  main_currencies
 
 
 
@@ -99,17 +99,18 @@ def charts():
                   'nbu_auction.operation': True}
     octothorpe = lambda x, dictionary: x * -1 if dictionary['nbu_auction']['operation'] == 'buy' else x
 
-    def nbu_flat_auction(doc):
+    def reformat_for_js(doc):
         if 'nbu_auction' in doc:
             doc['amount_requested'] = octothorpe(doc['nbu_auction'].pop('amount_requested'), doc)
             doc['amount_accepted_all'] = octothorpe(doc['nbu_auction'].pop('amount_accepted_all'), doc)
             del doc['nbu_auction']
+        doc['time'] = doc['time'].strftime('%Y-%m-%d_%H')
         return doc
 
-    for currency in ['USD', 'EUR', 'RUB']:
+    for currency in main_currencies:
         mongo_request = {}
         cursor = db[currency].find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
-        out_dict[currency] = [time_string(nbu_flat_auction(doc)) for doc in cursor]
+        out_dict[currency] = [reformat_for_js(doc) for doc in cursor]
     return render_template('charts.html',
                            usd=out_dict.get('USD'),
                            eur= out_dict.get('EUR'),

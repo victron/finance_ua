@@ -35,11 +35,9 @@ def flatten(dictionary):
     return result
 
 
-def time_string(doc):
-    doc['time'] = doc['time'].strftime('%Y-%m-%d')
-    return doc
+
 
 # global variables
-main_currencies = ['USD', 'UER', 'RUB']
+main_currencies = ['USD', 'EUR', 'RUB']
 operations = ['sell', 'buy']
 local_tz = current_datetime_tz().tzinfo

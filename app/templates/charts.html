@@ -40,7 +40,7 @@ var chartConfig = {
 	type: "stock",
     "theme": "none",
 //    pathToImages: "http://www.amcharts.com/lib/3/images/",
-    dataDateFormat: "YYYY-MM-DD",
+    dataDateFormat: "YYYY-MM-DD_JJ",
 	dataSets: [{
         title: "USD",
         fieldMappings: [{
@@ -77,6 +77,10 @@ var chartConfig = {
           "dataProvider": eur,
           "categoryField": "time"
     }],
+
+    categoryAxesSettings: {
+    minPeriod: "hh"
+    },
 
 	panels: [{
 
@@ -186,7 +190,13 @@ var chartConfig = {
 
 	periodSelector: {
         position: "left",
+
 		periods: [{
+			period: "DD",
+			selected: true,
+			count: 1,
+			label: "day"
+		},{
 			period: "WW",
 			selected: true,
 			count: 1,
