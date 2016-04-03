@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request, abort, jso
 from .forms import LoginForm, Update_db, Filter
 from mongo_start import data_active, history
 from mongo_start import news as news_db
-from mongo_start import db
+from mongo_start import db, aware_times
 from mongo_update import update_db, mongo_insert_history
 from filters import location, currency, operation, filter_or
 from flask.ext.login import login_user, logout_user, login_required
@@ -109,7 +109,8 @@ def charts():
 
     for currency in main_currencies:
         mongo_request = {}
-        cursor = db[currency].find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
+        # TODO: create universal way for access to collections
+        cursor = aware_times(currency).find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
         out_dict[currency] = [reformat_for_js(doc) for doc in cursor]
     return render_template('charts.html',
                            usd=out_dict.get('USD'),
