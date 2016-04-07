@@ -10,6 +10,7 @@ import parameters
 from common_spider import current_datetime_tz, date_handler
 from tables import print_table_as_is, reform_table_fix_columns_sizes
 import types
+import check_proxy
 
 # constants and vars
 # USD, EUR, PLN, GBP, RUB
@@ -90,7 +91,7 @@ def print_result(id_list):
 #
 # ------ fetch via requests ---------
 def fetch_data():
-    if parameters.proxy_is_used == False:
+    if check_proxy.proxy_is_used == False:
         responce_get = requests.get(url, headers=headers)
     else:
         responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)

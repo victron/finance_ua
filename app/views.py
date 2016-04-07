@@ -12,6 +12,7 @@ from news_minfin import minfin_headlines
 import pymongo
 from datetime import datetime
 from common_spider import  main_currencies
+import json
 
 
 
@@ -113,9 +114,9 @@ def charts():
         cursor = aware_times(currency).find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
         out_dict[currency] = [reformat_for_js(doc) for doc in cursor]
     return render_template('charts.html',
-                           usd=out_dict.get('USD'),
-                           eur= out_dict.get('EUR'),
-                           rub= out_dict.get('RUB'),
+                           usd=json.dumps(out_dict.get('USD')),
+                           eur=json.dumps(out_dict.get('EUR')),
+                           rub=json.dumps(out_dict.get('RUB')),
                            title='Charts')
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -6,9 +6,9 @@ from parameters import headers
 # - check connectivity with internet
 
 url = 'http://google.com'
+proxy_is_used = False
 try:
     responce_get = requests.get(url, timeout=3)
-    proxy_is_used = False
 except requests.exceptions.ConnectTimeout:
     responce_get = requests.get(url, proxies=proxies)
     proxy_is_used = True
