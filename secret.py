@@ -2,6 +2,7 @@ from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 from Crypto import Random
 import hashlib, random, struct, types, sys
+import os
 # ----------------- the encrypted file name -------------
 file_with_code = 'secret_data.pye'
 # ======================================================
@@ -35,6 +36,10 @@ def deccryp_file(key, in_file, out_file=None, chunksize=64*1024):
             outfile.truncate(origsize)
 
 def decrypt_file_in_mem(key, in_file, chunksize=64*1024):
+    # using full path to file
+    path = os.path.split(os.path.realpath(__file__))[0] # get head of path
+    in_file = os.path.join(path, in_file)
+
     with open(in_file, 'rb') as infile:
         origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
         iv = infile.read(16)

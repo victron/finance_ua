@@ -1,4 +1,4 @@
-from app import app
+from app import app, web_logging
 from flask import render_template, flash, redirect, url_for, request, abort, jsonify
 from .forms import LoginForm, Update_db, Filter
 from mongo_start import data_active, history
@@ -11,9 +11,13 @@ from .user import User, load_user
 from news_minfin import minfin_headlines
 import pymongo
 from datetime import datetime
-from common_spider import  main_currencies
+from common_spider import  main_currencies, date_handler
 import json
+import logging
 
+
+
+# web_logging.getLogger(__name__)
 
 
 @app.route('/')
@@ -56,10 +60,12 @@ def lists():
             del mongo_request[key]
 
     if form_update.db.data:
+        web_logging.debug('update db pushed')
         active_deleted = update_db()
         flash('recived db= {}, deleted docs={}'.format(str(form_update.db.data), active_deleted))
         result = data_active.find(mongo_request)
     elif form_filter.validate_on_submit():
+        web_logging.debug('filter pushed')
         flash('filter: City={city}, currency={currency},  Operation={operation}, source={source},<br>'
               'text={text}'.format(text=filter_recieved['$text'], city=filter_recieved['location'],
                                    operation=filter_recieved['operation'], currency=filter_recieved['currency'],
@@ -92,32 +98,22 @@ def news():
 @app.route('/charts')
 @login_required
 def charts():
-    # TODO: load data to js via api
-    # from mongo_start import history
-    out_dict = {}
-    projection = {'_id': False, 'time': True, 'sell': True, 'buy': True, 'nbu_rate': True,
-                  'nbu_auction.amount_requested': True, 'nbu_auction.amount_accepted_all': True,
-                  'nbu_auction.operation': True}
-    octothorpe = lambda x, dictionary: x * -1 if dictionary['nbu_auction']['operation'] == 'buy' else x
+    return render_template('charts.html', title='Charts')
+    # --------------- not needed because now data loaded via api ----------
+    # out_dict = {}
+    # projection = {'_id': False, 'time': True, 'sell': True, 'buy': True, 'nbu_rate': True,
+    #               'nbu_auction.amount_requested': True, 'nbu_auction.amount_accepted_all': True,
+    #               'nbu_auction.operation': True}
+    # for currency in main_currencies:
+    #     mongo_request = {}
+    #     cursor = aware_times(currency).find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
+    #     out_dict[currency] = [reformat_for_js(doc) for doc in cursor]
+    # return render_template('charts.html',
+    #                        usd=json.dumps(out_dict.get('USD')),
+    #                        eur=json.dumps(out_dict.get('EUR')),
+    #                        rub=json.dumps(out_dict.get('RUB')),
+    #                        title='Charts')
 
-    def reformat_for_js(doc):
-        if 'nbu_auction' in doc:
-            doc['amount_requested'] = octothorpe(doc['nbu_auction'].pop('amount_requested'), doc)
-            doc['amount_accepted_all'] = octothorpe(doc['nbu_auction'].pop('amount_accepted_all'), doc)
-            del doc['nbu_auction']
-        doc['time'] = doc['time'].strftime('%Y-%m-%d_%H')
-        return doc
-
-    for currency in main_currencies:
-        mongo_request = {}
-        # TODO: create universal way for access to collections
-        cursor = aware_times(currency).find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
-        out_dict[currency] = [reformat_for_js(doc) for doc in cursor]
-    return render_template('charts.html',
-                           usd=json.dumps(out_dict.get('USD')),
-                           eur=json.dumps(out_dict.get('EUR')),
-                           rub=json.dumps(out_dict.get('RUB')),
-                           title='Charts')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -138,6 +134,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
+    flash("You were logged out", category='success')
     return redirect(url_for('login'))
 
 
@@ -146,15 +143,23 @@ def logout():
 @login_required
 def history_json(currency):
     currency = currency.upper()
-    if currency in ['USD', 'EUR', 'RUB']:
+    octothorpe = lambda x, dictionary: x * -1 if dictionary['nbu_auction']['operation'] == 'buy' else x
+
+    def reformat_for_js(doc):
+        if 'nbu_auction' in doc:
+            doc['amount_requested'] = octothorpe(doc['nbu_auction'].pop('amount_requested'), doc)
+            doc['amount_accepted_all'] = octothorpe(doc['nbu_auction'].pop('amount_accepted_all'), doc)
+            del doc['nbu_auction']
+        doc['time'] = doc['time'].strftime('%Y-%m-%d_%H')
+        return doc
+
+    if currency in main_currencies:
         mongo_request = {}
-        db_request = db[currency]
-        cursor = db_request.find(mongo_request, {'_id': 0}, sort=([('time', pymongo.DESCENDING)]))
-        # return file
-        # data = {currency: [{'time': data['time'].strftime('%Y-%m-%d'),
-        #                     'value': data.get(currency, {}).get('buy', None)}
-        #                    for data in cursor]}
-        data = {currency: [ time_string(doc) for doc in cursor]} # dict for transfere parameter currency in json
+        projection = {'_id': False, 'time': True, 'sell': True, 'buy': True, 'nbu_rate': True,
+                      'nbu_auction.amount_requested': True, 'nbu_auction.amount_accepted_all': True,
+                      'nbu_auction.operation': True}
+        cursor = aware_times(currency).find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
+        data = {currency: [reformat_for_js(doc) for doc in cursor]} # dict for transfere parameter currency in json
         file = jsonify(data)
         file.headers['Content-Disposition'] = 'attachment;filename=' + currency + '.json'
         return file

@@ -4,10 +4,12 @@
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask.ext.script import Manager, Server
-from app import app
+from app import app, web_logging
+import logging
 
 
 manager = Manager(app)
+
 
 # Включение по умолчанию отладчика и перезагрузки
 manager.add_command("runserver", Server(
@@ -17,5 +19,6 @@ manager.add_command("runserver", Server(
 )
 
 if __name__ == "__main__":
+    web_logging.debug('start \'manager\'')
     manager.run()
 

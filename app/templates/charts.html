@@ -1,6 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 <script type="text/javascript">
+    function get_json(curency) {
+        // 1. Создаём новый объект XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+        // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
+        xhr.open('GET', '/api/history/' + curency, false);
+        // 3. Отсылаем запрос
+        xhr.send();
+        // 4. Если код ответа сервера не 200, то это ошибка
+        if (xhr.status != 200) {
+            // обработать ошибку
+            return alert(xhr.status + ': ' + xhr.statusText); // пример вывода: 404: Not Found
+        } else {
+            // вывести результат
+            return JSON.parse(xhr.responseText)[curency];
+            //  var usd =  ; // responseText -- текст ответа.
+        }
+    }
+
 // DEFINE CHART PLUGINS
 AmCharts.averageGraphs = 0;
 AmCharts.addMovingAverage = function (dataSet, panel, field, graph) {
@@ -32,8 +50,9 @@ AmCharts.addMovingAverage = function (dataSet, panel, field, graph) {
 
 // CHART DATA
 //  TODO: legendPeriodValueText
-var usd ={{usd|safe}};
-var eur ={{eur|safe}};
+//var usd ={{usd|safe}};
+var eur = get_json('EUR');
+var usd = get_json('USD');
 //var chartData ={{rub|safe}};
 // CHART CONFIG
 var chartConfig = {
