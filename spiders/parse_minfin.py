@@ -3,16 +3,19 @@
 # + minfin_history return data in float
 # from sh import curl
 # import sh
+import json
+from datetime import datetime, timedelta
+from time import sleep
+
 import requests
 from bs4 import BeautifulSoup
-from time import sleep
-from tables import reform_table_fix_columns_sizes, print_table_as_is
-from check_proxy import proxy_is_used
-import json
-import parameters, filters
-from datetime import datetime, timedelta
-from common_spider import current_datetime_tz, date_handler
-import secret
+
+from spiders import filters, parameters
+from spiders.check_proxy import proxy_is_used
+from spiders.common_spider import current_datetime_tz, date_handler
+from spiders.simple_encrypt_import import secret
+from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
+
 # user settings
 currency = filters.currency.lower()
 operation = filters.operation

@@ -16,6 +16,9 @@ DB_NAME = 'users'
 DATABASE = MongoClient()[DB_NAME]
 USERS_COLLECTION = DATABASE['users']
 
+
+
+
 DEBUG = True
 
 

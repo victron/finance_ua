@@ -1,16 +1,16 @@
-from mongo_start import data_active, records, news
 from pymongo.errors import DuplicateKeyError
-import finance_ua
-import berlox
-import parse_minfin
-from news_minfin import minfin_headlines
+
+from mongo_collector.mongo_start import data_active, records, news
+from spiders import berlox, finance_ua, parse_minfin
+from spiders.news_minfin import minfin_headlines
+
 # from finance_ua import data_api_finance_ua
 # from parse_minfin import data_api_minfin
 
 # from berlox import data_api_berlox
 
-from common_spider import current_datetime_tz, datetime, local_tz
-from filters import location, currency, operation, filter_or
+from spiders.common_spider import current_datetime_tz, datetime
+from spiders.filters import location, currency, operation, filter_or
 
 # TODO:
 # - delete some fields, before saving into history

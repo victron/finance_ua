@@ -1,20 +1,24 @@
-from pymongo import MongoClient
 import pymongo
 from bson.codec_options import CodecOptions
-from common_spider import local_tz
+# from app import app
+from . import DATABASE
+from spiders.common_spider import local_tz
 
 # TODO:
 # - move DBs init in config
 
-client = MongoClient()
+# client = MongoClient()
 # client = MongoClient('localhost', 27017)
 # client = MongoClient('mongodb://localhost:27017/')
 
-db = client['fin_ua']
-records = db['records']
-history = db['history']
+# db = app.config['DATABASE_DATA']
 
-aware_times = lambda collection: db[collection].with_options(codec_options=CodecOptions(tz_aware=True, tzinfo=local_tz))
+records = DATABASE['records']
+history = DATABASE['history']
+
+aware_times = lambda collection: DATABASE[collection].with_options(codec_options=CodecOptions(tz_aware=True,
+                                                                                              tzinfo=local_tz))
+# aware_times = lambda collection: DATABASE[collection]
 # data_active = db['data_active']
 data_active = aware_times('data_active') # pymongo 3.2.2
 # news = db['news']
@@ -33,5 +37,5 @@ data_active.create_index([('comment', pymongo.TEXT)], default_language='russian'
 news.create_index([('time', pymongo.ASCENDING)], name='news_time', unique=True)
 history.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
 for currency in ['USD', 'EUR', 'RUB']:
-    DB = db[currency]
+    DB = DATABASE[currency]
     DB.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)

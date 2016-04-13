@@ -1,10 +1,12 @@
-import requests
-from bs4 import BeautifulSoup
-from check_proxy import proxy_is_used
-import parameters
 import json
 from datetime import datetime
-from common_spider import current_datetime_tz, date_handler
+
+import requests
+from bs4 import BeautifulSoup
+
+from spiders import parameters
+from spiders.check_proxy import proxy_is_used
+from spiders.common_spider import current_datetime_tz, date_handler
 
 # TODO:
 # - convert time into datetime

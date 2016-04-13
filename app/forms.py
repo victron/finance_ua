@@ -1,7 +1,8 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, BooleanField, StringField, SelectField, SubmitField, PasswordField
-from wtforms.validators import Required, DataRequired, AnyOf, Optional
-from mongo_update import get_selection
+from wtforms import StringField, SelectField, SubmitField, PasswordField
+from wtforms.validators import DataRequired, Optional
+
+from mongo_collector.mongo_update import get_selection
 
 
 # class LoginFormoid(Form):

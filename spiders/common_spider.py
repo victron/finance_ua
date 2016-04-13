@@ -14,6 +14,12 @@ def current_datetime_tz() -> datetime:
     # below variant get timezone from diff between utc and local time
     # return datetime.now(timezone(timedelta(hours=(datetime.now().hour - datetime.utcnow().hour))))
 
+def get_tzinfo() -> timedelta:
+    # http://pytz.sourceforge.net/#tzinfo-api
+    currnt_tz = pytz.timezone('Europe/Kiev')
+    curent_time = datetime.now()
+    return timezone(currnt_tz.utcoffset(curent_time))
+
 
 
 def date_handler(obj):
@@ -40,4 +46,6 @@ def flatten(dictionary):
 # global variables
 main_currencies = ['USD', 'EUR', 'RUB']
 operations = ['sell', 'buy']
-local_tz = current_datetime_tz().tzinfo
+# local_tz = current_datetime_tz().tzinfo # gives wrong tzinfo, difference in one hour, reason in dst
+# local_tz = datetime.now(timezone(timedelta(hours=(datetime.now().hour - datetime.utcnow().hour)))).tzinfo
+local_tz = get_tzinfo()

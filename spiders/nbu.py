@@ -1,11 +1,14 @@
+import json
+from datetime import datetime
+
+import requests
 from bs4 import BeautifulSoup
 from bs4.element import Comment
-import requests
-from parameters import proxy_is_used, headers, proxies
-from common_spider import current_datetime_tz, date_handler, local_tz
-from datetime import datetime
-import json
-from time import sleep
+
+from spiders.common_spider import local_tz
+from spiders.parameters import proxy_is_used, headers, proxies
+
+
 # from check_proxy import proxy_requests
 
 # TODO:

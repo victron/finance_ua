@@ -1,20 +1,17 @@
-from app import app, web_logging
-from flask import render_template, flash, redirect, url_for, request, abort, jsonify
-from .forms import LoginForm, Update_db, Filter
-from mongo_start import data_active, history
-from mongo_start import news as news_db
-from mongo_start import db, aware_times
-from mongo_update import update_db, mongo_insert_history
-from filters import location, currency, operation, filter_or
-from flask.ext.login import login_user, logout_user, login_required
-from .user import User, load_user
-from news_minfin import minfin_headlines
 import pymongo
-from datetime import datetime
-from common_spider import  main_currencies, date_handler
-import json
-import logging
+from flask import render_template, flash, redirect, url_for, abort, jsonify
+from flask.ext.login import login_user, logout_user, login_required
+from mongo_collector.mongo_update import update_db, mongo_insert_history
 
+from app import app, web_logging
+from mongo_collector.mongo_start import aware_times
+from mongo_collector.mongo_start import data_active
+from mongo_collector.mongo_start import news as news_db
+from spiders.common_spider import  main_currencies
+from spiders.filters import location, currency, operation, filter_or
+from spiders.news_minfin import minfin_headlines
+from .forms import LoginForm, Update_db, Filter
+from .user import User
 
 
 # web_logging.getLogger(__name__)
@@ -35,14 +32,15 @@ def index():
             'body': 'The Avengers movie was so cool!'
         }
     ]
-    result = data_active.find({'location': location, 'currency': currency, 'operation': operation,
-                               '$text': {'$search': filter_or}})
+    # result = data_active.find({'location': location, 'currency': currency, 'operation': operation,
+    #                            '$text': {'$search': filter_or}})
 
     return render_template('index.html',
                            title='Home',
                            user=user,
                            posts=posts,
-                           result=result)
+                           # result=result
+                           )
 
 @app.route('/lists', methods= ['GET', 'POST'])
 @login_required

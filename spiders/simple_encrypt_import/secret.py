@@ -1,14 +1,28 @@
+import hashlib
+import os
+import struct
+import sys
+
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
-from Crypto import Random
-import hashlib, random, struct, types, sys
-import os
-# ----------------- the encrypted file name -------------
-file_with_code = 'secret_data.pye'
-# ======================================================
-# password = input('please enter password:').encode()
-from password import password
-key = hashlib.sha256(password).digest()
+
+from .decrypt_config import file_with_code
+
+try:
+    from .decrypt_config import stdinput
+except ImportError:
+    stdinput = False
+
+if stdinput:
+    password = input('please enter password:')
+else:
+    try:
+        from .decrypt_config import password
+    except ImportError:
+        print('define \'stdinput\' or \'password\' in \'decrypt_config.py\'')
+        exit(1)
+
+key = hashlib.sha256(password.encode()).digest()
 
 def deccryp_file(key, in_file, out_file=None, chunksize=64*1024):
     """
@@ -63,14 +77,7 @@ code = compile(code, '<string>', mode='exec')
 current_module = sys.modules[__name__]
 exec(code, current_module.__dict__)
 
-# --------------- it's beteter to make link on real functions for IDE ---
-# -------- berlox ------
-baseKey = baseKey
-Vector = Vector
-current_key = current_key
-# ------- minfin ----
-bid_to_payload = bid_to_payload
-# ========================================================================
+
 
 if __name__ == '__main__':
     file_with_code = 'test_module.pye'

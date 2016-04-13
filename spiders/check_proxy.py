@@ -1,6 +1,7 @@
 import requests
-from parameters import proxies
-from parameters import headers
+
+from spiders.parameters import headers
+from spiders.parameters import proxies
 
 # TODO:
 # - check connectivity with internet

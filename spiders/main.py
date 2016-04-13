@@ -1,12 +1,8 @@
-
-import parameters
-from tables import print_table_as_is, reform_table_fix_columns_sizes
-import finance_ua
-import parse_minfin
-import berlox
-from time import sleep
 from importlib import reload
+from time import sleep
 
+from spiders import berlox, finance_ua, parameters, parse_minfin
+from spiders.tables import print_table_as_is, reform_table_fix_columns_sizes
 
 # constans, user settings
 table_column_size = parameters.table_column_size

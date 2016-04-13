@@ -1,9 +1,8 @@
-from mongo_start import history, db, data_active, aware_times
-from datetime import datetime, timedelta
-from common_spider import current_datetime_tz, local_tz, main_currencies, operations
-from parse_minfin import minfin_history
-from nbu import NbuJson, auction_results, auction_get_dates
 import statistics
+from datetime import datetime, timedelta
+
+from mongo_collector.mongo_start import history, data_active, aware_times
+from spiders.common_spider import local_tz, main_currencies, operations
 
 
 def insert_history_embedded(input_document: dict):

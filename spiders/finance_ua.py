@@ -4,13 +4,12 @@
 import json
 from ast import literal_eval
 from datetime import datetime
+
 import requests
-import filters
-import parameters
-from common_spider import current_datetime_tz, date_handler
-from tables import print_table_as_is, reform_table_fix_columns_sizes
-import types
-import check_proxy
+
+from spiders import check_proxy, filters, parameters
+from spiders.common_spider import current_datetime_tz, date_handler
+from spiders.tables import print_table_as_is, reform_table_fix_columns_sizes
 
 # constants and vars
 # USD, EUR, PLN, GBP, RUB

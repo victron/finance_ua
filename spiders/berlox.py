@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import os
-from Crypto.Cipher import AES
-import zlib
-import requests
 import json
-from check_proxy import proxy_is_used
-from tables import reform_table_fix_columns_sizes, print_table_as_is
-import parameters
-import filters
-import secret
-from common_spider import current_datetime_tz, date_handler
+import os
+import zlib
 from datetime import datetime
 
+import requests
+from Crypto.Cipher import AES
 
+from spiders import filters, parameters
+from spiders.check_proxy import proxy_is_used
+from spiders.common_spider import current_datetime_tz, date_handler
+from spiders.simple_encrypt_import import secret
+from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
 
 # user settings
 currency = filters.currency
