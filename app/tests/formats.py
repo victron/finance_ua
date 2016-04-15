@@ -58,8 +58,25 @@ stat_format = [
      "nbu_rate": 26.182756},
 
 ]
+
+active_format = [
+{"source" : "f" , "phone" : "380688731157" , "comment" : "Левый берег, Бровары" , "bid" : 436283 , "rate" : 26.0 , "time_update" : "2016-04-13T15:07:34.405Z", "operation" : "sell" , "currency" : "USD" , "amount" : "1 000" , "priority" : 0 , "location" : "Киев" , "time" : "2016-04-13T03:33:00.000Z"},
+{"source" : "f" , "phone" : "380979650955" , "comment" : "Приеду частями" , "bid" : 436284 , "rate" : 25.5 , "time_update" : "2016-04-13T15:07:34.405Z", "operation" : "buy" , "currency" : "USD" , "amount" : "10 000" , "priority" : 2 , "location" : "Киев" , "time" : "2016-04-13T03:36:00.000Z"},
+{"source" : "f" , "phone" : "380734162002" , "comment" : "Igor" , "bid" : 436319 , "rate" : 25.56 , "time_update" : "2016-04-13T15:07:34.405Z", "operation" : "buy" , "currency" : "USD" , "amount" : "13 750" , "priority" : 0 , "location" : "Киев" , "time" : "2016-04-13T04:50:00.000Z"},
+{"source" : "m" , "operation" : "buy" , "phone" : "067xxx-x9-88" , "currency" : "EUR" , "location" : "Киев" , "time" : "2016-04-13T13:41:00.000Z", "bid" : "16107758" , "rate" : 29.1 , "comment" : "Оболонь, можно частями, могу подъехать" , "time_update" : "2016-04-13T15:07:34.405Z" , "amount" : "3600"},
+{"source" : "m" , "operation" : "sell" , "phone" : "068xxx-x9-27" , "currency" : "EUR" , "location" : "Киев" , "time" : "2016-04-13T15:05:00.000Z" , "bid" : "16115207" , "rate" : 29.25 , "comment" : "Контрактовая площадь, можно частями, обменный пункт, проверка денег." , "time_update" : "2016-04-13T15:07:34.405Z" , "amount" : "7000"},
+{"source" : "m" , "operation" : "sell" , "phone" : "063xxx-x7-58" , "currency" : "USD" , "location" : "Киев" , "time" : "2016-04-13T14:22:00.000Z" , "bid" : "16111529" , "rate" : 25.7 , "comment" : "Оболонь, целиком, могу подъехать" , "time_update" : "2016-04-13T15:07:34.405Z" , "amount" : "1100"},
+{"source" : "b" , "phone" : "+380635673288" , "amount" : 1000 , "bid" : "b7bbb1e37da24373a9a1fdde0e2abe6e" , "rate" : 29.4 , "pr" :  None  , "sid" : 1 , "time_update" : "2016-04-13T15:07:34.405Z", "operation" : "sell" , "currency" : "EUR" , "d" : False , "location" : "Киев" , "comment" : "Любой подъеду" , "uid" : "734-461-184" , "time" : "2016-04-13T10:33:00.000Z"},
+{"source" : "b" , "phone" : "+380958643413" , "amount" : 5000 , "bid" : "43483e9a353b46fd84ecbdcd018d2ddc" , "rate" : 25.7 , "pr" :  None  , "sid" : 1 , "time_update" : "2016-04-13T15:07:34.405Z" , "operation" : "sell" , "currency" : "USD" , "d" : False , "location" : "Днепропетровск" , "comment" : "Правда-Калиновая, безопасность, Угол Калиновой и пр. Правда, обмен валют, круглосуточно" , "uid" : "819-435-602" , "time" : "2016-04-13T10:33:00.000Z"},
+{"source" : "b" , "phone" : "+380936253114" , "amount" : 500000 , "bid" : "23e259ef91a2461f954889d4e638e1d0" , "rate" : 0.389 , "pr" : True , "sid" : 1 , "time_update" : "2016-04-13T15:07:34.405Z" , "operation" : "buy" , "currency" : "RUB" , "d" : False , "location" : "Донецк" , "comment" : "северный, Р-он салона\"Донна\"по Артема, можно частями. за доллары-66, обменка" , "uid" : "830-465-519" , "time" : "2016-04-13T10:33:00.000Z"}
+]
+
+time_keys = lambda field: field in ('time', 'time_update')
+
 def reformat_date(doc):
-    doc['time'] = datetime.strptime(doc['time'], '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=local_tz)
+    for key in filter(time_keys, doc):
+        doc[key] = datetime.strptime(doc[key], '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=local_tz)
     return doc
 
 stat_format = [reformat_date(doc) for doc in stat_format]
+active_format = [reformat_date(doc) for doc in active_format]

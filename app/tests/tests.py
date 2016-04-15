@@ -2,7 +2,7 @@ import unittest
 import mongo_collector
 from werkzeug.security import generate_password_hash
 from pymongo import MongoClient
-from formats import stat_format
+from formats import stat_format, active_format
 import json
 
 
@@ -16,7 +16,7 @@ from app.views_func import reformat_for_js
 original_list = tuple(dict(doc) for doc in stat_format)
 
 
-class TestCase(unittest.TestCase):
+class Login(unittest.TestCase):
 
     def setUp(self):
         app.config['TESTING'] = True
@@ -29,6 +29,7 @@ class TestCase(unittest.TestCase):
         app.config['USERS_COLLECTION'].insert_one({'_id': 'admin', 'password': generate_password_hash('default', 'sha256')})
 
         mongo_collector.DATABASE['USD'].insert_many(stat_format)
+        mongo_collector.DATABASE['data_active'].insert_many(active_format)
 
     def tearDown(self):
         MongoClient().drop_database('TESTS')
@@ -56,6 +57,7 @@ class TestCase(unittest.TestCase):
         rv = self.login('admin', 'defaultx')
         assert 'Wrong username or password' in rv.data.decode()
 
+class TestViews(Login):
     def test_api_history(self):
         self.login('admin', 'default')
 
@@ -69,6 +71,24 @@ class TestCase(unittest.TestCase):
         self.assertEquals(data['USD'], original)
 
 
+    def test_lists(self):
+        self.login('admin', 'default')
+
+        resp = self.app.get('/lists')
+        assert resp.status_code == 200, 'wrong staus code'
+        assert '063xxx-x7-58' in resp.data.decode()
+        assert not '380979650955' in resp.data.decode(), 'wrong default filter'
+        resp = self.app.post('/lists', data = {'locations': 'Киев', 'currencies': 'USD', 'operations': 'sell',
+                                               'sources': 'all', 'text': '',
+                                               'sort_order-0-sort_field': 'rate',
+                                               'sort_order-0-sort_direction': 'ASCENDING',
+                                               'sort_order-1-sort_field': 'time',
+                                               'sort_order-1-sort_direction': 'ASCENDING',
+                                               'sort_order-2-sort_field': 'None',
+                                               'sort_order-2-sort_direction': 'ASCENDING'})
+        assert '063xxx-x7-58' in resp.data.decode()
+        assert '380688731157' in resp.data.decode()
+        assert resp.data.decode().find('380688731157') > resp.data.decode().find('063xxx-x7-58'), 'wrong sort order'
 
 
 
