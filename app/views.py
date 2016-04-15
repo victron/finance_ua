@@ -10,9 +10,10 @@ from mongo_collector.mongo_start import news as news_db
 from spiders.common_spider import  main_currencies
 from spiders.filters import location, currency, operation, filter_or
 from spiders.news_minfin import minfin_headlines
-from .forms import LoginForm, Update_db, Filter
+from .forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
+from wtforms.validators import DataRequired, Optional
 from .user import User
-
+from .views_func import reformat_for_js
 
 # web_logging.getLogger(__name__)
 
@@ -45,12 +46,23 @@ def index():
 @app.route('/lists', methods= ['GET', 'POST'])
 @login_required
 def lists():
+    # modify a form dynamically in your view. This is possible by creating internal subclasses
+    # http://wtforms.simplecodes.com/docs/1.0.1/specific_problems.html#dynamic-form-composition
+    class Filter(FilterBase):
+        pass
+    setattr(Filter, 'sort_order', FieldList(FormField(SortForm), min_entries=3, validators=[Optional()]))
+    # ------------------------------
     form_update = Update_db()
     form_filter = Filter()
     filter_recieved = {'location': form_filter.locations.data, 'operation': form_filter.operations.data,
                         'currency': form_filter.currencies.data, 'source': form_filter.sources.data,
                         '$text': {'$search': form_filter.text.data}}
     mongo_request = dict(filter_recieved)
+    direction_dict = {'ASCENDING': pymongo.ASCENDING, 'DESCENDING': pymongo.DESCENDING}
+    sort_list = [(group_order.form.sort_field.data, direction_dict[group_order.form.sort_direction.data])
+                 for group_order in form_filter.sort_order if group_order.form.sort_field.data != 'None']
+    print(sort_list)
+    # sort_list = [('time', pymongo.DESCENDING)]
     for key, val in filter_recieved.items():
         if (val == 'None' or val == 'all') and key != '$text':
             del mongo_request[key]
@@ -62,13 +74,16 @@ def lists():
         active_deleted = update_db()
         flash('recived db= {}, deleted docs={}'.format(str(form_update.db.data), active_deleted))
         result = data_active.find(mongo_request)
+        # replace validate_on_submit to is_submitted in reason sort_order in class Filter
+        # TODO: form validation !!!, currently buldin form validators=[Optional()]
     elif form_filter.validate_on_submit():
         web_logging.debug('filter pushed')
         flash('filter: City={city}, currency={currency},  Operation={operation}, source={source},<br>'
               'text={text}'.format(text=filter_recieved['$text'], city=filter_recieved['location'],
                                    operation=filter_recieved['operation'], currency=filter_recieved['currency'],
                                    source=filter_recieved['source']))
-        result = data_active.find(mongo_request, sort=([('time', pymongo.DESCENDING)]))
+        flash('Sort: {sort_list}'.format(sort_list=sort_list))
+        result = data_active.find(mongo_request, sort=(sort_list))
     else:
         result = data_active.find(mongo_request, sort=([('time', pymongo.DESCENDING)]))
 
@@ -141,15 +156,7 @@ def logout():
 @login_required
 def history_json(currency):
     currency = currency.upper()
-    octothorpe = lambda x, dictionary: x * -1 if dictionary['nbu_auction']['operation'] == 'buy' else x
 
-    def reformat_for_js(doc):
-        if 'nbu_auction' in doc:
-            doc['amount_requested'] = octothorpe(doc['nbu_auction'].pop('amount_requested'), doc)
-            doc['amount_accepted_all'] = octothorpe(doc['nbu_auction'].pop('amount_accepted_all'), doc)
-            del doc['nbu_auction']
-        doc['time'] = doc['time'].strftime('%Y-%m-%d_%H')
-        return doc
 
     if currency in main_currencies:
         mongo_request = {}

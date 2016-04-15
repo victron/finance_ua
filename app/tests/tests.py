@@ -5,9 +5,13 @@ from pymongo import MongoClient
 from formats import stat_format
 import json
 
+
 mongo_collector.DB_NAME = 'TESTS'
 mongo_collector.DATABASE =  MongoClient()[mongo_collector.DB_NAME]
+# app need to import after changing mongo_collector.DATABASE in reason inside app importing mongo_collector
+# TODO: check how it should be correct
 from app import app
+from app.views_func import reformat_for_js
 # copy list in tuple !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 original_list = tuple(dict(doc) for doc in stat_format)
 
@@ -61,14 +65,6 @@ class TestCase(unittest.TestCase):
         resp = self.app.get('/api/history/usd', follow_redirects=True)
         assert resp.status_code == 200, 'wrong staus code'
         data = json.loads(resp.data.decode())
-        octothorpe = lambda x, dictionary: x * -1 if dictionary['nbu_auction']['operation'] == 'buy' else x
-        def reformat_for_js(doc):
-            if 'nbu_auction' in doc:
-                doc['amount_requested'] = octothorpe(doc['nbu_auction'].pop('amount_requested'), doc)
-                doc['amount_accepted_all'] = octothorpe(doc['nbu_auction'].pop('amount_accepted_all'), doc)
-                del doc['nbu_auction']
-            doc['time'] = doc['time'].strftime('%Y-%m-%d_%H')
-            return doc
         original = [ reformat_for_js(doc) for doc in original_list]
         self.assertEquals(data['USD'], original)
 

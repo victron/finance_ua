@@ -16,9 +16,21 @@
         Sources: {{form_filter.sources}}<br>
         {{form_filter.text(size=50)}}
         {% for error in form_filter.errors.text %}
-        <span style="color: red;">[{{error}}]</span>
+            <span style="color: red;">[{{error}}]</span>
         {% endfor %}<br>
-        <input type="submit" value="Filter">
+        Sort Order:<br>
+{#        {{form_filter.sort_order.sort_field}}#}
+{#    {% for person in form.potential_friends %}#}
+{#    persons[person.data].profile_pic :: {{person.label}} :: {{person}}<br>#}
+{#{% endfor %}#}
+{#        {% for p in form_filter.sort_order %}#}
+{#    {{p.label}} :: {{p.sort_field}}<br>#}
+{#{% endfor %}#}
+        {% for i in  form_filter.sort_order.entries%}
+            {{i.form.sort_field}}
+            {{i.form.sort_direction}}<br>
+        {% endfor %}
+        <br><input type="submit" value="Filter">
     </p>
 </form>
 

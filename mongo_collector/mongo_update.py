@@ -63,7 +63,7 @@ def update_db() -> int:
     return result.deleted_count
 
 
-def get_selection() -> (set, set, set):
+def get_selection() -> (set, set, set, set):
     result = data_active.find({}, {'location': 1, 'operation': 1, 'currency': 1, 'source': 1, '_id': 0})
     locations = set()
     operations = set()
