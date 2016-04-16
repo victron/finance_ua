@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 
 from mongo_collector.mongo_start import history, data_active, aware_times
 from spiders.common_spider import local_tz, main_currencies, operations
+from spiders.nbu import auction_get_dates, NbuJson, auction_results
+from spiders.parse_minfin import minfin_history
 
 
 def insert_history_embedded(input_document: dict):
@@ -155,18 +157,22 @@ def last_hour_stat(collection: data_active) -> dict:
 
 
 if __name__ == '__main__':
-    # auction_dates = set()
-    # for year in ['2014', '2015', '2016']:
-    #     auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
-    # for doc in minfin_history('USD', datetime(2016, 3, 31)):
-    #     insert_history(doc)
-    #     insert_history(NbuJson().rate_currency_date(doc['currency'], doc['time']))
-    #     if doc['time'] in auction_dates:
-    #         insert_history(auction_results(doc['time']))
-    for currency in main_currencies:
-        for operation in operations:
-            for doc in last_hour_stat(data_active):
+    auction_dates = set()
+    for year in ['2014', '2015', '2016']:
+        auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
+    for currency in ['USD', 'EUR']:
+        for doc in minfin_history(currency, datetime.now()):
+            if aware_times(doc['currency']).find({'time': doc['time']}).count() == 0:
+            # db.somName.find({"country":{"$exists":True}}).count()
                 insert_history(doc)
+                insert_history(NbuJson().rate_currency_date(doc['currency'], doc['time']))
+                if doc['time'] in auction_dates:
+                    insert_history(auction_results(doc['time']))
+    # ------- colect stat from own data ---------
+    # for currency in main_currencies:
+    #     for operation in operations:
+    #         for doc in last_hour_stat(data_active):
+    #             insert_history(doc)
 
 
 
