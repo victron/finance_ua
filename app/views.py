@@ -5,7 +5,7 @@ from mongo_collector.mongo_update import update_db, mongo_insert_history
 
 from app import app, web_logging
 from mongo_collector.mongo_start import aware_times
-from mongo_collector.mongo_start import data_active
+from mongo_collector.mongo_start import data_active, bonds
 from mongo_collector.mongo_start import news as news_db
 from spiders.common_spider import  main_currencies
 from spiders.filters import location, currency, operation, filter_or
@@ -174,3 +174,19 @@ def history_json(currency):
         #                         for data in cursor])
     else:
         abort(404)
+
+
+@app.route('/api/bonds')
+@login_required
+def bonds_json():
+    data = {}
+    for key in ('auctiondate', 'paydate', 'repaydate'):
+        mongo_request = {}
+        projection = {'_id': False, key: True, 'avglevel' : True , 'amount' : True , 'amountn' : True ,
+                      'auctionnum' : True , 'incomelevel' : True, 'attraction' : True , 'stockrestrict' : True ,
+                      'valcode' : True , 'stockcode' : True , 'stockrestrictn': True}
+        cursor = bonds.find(mongo_request, projection, sort=([(key, pymongo.ASCENDING)]))
+        data.update({key: [doc for doc in cursor]})
+    file = jsonify(data)
+    file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds' + '.json'
+    return file

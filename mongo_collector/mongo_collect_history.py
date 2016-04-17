@@ -1,7 +1,8 @@
 import statistics
 from datetime import datetime, timedelta
 
-from mongo_collector.mongo_start import history, data_active, aware_times
+from mongo_collector.mongo_start import history, data_active, aware_times, bonds
+from mongo_update import mongo_insert_history
 from spiders.common_spider import local_tz, main_currencies, operations
 from spiders.nbu import auction_get_dates, NbuJson, auction_results
 from spiders.parse_minfin import minfin_history
@@ -135,7 +136,7 @@ def last_hour_stat(collection: data_active) -> dict:
     stop_time = update_time.replace(minute=0, second=0, microsecond=0)
     start_time = stop_time - timedelta(hours=1)
     location = 'Киев'
-    source = 'h_stat'
+    source = 'h_int_stat'
     pipeline = [{'$match': {'location': location,
                             '$and': [{'time': {'$gte': start_time}}, {'time': {'$lt': stop_time}}]}},
                 {'$group': {'_id': {'operation': '$operation', 'currency': '$currency'},
@@ -155,8 +156,7 @@ def last_hour_stat(collection: data_active) -> dict:
     return [form_output_doc(doc) for doc in command_cursor]
 
 
-
-if __name__ == '__main__':
+def ext_history():
     auction_dates = set()
     for year in ['2014', '2015', '2016']:
         auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
@@ -164,15 +164,23 @@ if __name__ == '__main__':
         for doc in minfin_history(currency, datetime.now()):
             if aware_times(doc['currency']).find({'time': doc['time']}).count() == 0:
             # db.somName.find({"country":{"$exists":True}}).count()
-                insert_history(doc)
+            #     insert_history(doc)
                 insert_history(NbuJson().rate_currency_date(doc['currency'], doc['time']))
                 if doc['time'] in auction_dates:
                     insert_history(auction_results(doc['time']))
+                insert_history(dict(doc, source='d_ext_stat'))
+
+
+def internal_history():
     # ------- colect stat from own data ---------
-    # for currency in main_currencies:
-    #     for operation in operations:
-    #         for doc in last_hour_stat(data_active):
-    #             insert_history(doc)
+    for doc in last_hour_stat(data_active):
+        insert_history(doc)
+
+
+if __name__ == '__main__':
+    # ext_history()
+    # internal_history()
+    mongo_insert_history(NbuJson().ovdp_all(), bonds)
 
 
 

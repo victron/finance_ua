@@ -16,13 +16,13 @@ from spiders.common_spider import local_tz
 records = DATABASE['records']
 history = DATABASE['history']
 
+# wraper for collection tz_aware and tzinfo
 aware_times = lambda collection: DATABASE[collection].with_options(codec_options=CodecOptions(tz_aware=True,
                                                                                               tzinfo=local_tz))
-# aware_times = lambda collection: DATABASE[collection]
 # data_active = db['data_active']
 data_active = aware_times('data_active') # pymongo 3.2.2
-# news = db['news']
 news = aware_times('news')
+bonds = aware_times('bonds')
 
 records.create_index([('bid', pymongo.ASCENDING),
                       ('time', pymongo.ASCENDING),

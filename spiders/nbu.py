@@ -15,9 +15,7 @@ from spiders.parameters import proxy_is_used, headers, proxies
 # - correct offten call current_datetime_tz
 # + check nbu_rate in weekend
 
-# from http://www.bank.gov.ua/control/uk/publish/article?art_id=25327817&cat_id=25365601
-#  Розміщення облігацій по валюті (можливі значення UAH / USD / EUR, регістр значення не має):
-# http://bank.gov.ua/NBUStatService/v1/statdirectory/ovdp?valcode=usd&json
+
 # Індекс міжбанківських ставок за період
 # (можливі значення для періоду OVERNIGHT / 1WEEK / 2WEEKS / 1MONTH / 3MONTHS, регістр значення не має):
 # http://bank.gov.ua/NBUStatService/v1/statdirectory/uiir?period=1WEEK&date=YYYYMMDD
@@ -109,20 +107,31 @@ class NbuJson():
     http://www.bank.gov.ua/control/uk/publish/article?art_id=25327817&cat_id=25365601
     """
     def __init__(self):
-        self.url = 'http://bank.gov.ua/NBUStatService/v1/statdirectory/exchange'
+        self.url = 'http://bank.gov.ua/NBUStatService/v1/statdirectory/'
+        self.params = {'json': ''}
+
+    @staticmethod
+    def _date_object_hook(obj: dict) -> dict:
+        # for staticmethod self not needed
+        for key in ('auctiondate', 'paydate', 'repaydate'):
+            try:
+                obj[key] = datetime.strptime(obj[key], '%d.%m.%Y')
+            except:
+                pass
+        return obj
 
     def rates_current(self) -> json:
-        return requests.get(self.url, params='json').json()
+        return requests.get(self.url + 'exchange', params='json').json()
 
     def rates_date(self,date: datetime) -> json:
         params = {'date': date.strftime('%Y%m%d'), 'json': ''}
-        return requests.get(self.url, params=params).json()
+        return requests.get(self.url + 'exchange', params=params).json()
 
     def rate_currency_date(self, currency: str, date: datetime) -> dict:
         params = {'valcode': currency, 'date': date.strftime('%Y%m%d'), 'json': ''}
         document = {}
         try:
-            recieved_doc = requests.get(self.url, params=params).json()[0]
+            recieved_doc = requests.get(self.url + 'exchange', params=params).json()[0]
         except IndexError:
             return {}
         document['currency'] = recieved_doc['cc']
@@ -131,6 +140,27 @@ class NbuJson():
         document['nbu_rate'] = recieved_doc['rate']
         document['source'] = 'nbu'
         return document
+
+
+    def ovdp_all(self) -> json:
+        # API сторінка результатів розміщення облігацій внутрішніх державних позик
+        # Всі результати розміщення облігації:
+        return requests.get(self.url + 'ovdp', params=self.params).json(object_hook=self._date_object_hook)
+
+    def ovdp_date(self, date: datetime) -> json:
+        # Розміщення облігацій на дату (у форматі yyyyMMdd)
+        params = {'date': date.strftime('%Y%m%d'), 'json': ''}
+        return requests.get(self.url + 'ovdp', params=params).json()
+
+    def ovdp_currency(self, currency: str) -> json:
+        #Розміщення облігацій по валюті (можливі значення UAH / USD / EUR
+        params = {'valcode': currency, 'json': ''}
+        return requests.get(self.url + 'ovdp', params=params).json()
+
+    def ovdp_currency_date(self, date: datetime, currency: str) -> json:
+        # Розміщення облігацій щодо валюти на дату:
+        params = {'date': date.strftime('%Y%m%d'), 'valcode': currency, 'json': ''}
+        return requests.get(self.url + 'ovdp', params=params).json()
 
 
 if __name__ == '__main__':
@@ -143,6 +173,6 @@ if __name__ == '__main__':
     #                  separators=(',', ': '), ensure_ascii=False, default=date_handler))
     # print(json.dumps(NbuJson().rate_currency_date('USD', datetime.strptime('27.03.2016', '%d.%m.%Y')),
     #                  sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
-    print(NbuJson().rate_currency_date('USD', datetime.strptime('27.03.2016', '%d.%m.%Y')))
-
+    # print(NbuJson().rate_currency_date('USD', datetime.strptime('27.03.2016', '%d.%m.%Y')))
+    print(NbuJson().ovdp_all())
 
