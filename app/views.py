@@ -13,7 +13,7 @@ from spiders.news_minfin import minfin_headlines
 from .forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
 from wtforms.validators import DataRequired, Optional
 from .user import User
-from .views_func import reformat_for_js
+from .views_func import reformat_for_js, octothorpe2
 
 # web_logging.getLogger(__name__)
 
@@ -190,3 +190,42 @@ def bonds_json():
     file = jsonify(data)
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds' + '.json'
     return file
+
+
+@app.route('/api/bonds2')
+@login_required
+def bonds_json2():
+    bond_currencies = ['UAH', 'USD', 'EUR']
+    currency = 'USD'
+    # bond_currency = 'UAH'
+    def create_lookup(bond_currency: str) -> list:
+        return [{'$lookup': {'from': 'bonds_' + bond_currency, 'localField': 'time', 'foreignField': 'repaydate',
+                                 'as': 'repay_' + bond_currency}},
+                    {'$lookup': {'from': 'bonds_' + bond_currency, 'localField': 'time', 'foreignField': 'paydate',
+                                 'as': 'pay_' + bond_currency}},
+                    {'$lookup': {'from': 'bonds_' + bond_currency, 'localField': 'time', 'foreignField': 'auctiondate',
+                                 'as': 'auctiondate_' + bond_currency}}]
+
+    def create_project(currencies: list) -> dict:
+        project = {}
+        for currency in currencies:
+            project.update({'repay_amount_' + currency: {'$sum': '$repay_' + currency + '.amount'},
+                                'repay_amountn_' + currency: { '$sum': '$repay_' + currency + '.amountn'},
+                                'pay_amount_' + currency: {'$sum': '$pay_' + currency + '.amount'},
+                                'pay_amountn_' + currency: {'$sum': '$pay_' + currency + '.amountn'}})
+        project.update({'_id': False, 'buy': True, 'sell': True,
+                        'amount_accepted_all': '$nbu_auction.amount_accepted_all',
+                        'amount_requested': '$nbu_auction.amount_requested',
+                        'nbu_auction_operation': '$nbu_auction.operation', 'nbu_rate': True, 'time': True})
+        return {'$project': project}
+
+    pipeline = [elem for _currency in bond_currencies for elem in create_lookup(_currency)] \
+               + [{ '$sort' : { 'time' : pymongo.ASCENDING}}] + [create_project(bond_currencies)]
+    # print(pipeline)
+    command_cursor = aware_times(currency).aggregate(pipeline)
+    data = {currency:[octothorpe2(doc) for doc in command_cursor]}
+    file = jsonify(data)
+    file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds2' + '.json'
+    return file
+
+

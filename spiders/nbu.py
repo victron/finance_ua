@@ -115,7 +115,8 @@ class NbuJson():
         # for staticmethod self not needed
         for key in ('auctiondate', 'paydate', 'repaydate'):
             try:
-                obj[key] = datetime.strptime(obj[key], '%d.%m.%Y')
+                obj[key] = datetime.strptime(obj[key], '%d.%m.%Y')\
+                    .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
             except:
                 pass
         return obj
@@ -150,12 +151,12 @@ class NbuJson():
     def ovdp_date(self, date: datetime) -> json:
         # Розміщення облігацій на дату (у форматі yyyyMMdd)
         params = {'date': date.strftime('%Y%m%d'), 'json': ''}
-        return requests.get(self.url + 'ovdp', params=params).json()
+        return requests.get(self.url + 'ovdp', params=params).json(object_hook=self._date_object_hook)
 
     def ovdp_currency(self, currency: str) -> json:
         #Розміщення облігацій по валюті (можливі значення UAH / USD / EUR
         params = {'valcode': currency, 'json': ''}
-        return requests.get(self.url + 'ovdp', params=params).json()
+        return requests.get(self.url + 'ovdp', params=params).json(object_hook=self._date_object_hook)
 
     def ovdp_currency_date(self, date: datetime, currency: str) -> json:
         # Розміщення облігацій щодо валюти на дату:

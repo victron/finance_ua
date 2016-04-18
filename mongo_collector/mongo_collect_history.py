@@ -180,7 +180,10 @@ def internal_history():
 if __name__ == '__main__':
     # ext_history()
     # internal_history()
-    mongo_insert_history(NbuJson().ovdp_all(), bonds)
+    # TODO: minor: validate counts of records from ovdp_all and by currency
+    # mongo_insert_history(NbuJson().ovdp_all(), bonds)
+    for currency in ['UAH', 'USD', 'EUR']:
+        mongo_insert_history(NbuJson().ovdp_currency(currency), aware_times('bonds_' + currency))
 
 
 
