@@ -55,6 +55,7 @@ var eur = get_json('/api/history/' + 'EUR')['EUR'];
 var usd = get_json('/api/history/' + 'USD')['USD'];
 {#var repaydate = get_json('/api/bonds')['repaydate'];#}
 var usd_bonds = get_json('/api/bonds2')['USD'];
+var ukrstat = get_json('/api/ukrstat')['ukrstat'];
 //var chartData ={{rub|safe}};
 // CHART CONFIG
 var chartConfig = {
@@ -313,7 +314,7 @@ var chartConfig = {
 
     dataSetSelector: {
     position: "left" }
-}
+};
 
 // ADD INDICATORS
 //AmCharts.addMovingAverage(chartConfig.dataSets[0], chartConfig.panels[0], 'value', {
@@ -322,9 +323,135 @@ var chartConfig = {
 //    title: "Moving average"
 //})
 
+var chartConfig_ukrstat = {
+   type: "stock",
+    "theme": "none",
+	dataSets: [{
+        title: "ukrstat",
+        fieldMappings: [{
+            fromField: "import",
+            toField: "import"
+        }, {
+            fromField: "export",
+            toField: "export"
+        },{
+            fromField: "saldo",
+            toField: "saldo"
+        }],
+			dataProvider: ukrstat,
+            categoryField: "time"
+
+    }],
+
+    categoryAxesSettings: {
+    minPeriod: "MM"
+    },
+
+	panels: [{
+
+			showCategoryAxis: false,
+			title: "saldo",
+			percentHeight: 50,
+
+			stockGraphs: [{
+				id: "saldo",
+                title: "saldo",
+				valueField: "saldo",
+{#				comparable: true,#}
+{#				compareField: "export",#}
+				balloonText: "<b>[[value]]</b>",
+				compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
+                periodValue: "Sum",
+                lineColor: "green",
+                useDataSetColors: false,
+                precision: 2,
+                connect: false,
+
+			}],
+
+			stockLegend: {
+				periodValueTextComparing: "[[percents.value.close]]%",
+				periodValueTextRegular: "[[value]]",
+                labelText: "[[title]]"
+			}
+		},{
+			title: "imp_exp",
+			percentHeight: 50,
+			stockGraphs: [{
+                id: "import",
+                title: "import",
+				valueField: "import",
+				type: "column",
+				showBalloon: true,
+				fillAlphas: 1,
+                lineColor: "red",
+                useDataSetColors: false,
+                periodValue: "Sum",
+                precision: 2
+			},
+                {
+                title: "export",
+				valueField: "export",
+				type: "column",
+				showBalloon: true,
+				fillAlphas: 1,
+                lineColor: "blue",
+                useDataSetColors: false,
+                periodValue: "Sum",
+                precision: 2
+			}],
+                stockLegend: {
+				periodValueTextComparing: "[[percents.value.close]]%",
+				periodValueTextRegular: "[[value]]",
+                labelText: "[[title]]"
+			}}],
+
+	chartScrollbarSettings: {
+		graph: "import"
+	},
+
+	chartCursorSettings: {
+		valueBalloonsEnabled: true,
+        fullWidth:true,
+        cursorAlpha:0.1,
+        valueLineEnabled: true,
+        valueLineBalloonEnabled: true,
+        animationDuration: 0
+	},
+
+     balloon: {
+        animationDuration: 0
+    },
+
+	periodSelector: {
+        position: "left",
+
+		periods: [{
+			period: "MM",
+			selected: true,
+			count: 1,
+			label: "1 month"
+		}, {
+			period: "YYYY",
+			count: 1,
+			label: "1 year"
+		}, {
+			period: "YTD",
+			label: "YTD"
+		}, {
+			period: "MAX",
+			label: "MAX"
+		}]
+	},
+
+    dataSetSelector: {
+    position: "left" }
+};
 // CREATE CHART
 var chart = AmCharts.makeChart("chartdiv", chartConfig);
+var chart_ukrstat = AmCharts.makeChart("ukrstat", chartConfig_ukrstat);
 
 </script>
 <div id="chartdiv" style="width:100%; height:700px;"></div>
+<div id="ukrstat" style="width:100%; height:700px;"></div>
 {% endblock %}

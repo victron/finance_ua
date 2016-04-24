@@ -6,6 +6,8 @@ from mongo_update import mongo_insert_history
 from spiders.common_spider import local_tz, main_currencies, operations
 from spiders.nbu import auction_get_dates, NbuJson, auction_results
 from spiders.parse_minfin import minfin_history
+from spiders.ukrstat import import_stat
+from pymongo.errors import DuplicateKeyError
 
 
 def insert_history_embedded(input_document: dict):
@@ -176,14 +178,42 @@ def internal_history():
     for doc in last_hour_stat(data_active):
         insert_history(doc)
 
+def ukrstat(start_date: datetime) -> tuple:
+    duplicate_count = 0
+    inserted_count = 0
+    end_date = datetime.now()
+    date = start_date
+    while date < end_date.replace(month=(end_date.month - 1), day=1, hour=0, minute=0, second=0, microsecond=0):
+        try:
+            insert_result = aware_times('ukrstat').insert_one(import_stat(date))
+            inserted_count += 1
+        except DuplicateKeyError as e:
+            print('duplicate found={}'.format(str(e)))
+            duplicate_count += 1
+        if date.month // 12 == 0:
+            date = date.replace(month=(date.month + 1))
+        else:
+            date = date.replace(year=(date.year + 1), month=1)
+    return inserted_count, duplicate_count
 
 if __name__ == '__main__':
     # ext_history()
     # internal_history()
     # TODO: minor: validate counts of records from ovdp_all and by currency
     # mongo_insert_history(NbuJson().ovdp_all(), bonds)
-    for currency in ['UAH', 'USD', 'EUR']:
-        mongo_insert_history(NbuJson().ovdp_currency(currency), aware_times('bonds_' + currency))
+    # for currency in ['UAH', 'USD', 'EUR']:
+    #     doc_list = NbuJson().ovdp_currency(currency)
+    #     mongo_insert_history(doc_list, aware_times('bonds_' + currency))
+    #     times_from_bonds = [{'time': doc[field]} for doc in doc_list
+    #                                              for field in ['repaydate', 'paydate', 'auctiondate']]
+    #     for cur in ['USD', 'EUR']:
+    #         mongo_insert_history(times_from_bonds, aware_times(cur))
+
+    start_date = datetime.strptime('2006-01', '%Y-%m')
+    result = ukrstat(start_date)
+    print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
+
+
 
 
 

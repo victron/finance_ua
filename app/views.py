@@ -191,6 +191,46 @@ def bonds_json():
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds' + '.json'
     return file
 
+@app.route('/api/ukrstat')
+@login_required
+def ukrstat_json():
+    data = {}
+    mongo_request = {}
+    projection = {'$time': '$id', 'import': True, 'export': True}
+    cursor = aware_times('ukrstat').find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
+
+    data.update({'ukrstat': []})
+    previous_doc = None
+    for doc in cursor:
+        doc['time'] = doc['_id']
+        del doc['_id']
+        if previous_doc is not None:
+            month = doc['time'].month
+            if month != 1:
+                if month == previous_doc['time'].month + 1:
+                    doc['_import'] = round((doc['import'] - previous_doc['import'])/1000000, 2)
+                    doc['_export'] = round((doc['export'] - previous_doc['export'])/1000000, 2)
+                    doc['saldo'] = doc['_import'] - doc['_export']
+                    previous_doc = doc
+            else:
+                previous_doc = doc
+                doc['import'] = round(doc['import']/1000000, 2)
+                doc['export'] = round(doc['export']/1000000, 2)
+                doc['saldo'] = doc['import'] - doc['export']
+        else:
+            previous_doc = doc
+            doc['import'] = round(doc['import'] / 1000000, 2)
+            doc['export'] = round(doc['export'] / 1000000, 2)
+            doc['saldo'] = doc['import'] - doc['export']
+            
+        data['ukrstat'].append(doc)
+    for doc in data['ukrstat']:
+        if '_import' in doc:
+            doc['import'] = doc.pop('_import')
+            doc['export'] = doc.pop('_export')
+    file = jsonify(data)
+    file.headers['Content-Disposition'] = 'attachment;filename=' + 'ukrstat' + '.json'
+    return file
 
 @app.route('/api/bonds2')
 @login_required
@@ -223,7 +263,8 @@ def bonds_json2():
                + [{ '$sort' : { 'time' : pymongo.ASCENDING}}] + [create_project(bond_currencies)]
     # print(pipeline)
     command_cursor = aware_times(currency).aggregate(pipeline)
-    data = {currency:[octothorpe2(doc) for doc in command_cursor]}
+    # {k: v for k, v in doc.items() if v != 0} delete fields with 0 from result
+    data = {currency:[octothorpe2({k: v for k, v in doc.items() if v != 0}) for doc in command_cursor]}
     file = jsonify(data)
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds2' + '.json'
     return file
