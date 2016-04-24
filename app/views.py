@@ -223,7 +223,8 @@ def bonds_json2():
                + [{ '$sort' : { 'time' : pymongo.ASCENDING}}] + [create_project(bond_currencies)]
     # print(pipeline)
     command_cursor = aware_times(currency).aggregate(pipeline)
-    data = {currency:[octothorpe2(doc) for doc in command_cursor]}
+    # {k: v for k, v in doc.items() if v != 0} delete fields with 0 from result
+    data = {currency:[octothorpe2({k: v for k, v in doc.items() if v != 0}) for doc in command_cursor]}
     file = jsonify(data)
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds2' + '.json'
     return file
