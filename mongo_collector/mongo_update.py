@@ -2,7 +2,8 @@ from pymongo.errors import DuplicateKeyError
 
 from mongo_collector.mongo_start import data_active, records, news
 from spiders import berlox, finance_ua, parse_minfin
-from spiders.news_minfin import minfin_headlines
+from spiders.news_minfin import parse_minfin_headlines
+from spiders.minfin import minfin_headlines
 
 # from finance_ua import data_api_finance_ua
 # from parse_minfin import data_api_minfin
@@ -56,6 +57,7 @@ def update_db() -> int:
                     parse_minfin.data_api_minfin(parse_minfin.get_triple_data),
                     berlox.data_api_berlox(berlox.fetch_data)]:
         mongo_insert_history(doc_set, records)
+        mongo_insert_history(parse_minfin_headlines(), news)
         mongo_insert_history(minfin_headlines(), news)
         mongo_update_active(doc_set, update_time)
     # delete old records and records without 'time_update'

@@ -201,17 +201,19 @@ if __name__ == '__main__':
     # internal_history()
     # TODO: minor: validate counts of records from ovdp_all and by currency
     # mongo_insert_history(NbuJson().ovdp_all(), bonds)
-    # for currency in ['UAH', 'USD', 'EUR']:
-    #     doc_list = NbuJson().ovdp_currency(currency)
-    #     mongo_insert_history(doc_list, aware_times('bonds_' + currency))
-    #     times_from_bonds = [{'time': doc[field]} for doc in doc_list
-    #                                              for field in ['repaydate', 'paydate', 'auctiondate']]
-    #     for cur in ['USD', 'EUR']:
-    #         mongo_insert_history(times_from_bonds, aware_times(cur))
+    for currency in ['UAH', 'USD', 'EUR']:
+        doc_list = NbuJson().ovdp_currency(currency)
+        mongo_insert_history(doc_list, aware_times('bonds_' + currency))
+        times_from_bonds = [{'time': doc[field]} for doc in doc_list
+                                                 for field in ['repaydate', 'paydate', 'auctiondate']]
+        for cur in ['USD', 'EUR']:
+            mongo_insert_history(times_from_bonds, aware_times(cur))
 
-    start_date = datetime.strptime('2006-01', '%Y-%m')
-    result = ukrstat(start_date)
-    print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
+    # ----------- colect ukrstat -------------------
+    # start_date = datetime.strptime('2006-01', '%Y-%m')
+    # result = ukrstat(start_date)
+    # print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
+    # ================================================
 
 
 

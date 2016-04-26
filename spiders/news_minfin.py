@@ -19,7 +19,7 @@ proxies = parameters.proxies
 
 urls_dict = {'currency': 'commerce'}
 
-def minfin_headlines():
+def parse_minfin_headlines():
     news_type = parameters.news_type
     url = 'http://minfin.com.ua/news/' + urls_dict[news_type] + '/'
     if proxy_is_used == False:
@@ -41,6 +41,6 @@ def minfin_headlines():
     return data
 
 if __name__ == '__main__':
-    print(json.dumps(minfin_headlines(), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
+    print(json.dumps(parse_minfin_headlines(), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
                      default=date_handler))
 

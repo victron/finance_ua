@@ -7,9 +7,11 @@ from app import app, web_logging
 from mongo_collector.mongo_start import aware_times
 from mongo_collector.mongo_start import data_active, bonds
 from mongo_collector.mongo_start import news as news_db
+
 from spiders.common_spider import  main_currencies
 from spiders.filters import location, currency, operation, filter_or
-from spiders.news_minfin import minfin_headlines
+from spiders.news_minfin import parse_minfin_headlines
+from spiders.minfin import minfin_headlines
 from .forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
 from wtforms.validators import DataRequired, Optional
 from .user import User
@@ -99,7 +101,10 @@ def lists():
 def news():
     form_update = Update_db()
     if form_update.db.data:
-        inserted_count, duplicate_count = mongo_insert_history(minfin_headlines(), news_db)
+        inserted_count, duplicate_count = mongo_insert_history(parse_minfin_headlines(), news_db)
+        insert_result_minfin = mongo_insert_history(minfin_headlines(), news_db)
+        inserted_count += insert_result_minfin[0]
+        duplicate_count += insert_result_minfin[1]
         flash('inserted: {}, duplicated: {}'.format(inserted_count, duplicate_count))
     mongo_request = {}
     result = news_db.find(mongo_request, sort=([('time', pymongo.DESCENDING)]))
@@ -222,7 +227,7 @@ def ukrstat_json():
             doc['import'] = round(doc['import'] / 1000000, 2)
             doc['export'] = round(doc['export'] / 1000000, 2)
             doc['saldo'] = doc['import'] - doc['export']
-            
+
         data['ukrstat'].append(doc)
     for doc in data['ukrstat']:
         if '_import' in doc:

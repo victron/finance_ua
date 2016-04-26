@@ -1,7 +1,7 @@
 import pymongo
 from bson.codec_options import CodecOptions
 # from app import app
-from . import DATABASE
+from mongo_collector import DATABASE
 from spiders.common_spider import local_tz
 
 # TODO:
@@ -34,7 +34,8 @@ data_active.create_index([('bid', pymongo.ASCENDING),
 
 data_active.create_index([('time_update', pymongo.ASCENDING)], name='update_time_key')
 data_active.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')
-news.create_index([('time', pymongo.ASCENDING)], name='news_time', unique=True)
+news.create_index([('time', pymongo.ASCENDING),
+                   ('href', pymongo.ASCENDING)], name='news_time', unique=True)
 history.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
 for currency in ['USD', 'EUR', 'RUB']:
     DB = DATABASE[currency]

@@ -1,5 +1,4 @@
-
-[
+external_loans = [
 {'incomelevel': 7.75 , 'repaydate': '01.09.2019', 'coupon_date': ['1.03', '1.09'],  'ISIN':	'XS1303918269',	'CUSIP': '903724AV4', 'amount':	1330472000,},
 {'incomelevel': 7.75 , 'repaydate': '01.09.2020', 'coupon_date': ['1.03', '1.09'],  'ISIN':	'XS1303918939',	'CUSIP': '903724AM4', 'amount':	1706530000,},
 {'incomelevel': 7.75 , 'repaydate': '01.09.2021', 'coupon_date': ['1.03', '1.09'],  'ISIN':	'XS1303920083',	'CUSIP': '903724AN2', 'amount':	1377761000,},
@@ -9,7 +8,7 @@
 {'incomelevel': 7.75 , 'repaydate': '01.09.2025', 'coupon_date': ['1.03', '1.09'],  'ISIN':	'XS1303925470',	'CUSIP': '903724AS1', 'amount':	1306032000,},
 {'incomelevel': 7.75 , 'repaydate': '01.09.2026', 'coupon_date': ['1.03', '1.09'],  'ISIN':	'XS1303926528',	'CUSIP': '903724AT9', 'amount':	1295404000,},
 {'incomelevel': 7.75 , 'repaydate': '01.09.2027', 'coupon_date': ['1.03', '1.09'],  'ISIN':	'XS1303927179',	'CUSIP': '903724AU6', 'amount':	1286228000,},
-{'incomelevel': 3.4, 'ISIN': 'XS1303929894,	'CUSIP': '903724AW2',	 'coupon_date': ['31.05'], 'amount':   3027815000},
+{'incomelevel': 3.4, 'ISIN': 'XS1303929894',	'CUSIP': '903724AW2',	 'coupon_date': ['31.05'], 'amount':   3027815000},
 {'incomelevel': 1.847 , 'coupon_date': ['29.11', '29.05'], 'repaydate': '29.05.2020', 'ISIN':	'US903724АL62',	 'amount':	1000000000,},
 {'incomelevel': 1.844 , 'coupon_date': ['16.11', '16.05'], 'repaydate': '16.05.2019', 'ISIN':	'US903724АК89',	 'amount':	1000000000,},
 ]

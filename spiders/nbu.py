@@ -119,6 +119,8 @@ class NbuJson():
                     .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
             except:
                 pass
+        obj['_id'] = obj['stockcode']
+        del obj['stockcode']
         return obj
 
     def rates_current(self) -> json:
@@ -157,6 +159,7 @@ class NbuJson():
         #Розміщення облігацій по валюті (можливі значення UAH / USD / EUR
         params = {'valcode': currency, 'json': ''}
         return requests.get(self.url + 'ovdp', params=params).json(object_hook=self._date_object_hook)
+
 
     def ovdp_currency_date(self, date: datetime, currency: str) -> json:
         # Розміщення облігацій щодо валюти на дату:
