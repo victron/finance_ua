@@ -104,6 +104,9 @@ var chartConfig = {
         },{
             fromField: "repay_amountn_USD",
             toField: "repay_amountn_USD"
+        },{
+            fromField: "sum_coupon",
+            toField: "sum_coupon"
         }],
 			dataProvider: usd_bonds,
             categoryField: "time"
@@ -253,6 +256,17 @@ var chartConfig = {
                 showBalloon: true,
                 fillAlphas: 1,
                 lineColor: "green",
+                useDataSetColors: false,
+                periodValue: "Sum",
+                precision: 2
+
+            },{
+                valueField: "sum_coupon",
+                title: "sum_coupon",
+                type: "column",
+                showBalloon: true,
+                fillAlphas: 1,
+                lineColor: "red",
                 useDataSetColors: false,
                 periodValue: "Sum",
                 precision: 2

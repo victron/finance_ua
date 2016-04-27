@@ -15,7 +15,7 @@ from spiders.minfin import minfin_headlines
 from .forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
 from wtforms.validators import DataRequired, Optional
 from .user import User
-from .views_func import reformat_for_js, octothorpe2
+from .views_func import reformat_for_js, reformat_for_js_bonds
 
 # web_logging.getLogger(__name__)
 
@@ -216,14 +216,14 @@ def ukrstat_json():
                     doc['_import'] = round((doc['import'] - previous_doc['import'])/1000000, 2)
                     doc['_export'] = round((doc['export'] - previous_doc['export'])/1000000, 2)
                     doc['saldo'] = doc['_import'] - doc['_export']
-                    previous_doc = doc
+                    previous_doc = dict(doc)
             else:
-                previous_doc = doc
+                previous_doc = dict(doc)
                 doc['import'] = round(doc['import']/1000000, 2)
                 doc['export'] = round(doc['export']/1000000, 2)
                 doc['saldo'] = doc['import'] - doc['export']
         else:
-            previous_doc = doc
+            previous_doc = dict(doc)
             doc['import'] = round(doc['import'] / 1000000, 2)
             doc['export'] = round(doc['export'] / 1000000, 2)
             doc['saldo'] = doc['import'] - doc['export']
@@ -245,31 +245,32 @@ def bonds_json2():
     # bond_currency = 'UAH'
     def create_lookup(bond_currency: str) -> list:
         return [{'$lookup': {'from': 'bonds_' + bond_currency, 'localField': 'time', 'foreignField': 'repaydate',
-                                 'as': 'repay_' + bond_currency}},
-                    {'$lookup': {'from': 'bonds_' + bond_currency, 'localField': 'time', 'foreignField': 'paydate',
-                                 'as': 'pay_' + bond_currency}},
-                    {'$lookup': {'from': 'bonds_' + bond_currency, 'localField': 'time', 'foreignField': 'auctiondate',
-                                 'as': 'auctiondate_' + bond_currency}}]
+                             'as': 'repay_' + bond_currency}},
+                {'$lookup': {'from': 'bonds_' + bond_currency, 'localField': 'time', 'foreignField': 'paydate',
+                             'as': 'pay_' + bond_currency}},
+                {'$lookup': {'from': 'bonds_' + bond_currency, 'localField': 'time', 'foreignField': 'auctiondate',
+                             'as': 'auctiondate_' + bond_currency}}]
 
     def create_project(currencies: list) -> dict:
         project = {}
         for currency in currencies:
             project.update({'repay_amount_' + currency: {'$sum': '$repay_' + currency + '.amount'},
-                                'repay_amountn_' + currency: { '$sum': '$repay_' + currency + '.amountn'},
-                                'pay_amount_' + currency: {'$sum': '$pay_' + currency + '.amount'},
-                                'pay_amountn_' + currency: {'$sum': '$pay_' + currency + '.amountn'}})
-        project.update({'_id': False, 'buy': True, 'sell': True,
+                            'repay_amountn_' + currency: { '$sum': '$repay_' + currency + '.amountn'},
+                            'pay_amount_' + currency: {'$sum': '$pay_' + currency + '.amount'},
+                            'pay_amountn_' + currency: {'$sum': '$pay_' + currency + '.amountn'}})
+
+        project.update({'_id': False, 'buy': True, 'sell': True, 'bonds': True,
                         'amount_accepted_all': '$nbu_auction.amount_accepted_all',
                         'amount_requested': '$nbu_auction.amount_requested',
                         'nbu_auction_operation': '$nbu_auction.operation', 'nbu_rate': True, 'time': True})
         return {'$project': project}
 
     pipeline = [elem for _currency in bond_currencies for elem in create_lookup(_currency)] \
-               + [{ '$sort' : { 'time' : pymongo.ASCENDING}}] + [create_project(bond_currencies)]
+               + [{'$sort': {'time': pymongo.ASCENDING}}] + [create_project(bond_currencies)]
     # print(pipeline)
     command_cursor = aware_times(currency).aggregate(pipeline)
     # {k: v for k, v in doc.items() if v != 0} delete fields with 0 from result
-    data = {currency:[octothorpe2({k: v for k, v in doc.items() if v != 0}) for doc in command_cursor]}
+    data = {currency:[reformat_for_js_bonds({k: v for k, v in doc.items() if v != 0}) for doc in command_cursor]}
     file = jsonify(data)
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds2' + '.json'
     return file
