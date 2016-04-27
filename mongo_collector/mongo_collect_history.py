@@ -1,15 +1,16 @@
 import statistics
 from datetime import datetime, timedelta
 
-from mongo_collector.mongo_start import history, data_active, aware_times, bonds
+from bson.dbref import DBRef
 from mongo_update import mongo_insert_history
-from spiders.common_spider import local_tz, main_currencies, operations
+from pymongo.errors import DuplicateKeyError
+
+from mongo_collector.external_loans import external_loans_USD
+from mongo_collector.mongo_start import history, data_active, aware_times
+from spiders.common_spider import local_tz
 from spiders.nbu import auction_get_dates, NbuJson, auction_results
 from spiders.parse_minfin import minfin_history
 from spiders.ukrstat import import_stat
-from pymongo.errors import DuplicateKeyError
-from data.external_loans import external_loans_USD
-from bson.dbref import DBRef
 
 
 def insert_history_embedded(input_document: dict):
@@ -205,6 +206,8 @@ if __name__ == '__main__':
     # mongo_insert_history(NbuJson().ovdp_all(), bonds)
     for currency in ['UAH', 'USD', 'EUR']:
         doc_list = NbuJson().ovdp_currency(currency)
+        # in json from NBU 'amount' is number of papers, value of paper == 1000
+        doc_list = [dict(doc, amount=doc['amount'] * 1000) for doc in doc_list]
         if currency == 'USD':
             doc_list += external_loans_USD
         mongo_insert_history(doc_list, aware_times('bonds_' + currency))
@@ -219,6 +222,7 @@ if __name__ == '__main__':
                                 for date in doc['coupon_date']
                                 for year in range(2016, int(doc['repaydate'].strftime('%Y'))+1)]
                 times_from_bonds += [{'time': doc['repaydate']}]
+                # Be careful with ref, after delete colection ref still exist on None object
                 times_from_bonds += [{'time': coupon_date, 'bonds': [DBRef('bonds_' + currency, doc['_id'])]}
                                      for coupon_date in coupon_dates]
         for cur in ['USD', 'EUR']:

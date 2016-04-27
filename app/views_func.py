@@ -11,7 +11,11 @@ def reformat_for_js_bonds(doc: dict) -> dict:
         sum_amount = 0
         for bond in doc.pop('bonds'):
             bond_doc = aware_times(bond.collection).find_one({'_id': bond.id})
-            sum_amount += bond_doc['amount'] / 100 * bond_doc['incomelevel']
+            try:
+                sum_amount += bond_doc['amount'] / 100 * bond_doc['incomelevel']
+            except TypeError:
+                print(bond_doc)
+                print('!!! check if $ref inside \'bonds\' exists !!!')
         doc['sum_coupon'] = sum_amount
     return octothorpe2(doc)
 
