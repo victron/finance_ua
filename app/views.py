@@ -271,6 +271,7 @@ def bonds_json2():
     command_cursor = aware_times(currency).aggregate(pipeline)
     # {k: v for k, v in doc.items() if v != 0} delete fields with 0 from result
     data = {currency:[reformat_for_js_bonds({k: v for k, v in doc.items() if v != 0}) for doc in command_cursor]}
+
     file = jsonify(data)
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds2' + '.json'
     return file

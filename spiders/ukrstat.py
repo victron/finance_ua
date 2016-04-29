@@ -53,7 +53,6 @@ def import_stat(date) -> dict:
 
 
 
-
 if __name__ == '__main__':
     print(json.dumps(import_stat(datetime.strptime('2006-12', '%Y-%m')), sort_keys=True, indent=4,
           separators=(',', ': '), ensure_ascii=False, default=date_handler))

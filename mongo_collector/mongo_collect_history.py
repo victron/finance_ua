@@ -11,6 +11,8 @@ from spiders.common_spider import local_tz
 from spiders.nbu import auction_get_dates, NbuJson, auction_results
 from spiders.parse_minfin import minfin_history
 from spiders.ukrstat import import_stat
+from pymongo.errors import DuplicateKeyError
+
 
 
 def insert_history_embedded(input_document: dict):
@@ -204,6 +206,7 @@ if __name__ == '__main__':
     # internal_history()
     # TODO: minor: validate counts of records from ovdp_all and by currency
     # mongo_insert_history(NbuJson().ovdp_all(), bonds)
+
     for currency in ['UAH', 'USD', 'EUR']:
         doc_list = NbuJson().ovdp_currency(currency)
         # in json from NBU 'amount' is number of papers, value of paper == 1000
@@ -233,6 +236,7 @@ if __name__ == '__main__':
     # result = ukrstat(start_date)
     # print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
     # ================================================
+
 
 
 
