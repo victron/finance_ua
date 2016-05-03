@@ -1,21 +1,21 @@
 import pymongo
-from flask import render_template, flash, redirect, url_for, abort, jsonify
-from flask.ext.login import login_user, logout_user, login_required
-from mongo_collector.mongo_update import update_db, mongo_insert_history
+from wtforms.validators import Optional
 
 from app import app, web_logging
+from flask.ext.login import login_user, logout_user, login_required
+from flask import render_template, flash, redirect, url_for, abort, jsonify
 from mongo_collector.mongo_start import aware_times
 from mongo_collector.mongo_start import data_active, bonds
 from mongo_collector.mongo_start import news as news_db
-
+from mongo_collector.mongo_update import update_db, mongo_insert_history
 from spiders.common_spider import  main_currencies
-from spiders.filters import location, currency, operation, filter_or
-from spiders.news_minfin import parse_minfin_headlines
 from spiders.minfin import minfin_headlines
+from spiders.news_minfin import parse_minfin_headlines
+from spiders.filters import location, currency, operation, filter_or
 from .forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
-from wtforms.validators import DataRequired, Optional
 from .user import User
 from .views_func import reformat_for_js, reformat_for_js_bonds
+
 
 # web_logging.getLogger(__name__)
 

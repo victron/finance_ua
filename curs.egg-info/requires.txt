@@ -1,0 +1,8 @@
+flask
+flask-wtf
+flask-login
+flask-pymongo
+pytz
+requests
+pycrypto
+beautifulsoup4

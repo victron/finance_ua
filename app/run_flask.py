@@ -1,5 +1,6 @@
-
+# for deploy and then start it
 from app import app
+
 def main():
     app.run(debug = True)
 

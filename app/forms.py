@@ -1,7 +1,7 @@
-from flask.ext.wtf import Form
 from wtforms import StringField, SelectField, SubmitField, PasswordField, FormField, FieldList
 from wtforms.validators import DataRequired, Optional
 
+from flask.ext.wtf import Form
 from mongo_collector.mongo_update import get_selection
 
 

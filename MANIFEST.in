@@ -1,0 +1,7 @@
+recursive-include app/templates *
+recursive-include app/static *
+include config/flask.cfg
+#include spiders/simple_encrypt_import/secret_data.pye
+include bin/lighttpd.fcgi
+
+

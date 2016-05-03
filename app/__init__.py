@@ -17,7 +17,11 @@ web_logging.addHandler(root_handler)
 
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object('app.default_config')
+try:
+    app.config.from_envvar('env_config')
+except RuntimeError:
+    print('no environment config, default used')
 # db = MongoEngine(app)
 
 login_manager = LoginManager()
