@@ -1,11 +1,13 @@
 from setuptools import setup
+# http://python-packaging-user-guide.readthedocs.io/en/latest/distributing/?highlight=package_data#package-data
+# http://pythonhosted.org/setuptools/setuptools.html#including-data-files
 
 setup(
     # Application name:
     name='curs',
 
     # Version number (initial):
-    version='16.05.01.dev1',
+    version='16.05.01.dev2',
 
     # Application author details:
     author='Viktor Tsymbalyuk',
@@ -17,8 +19,7 @@ setup(
               'spiders',
               'spiders.simple_encrypt_import'],
 
-    # Include additional files into the package
-    # include_package_data=True,
+
 
     # Details
     url='https://github.com/victron/finance_ua/',
@@ -33,16 +34,19 @@ setup(
     install_requires=['flask',
                       'flask-wtf',
                       'flask-login',
-                      'flask-pymongo',
+                      'pymongo',
 
                       'pytz',
                       'requests',
                       'pycrypto',
-                      'beautifulsoup4'
+                      'beautifulsoup4',
+
+                      'uwsgi'
 
 
 
     ],
+    # install in bin script to start flask web server
     entry_points={
         'console_scripts': [
             'flask=app.run_flask:main',
@@ -50,13 +54,19 @@ setup(
         ],
     },
 
-    scripts=['bin/lighttpd.fcgi'],
+    # This tells setuptools to install any data files it finds in your packages. The data files must be specified via the distutils’ MANIFEST.in file
+    include_package_data=True,
 
-    package_data={
-        'spiders.simple_encrypt_import': ['secret_data.pye'],
-    },
+    # package_data={
+    #     'spiders.simple_encrypt_import': ['secret_data.pye'],
+    #     'app.templates': ['*.html'],
+    #     'app.static': ['*'],
+    # },
+    scripts=['bin/uwsgi_start.sh',],
 
-    data_files=[('.curs', ['config/flask.cfg']),
-                # ('/etc/init.d', ['init-script'])
+    data_files=[
+        ('.curs', ['config/flask.cfg', 'config/nginx.conf', 'config/uwsgi.ini']),
+        # ('.curs', ['config']),
+        # ('/etc/init.d', ['init-script'])
                 ]
 )
