@@ -9,6 +9,7 @@ app/run_flask.py
 app/user.py
 app/views.py
 app/views_func.py
+app/wsgi.py
 app/static/amcharts/amcharts.js
 app/static/amcharts/amstock.js
 app/static/amcharts/serial.js
@@ -295,8 +296,10 @@ app/templates/index.html
 app/templates/lists.html
 app/templates/login.html
 app/templates/news.html
-bin/lighttpd.fcgi
+bin/uwsgi_start.sh
 config/flask.cfg
+config/nginx.conf
+config/uwsgi.ini
 curs.egg-info/PKG-INFO
 curs.egg-info/SOURCES.txt
 curs.egg-info/dependency_links.txt
@@ -325,6 +328,9 @@ spiders/tables.py
 spiders/ukrstat.py
 spiders/simple_encrypt_import/__init__.py
 spiders/simple_encrypt_import/decrypt_config.py
+spiders/simple_encrypt_import/encrypt_config.py
+spiders/simple_encrypt_import/encrypt_module.py
 spiders/simple_encrypt_import/ide_config.py
 spiders/simple_encrypt_import/secret.py
+spiders/simple_encrypt_import/secret_data.py
 spiders/simple_encrypt_import/secret_data.pye
