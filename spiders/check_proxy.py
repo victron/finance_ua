@@ -10,9 +10,12 @@ url = 'http://google.com'
 proxy_is_used = False
 try:
     responce_get = requests.get(url, timeout=3)
-except requests.exceptions.ConnectTimeout:
-    responce_get = requests.get(url, proxies=proxies)
-    proxy_is_used = True
+except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError):
+    try:
+        responce_get = requests.get(url, proxies=proxies)
+        proxy_is_used = True
+    except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError):
+        print('!!! no direct connection and wrong proxy {} \nspiders not works!!!'.format(url))
 
 
 def proxy_requests(url):
