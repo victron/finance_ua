@@ -62,7 +62,11 @@ setup(
     #     'app.templates': ['*.html'],
     #     'app.static': ['*'],
     # },
+<<<<<<< HEAD
     scripts=['bin/uwsgi_start.sh'],
+=======
+    scripts=['bin/uwsgi_start.sh',],
+>>>>>>> 4eec0cea2fbdbbc666b4d6a4c2b5794e481da4b2
 
     data_files=[
         ('.curs', ['config/flask.cfg', 'config/nginx.conf', 'config/uwsgi.ini']),
