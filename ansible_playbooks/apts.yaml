@@ -1,0 +1,13 @@
+---
+# install dpk packages (on Ubuntu)
+- name: install python's repos
+  apt_repository: repo='ppa:fkrull/deadsnakes'
+- name: install python3.5
+  apt: name=python3.5  state=present
+- name: install python3.5-dev
+  apt: name=python3.5-dev   state=present
+- name: install mongo keys
+  apt_key: keyserver=keyserver.ubuntu.com id=EA312927
+- name: install  mongodb-org
+  apt: name=mongodb-org update_cache=yes state=present
+...

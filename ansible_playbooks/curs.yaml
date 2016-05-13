@@ -1,0 +1,19 @@
+---
+- hosts: test
+  remote_user: vagrant
+#  r_user: {{ remote_user }}
+  vars:
+    venv_dir: flask
+    static_path: /var/www/curs/static
+    home_dir: "{{ ansible_user_dir }}"
+  tasks:
+    - block:
+      - include: apts.yaml
+        become: yes
+        become_method: sudo
+        when: ansible_pkg_mgr == "apt"
+      - include: python.yaml
+      - include: uwsgi_nginx.yaml
+      when: ansible_architecture == "x86_64"
+
+...

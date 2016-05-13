@@ -25,7 +25,7 @@
 
         `/etc/init.d/mongod`
 
-    * **install virtual environment**
+    * **create virtual environment**
 
     `wget https://bootstrap.pypa.io/get-pip.py`
 
@@ -44,10 +44,12 @@
 
         `sudo /etc/init.d/mongod start`
 
+        `sudo service mongod start`
+
    * **configure nginx and uwsgi**
         * prety working config copied by `pip install` in `.curs` folder.
         need to move in `/etc/nginx/nginx.conf`
-        * copy into `/var/www/curs/static/` static files from `app\static`
+        * copy into `/var/www/curs/static/` static files from `app/static`
         * working **uwsgi** config in `.curs` folder, too.
         installed ` bin/uwsgi_start.sh` will find it.
    * **start nginx and uwsgi**

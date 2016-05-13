@@ -1,0 +1,14 @@
+---
+# create venv and install application
+- name: Initiate virtualenv for python3.5
+  command: python3.5 -m venv --without-pip ~/{{ venv_dir }}
+- name: download get-pip.py
+  get_url: url=https://bootstrap.pypa.io/get-pip.py
+    dest=~
+- name: install pip3.5
+  command: ~/{{ venv_dir }}/bin/python3.5 ~/get-pip.py
+- name: install application
+  pip: name='file:///home/vagrant/_ALU_priv/python/finance_ua/dist/curs-16.5.1.dev2.tar.gz'
+       virtualenv=~/{{ venv_dir}}
+       virtualenv_python=python3.5
+...

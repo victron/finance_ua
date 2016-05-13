@@ -1,0 +1,6 @@
+[test]
+localhost   
+
+[test:vars]
+ansible_connection = local
+

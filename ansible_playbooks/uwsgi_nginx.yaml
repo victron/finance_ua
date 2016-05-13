@@ -1,0 +1,26 @@
+---
+# copy nginx config, statics and starts
+- name: copy nginx config
+  command: cp {{ venv_dir }}/.curs/nginx.conf /etc/nginx/nginx.conf chdir={{ home_dir }}
+  become: yes
+  become_method: sudo
+- name: make static directory
+  command: mkdir -p {{ static_path }}
+  become: yes
+  become_method: sudo
+- name: copy static files
+# TODO: replace chdir on var
+  shell: cp -R {{ venv_dir }}/lib/python3.5/site-packages/app/static/* {{ static_path }} chdir={{ home_dir }}
+  become: yes
+  become_method: sudo
+- name: start nginx
+  service: name=nginx state=restarted
+  become: yes
+  become_method: sudo
+- name: start mongo
+  service: name=mongod state=started
+  become: yes
+  become_method: sudo
+- name: start uwsgi
+  command: bin/uwsgi_start.sh  start chdir={{ home_dir }}/{{ venv_dir }}
+...
