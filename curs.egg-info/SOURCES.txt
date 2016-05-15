@@ -296,7 +296,7 @@ app/templates/index.html
 app/templates/lists.html
 app/templates/login.html
 app/templates/news.html
-bin/uwsgi_start.sh
+bin/curs
 config/flask.cfg
 config/nginx.conf
 config/uwsgi.ini
