@@ -13,6 +13,11 @@
   shell: cp -R {{ venv_dir }}/lib/python3.5/site-packages/app/static/* {{ static_path }} chdir={{ home_dir }}
   become: yes
   become_method: sudo
+- name: copy uwsgi (curs) script to init.d
+  file: src={{ home_dir }}/{{ venv_dir }}/bin/curs dest=/etc/init.d/curs
+    state=file
+  become: yes
+  become_method: sudo
 - name: start nginx
   service: name=nginx state=restarted
   become: yes
@@ -22,5 +27,5 @@
   become: yes
   become_method: sudo
 - name: start uwsgi
-  command: bin/uwsgi_start.sh  start chdir={{ home_dir }}/{{ venv_dir }}
+  service: name=curs  state=started args={{ home_dir }}/{{ venv_dir }}
 ...

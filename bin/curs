@@ -10,17 +10,16 @@
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
-dir=`pwd`
-cmd="bin/uwsgi --ini .curs/uwsgi.ini"
-user=`echo $USER`
+# full path to venv directory in second argument
+dir=$2
+cmd="$2/bin/uwsgi --ini $2/.curs/uwsgi.ini --venv $2"
+user=vagrant
 
 name=`basename $0`
 #pid_file="/var/run/$name.pid"
-pid_file=`awk '/pidfile/ {print $3}' .curs/uwsgi.ini`
-#stdout_log="/var/log/$name.log"
-#stderr_log="/var/log/$name.err"
-stdout_log="./$name.log"
-stderr_log="./$name.err"
+pid_file=`awk '/pidfile/ {print $3}' $2/.curs/uwsgi.ini`
+stdout_log="/var/log/$name.log"
+stderr_log="/var/log/$name.err"
 
 get_pid() {
     cat "$pid_file"
@@ -42,11 +41,13 @@ case "$1" in
         else
             sudo -u "$user" $cmd >> "$stdout_log" 2>> "$stderr_log" &
         fi
-        echo $! > "$pid_file"
+#        echo $! > "$pid_file"
+        sleep 3
         if ! is_running; then
             echo "Unable to start, see $stdout_log and $stderr_log"
             exit 1
         fi
+
     fi
     ;;
     stop)

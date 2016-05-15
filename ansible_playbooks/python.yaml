@@ -7,8 +7,10 @@
     dest=~
 - name: install pip3.5
   command: ~/{{ venv_dir }}/bin/python3.5 ~/get-pip.py
+- name: copy application package on remote
+  copy: src=../dist/{{ app_file }} dest=~
 - name: install application
-  pip: name='file:///home/vagrant/_ALU_priv/python/finance_ua/dist/curs-16.5.1.dev2.tar.gz'
+  pip: name='file://{{ home_dir }}/{{ app_file }}'
        virtualenv=~/{{ venv_dir}}
        virtualenv_python=python3.5
 ...
