@@ -1,5 +1,5 @@
 ---
-- hosts: vagrant
+- hosts: local
   remote_user: vagrant
 #  r_user: {{ remote_user }}
   vars:
@@ -7,6 +7,7 @@
     static_path: /var/www/curs/static
     home_dir: "{{ ansible_user_dir }}"
     app_file: curs-16.5.1.dev2.tar.gz
+    conf_dir: /etc/curs
   tasks:
     - block:
       - include: apts.yaml

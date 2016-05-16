@@ -1,5 +1,5 @@
 [local]
-localhost
+127.0.0.1
 
 [vagrant]
 127.0.0.1
@@ -11,4 +11,5 @@ ansible_connection = local
 ansible_connection = paramiko
 ansible_port = 2222
 ansible_python_interpreter=/usr/bin/python
+
 
