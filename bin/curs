@@ -11,13 +11,16 @@
 ### END INIT INFO
 
 # full path to venv directory in second argument
-dir=$2
-cmd="$2/bin/uwsgi --ini $2/.curs/uwsgi.ini --venv $2"
+#dir=$2
+# or from conf file for autostart
+. /etc/curs/curs.conf
+
+cmd="$dir/bin/uwsgi --ini $dir/.curs/uwsgi.ini --venv $dir"
 user=vagrant
 
 name=`basename $0`
 #pid_file="/var/run/$name.pid"
-pid_file=`awk '/pidfile/ {print $3}' $2/.curs/uwsgi.ini`
+pid_file=`awk '/pidfile/ {print $3}' $dir/.curs/uwsgi.ini`
 stdout_log="/var/log/$name.log"
 stderr_log="/var/log/$name.err"
 

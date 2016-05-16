@@ -13,20 +13,32 @@
   shell: cp -R {{ venv_dir }}/lib/python3.5/site-packages/app/static/* {{ static_path }} chdir={{ home_dir }}
   become: yes
   become_method: sudo
-- name: link on uwsgi (curs) script to init.d
-  file: src={{ home_dir }}/{{ venv_dir }}/bin/curs dest=/etc/init.d/curs state=link
+- name: make /etc/curs directory
+  command: mkdir -p {{ conf_dir }}
+  become: yes
+  become_method: sudo
+- name: generate curs.conf file
+  shell: echo 'dir="{{ home_dir }}/{{ venv_dir }}"' > {{ conf_dir }}/curs.conf
+  become: yes
+  become_method: sudo
+- name: copy uwsgi (curs) script to init.d
+#  file: src={{ home_dir }}/{{ venv_dir }}/bin/curs dest=/etc/init.d/curs state=link
+  command: cp {{ home_dir }}/{{ venv_dir }}/bin/curs /etc/init.d/curs
   become: yes
   become_method: sudo
 - name: start nginx
   service: name=nginx state=restarted
+           enabled=yes
   become: yes
   become_method: sudo
 - name: start mongo
   service: name=mongod state=started
+           enabled=yes
   become: yes
   become_method: sudo
 - name: start uwsgi
-  service: name=curs  state=started args={{ home_dir }}/{{ venv_dir }}
+  service: name=curs  state=started
+           enabled=yes
   become: yes
   become_method: sudo
 ...
