@@ -10,8 +10,9 @@
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
-# full path to venv directory in second argument
+# full path to venv directory could be also in second argument
 #dir=$2
+dir=`pwd`
 # or from conf file for autostart
 . /etc/curs/curs.conf
 
