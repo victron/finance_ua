@@ -13,11 +13,12 @@
 # full path to venv directory could be also in second argument
 #dir=$2
 dir=`pwd`
+user=`whoami`
 # or from conf file for autostart
 . /etc/curs/curs.conf
 
 cmd="$dir/bin/uwsgi --ini $dir/.curs/uwsgi.ini --venv $dir"
-user=vagrant
+
 
 name=`basename $0`
 #pid_file="/var/run/$name.pid"

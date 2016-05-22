@@ -1,6 +1,6 @@
 ---
-- hosts: local
-  remote_user: vagrant
+- hosts: all
+#  remote_user: vagrant
 #  r_user: {{ remote_user }}
   vars:
     venv_dir: flask
@@ -17,5 +17,6 @@
       - include: python.yaml
       - include: uwsgi_nginx.yaml
       when: ansible_architecture == "x86_64"
-
+  handlers:
+    - include: handlers/handlers.yml
 ...

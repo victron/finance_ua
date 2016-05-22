@@ -17,8 +17,12 @@
   command: mkdir -p {{ conf_dir }}
   become: yes
   become_method: sudo
-- name: generate curs.conf file
-  shell: echo 'dir="{{ home_dir }}/{{ venv_dir }}"' > {{ conf_dir }}/curs.conf
+#- name: generate curs.conf file
+#  shell: echo 'dir="{{ home_dir }}/{{ venv_dir }}"' > {{ conf_dir }}/curs.conf && echo 'user="{{ remote_user }}"' >> {{ conf_dir }}/curs.conf
+#  become: yes
+#  become_method: sudo
+- name: generate curs.conf from template
+  template: src=templates/curs.conf.j2 dest={{ conf_dir }}/curs.conf
   become: yes
   become_method: sudo
 - name: copy uwsgi (curs) script to init.d
@@ -26,19 +30,22 @@
   command: cp {{ home_dir }}/{{ venv_dir }}/bin/curs /etc/init.d/curs
   become: yes
   become_method: sudo
-- name: start nginx
-  service: name=nginx state=restarted
-           enabled=yes
-  become: yes
-  become_method: sudo
-- name: start mongo
-  service: name=mongod state=started
-           enabled=yes
-  become: yes
-  become_method: sudo
-- name: start uwsgi
-  service: name=curs  state=started
-           enabled=yes
-  become: yes
-  become_method: sudo
+  notify:
+    - start uwsgi
+    - start nginx
+#- name: start nginx
+#  service: name=nginx state=restarted
+#           enabled=yes
+#  become: yes
+#  become_method: sudo
+#- name: start mongo
+#  service: name=mongod state=started
+#           enabled=yes
+#  become: yes
+#  become_method: sudo
+#- name: start uwsgi
+#  service: name=curs  state=started
+#           enabled=yes
+#  become: yes
+#  become_method: sudo
 ...
