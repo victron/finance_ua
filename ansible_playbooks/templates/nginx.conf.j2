@@ -38,9 +38,9 @@ http {
 #        listen 80;
 # ------ SSL block -----------------
         listen 443 ssl;
-        server_name 192.168.1.125;
-        ssl_certificate /etc/nginx/ssl/nginx.crt;
-        ssl_certificate_key /etc/nginx/ssl/nginx.key;
+        server_name {{ ansible_fqdn }};
+        ssl_certificate {{ ssl_certificate }};
+        ssl_certificate_key {{ ssl_certificate_key }};
 # ==================================
         # Settings to by-pass for static files 
 #        location ^~ /static/  {
