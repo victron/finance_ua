@@ -13,6 +13,7 @@ from spiders.check_proxy import proxy_is_used
 from spiders.common_spider import current_datetime_tz, date_handler
 from spiders.simple_encrypt_import import secret
 from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
+from mytools import timer
 
 # user settings
 currency = filters.currency
@@ -57,6 +58,7 @@ conv_dict_orig = {'d' : 'd',
                 'pr': 'pr',
                 'cm': 'comment'}
 
+@timer()
 def fetch_data():
     def decrypt_file(key, iv, in_file, out_file=None, chunksize=24*1024):
         """
@@ -118,6 +120,7 @@ def fetch_data():
 
     return json.loads(decrypt_data(current_key(), Vector, get_belox_data(proxy_is_used)).decode())
 
+@timer()
 def data_api_berlox(fn_fetch):
     def convertor_berlox(id: int, dic: dict, current_date: datetime) -> dict:
         out_dic = {}

@@ -10,7 +10,7 @@ import requests
 from spiders import check_proxy, filters, parameters
 from spiders.common_spider import current_datetime_tz, date_handler
 from spiders.tables import print_table_as_is, reform_table_fix_columns_sizes
-
+from mytools import timer
 # constants and vars
 # USD, EUR, PLN, GBP, RUB
 currency = filters.currency
@@ -89,6 +89,7 @@ def print_result(id_list):
 #   raw_data = input_data.read()
 #
 # ------ fetch via requests ---------
+@timer()
 def fetch_data():
     if check_proxy.proxy_is_used == False:
         responce_get = requests.get(url, headers=headers)
@@ -118,6 +119,7 @@ def convertor_finance_ua(id: int, current_date: datetime, data) -> dict:
 
 
 # @fetch_data
+@timer('[EXE_TIME] >>>>')
 def data_api_finance_ua(fn):
     data = fn()
     if len(data) == 0:

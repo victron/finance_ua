@@ -5,14 +5,10 @@ from spiders import berlox, finance_ua, parse_minfin
 from spiders.news_minfin import parse_minfin_headlines
 from spiders.minfin import minfin_headlines
 
-# from finance_ua import data_api_finance_ua
-# from parse_minfin import data_api_minfin
-
-# from berlox import data_api_berlox
-
 from spiders.common_spider import current_datetime_tz, datetime
 from spiders.filters import location, currency, operation, filter_or
-
+from mytools import timer
+from app import mongo_logging
 # TODO:
 # - delete some fields, before saving into history
 # + delete from data_active all records without "time_update"
@@ -20,6 +16,7 @@ from spiders.filters import location, currency, operation, filter_or
 
 time_periods = range(8, 20)
 
+@timer('[EXE_TIME] >>>>')
 def mongo_insert_history(docs: list, collection):
     dublicate_count = 0
     inserted_count = 0
@@ -31,10 +28,10 @@ def mongo_insert_history(docs: list, collection):
         try:
             result = collection.insert_one(temp_doc)
             inserted_count += 1
-            print('history insert={}'.format(result.acknowledged))
+            mongo_logging.debug('history insert={}'.format(result.acknowledged))
         except DuplicateKeyError as e:
             dublicate_count += 1
-            print('duplicate found={}'.format(str(e)))
+            mongo_logging.debug('duplicate found={}'.format(str(e)))
     return inserted_count, dublicate_count
 
 
@@ -44,13 +41,14 @@ def mongo_update_active(docss: list, time: datetime):
         key = {'bid': document['bid'], 'time': document['time'], 'source': document['source']}
         try:
             result = data_active.replace_one(key, document, upsert=True)  # upsert used to insert a new document if a matching document does not exist.
-            print('update result acknowledged={}, upserted_id={}'.format(result.acknowledged, result.upserted_id))
+            mongo_logging.debug('update result acknowledged={}, '
+                                'upserted_id={}'.format(result.acknowledged, result.upserted_id))
         except:
             print(document)
             print(docss)
             raise
 
-
+@timer('[EXE_TIME] >>>>')
 def update_db() -> int:
     update_time = current_datetime_tz()
     for doc_set in [finance_ua.data_api_finance_ua(finance_ua.fetch_data),

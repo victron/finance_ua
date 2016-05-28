@@ -18,6 +18,6 @@ manager.add_command("runserver", Server(
 )
 
 if __name__ == "__main__":
-    web_logging.debug('start \'manager\'')
+    web_logging.info('start \'manager\'')
     manager.run()
 

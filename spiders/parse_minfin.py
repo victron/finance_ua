@@ -15,7 +15,7 @@ from spiders.check_proxy import proxy_is_used
 from spiders.common_spider import current_datetime_tz, date_handler
 from spiders.simple_encrypt_import import secret
 from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
-
+from mytools import timer
 # user settings
 currency = filters.currency.lower()
 operation = filters.operation
@@ -32,7 +32,7 @@ headers = {'user-agent': user_agent}
 proxies = parameters.proxies
 
 
-
+@timer()
 def get_triple_data(currency: str, operation: str) -> dict:
 
     # minfin_urls = {'usd_sell' : 'http://minfin.com.ua/currency/auction/usd/sell/kiev/?presort=&sort=time&order=desc',
@@ -82,7 +82,7 @@ def get_triple_data(currency: str, operation: str) -> dict:
     # print('----------------- fetch -------------------------')
     return data, responce_get
 
-
+@timer()
 def data_api_minfin(fn):
     def convertor_minfin(dic: dict, current_date: datetime, id: int) -> dict:
         dic['bid'] = dic['id']

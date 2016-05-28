@@ -9,12 +9,18 @@ from flask import Flask
 from flask.ext.login import LoginManager
 # from flask.ext.mongoengine import MongoEngine
 import logging
-web_logging = logging.getLogger(__name__)
-web_logging.setLevel(logging.DEBUG)
-log_format = logging.Formatter('{asctime} {levelname:5s} {filename} LINE: {lineno} {message}', style='{')
-root_handler = logging.StreamHandler()
-root_handler.setFormatter(log_format)
-web_logging.addHandler(root_handler)
+import yaml
+import logging.config
+logging.config.dictConfig(yaml.load(open('config/logging.yml', 'r')))
+web_logging = logging.getLogger('curs')
+mongo_logging = logging.getLogger('curs.mongo')
+# web_logging = logging.getLogger(__name__)
+
+# web_logging.setLevel(logging.DEBUG)
+# log_format = logging.Formatter('{asctime} {levelname:5s} {filename} LINE: {lineno} {message}', style='{')
+# root_handler = logging.StreamHandler()
+# root_handler.setFormatter(log_format)
+# web_logging.addHandler(root_handler)
 
 
 app = Flask(__name__)
