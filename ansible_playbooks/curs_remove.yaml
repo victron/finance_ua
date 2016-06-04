@@ -1,0 +1,13 @@
+---
+- hosts: all
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: remove application from env
+      pip: name=curs
+           virtualenv=~/{{ venv_dir}}
+           virtualenv_python=python3.5
+           state=absent
+    - name: delete previos file package
+      file: name=/{{ home_dir }}/{{ app_file }}
+        state=absent

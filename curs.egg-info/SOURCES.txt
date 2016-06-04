@@ -299,6 +299,7 @@ app/templates/news.html
 bin/curs
 config/curs.conf
 config/flask.cfg
+config/logging.yml
 config/nginx.conf
 config/uwsgi.ini
 curs.egg-info/PKG-INFO
@@ -307,7 +308,9 @@ curs.egg-info/dependency_links.txt
 curs.egg-info/entry_points.txt
 curs.egg-info/requires.txt
 curs.egg-info/top_level.txt
+logs/curs.log
 mongo_collector/__init__.py
+mongo_collector/auto_update.py
 mongo_collector/external_loans.py
 mongo_collector/mongo_collect_history.py
 mongo_collector/mongo_start.py

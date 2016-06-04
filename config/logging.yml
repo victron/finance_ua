@@ -17,23 +17,26 @@ handlers:
     class: logging.handlers.RotatingFileHandler
     level: DEBUG
     formatter: log_format
-    filename: logs/curs.log
+    filename: curs.log
     maxBytes: 2048
     backupCount: 3
-  syslog:
-    class: logging.handlers.SysLogHandler
-    address: /dev/log
-    facility: local5
+#  syslog:
+#    class: logging.handlers.SysLogHandler
+#    address: /dev/log
+#    facility: local5
 
 loggers:
   curs:
     level: INFO
-    handlers: [file, syslog]
+#    handlers: [file, syslog]
+    handlers: [file]
     propagate: yes
   curs.mongo:
     level: INFO
-    handlers: [file, syslog]
+#    handlers: [file, syslog]
+    handlers: [file]
     propagate: yes
 root:
   level: WARNING
-  handlers: [console, file, syslog]
+#  handlers: [console, file, syslog]
+  handlers: [file, console]

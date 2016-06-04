@@ -9,8 +9,9 @@ from spiders.common_spider import current_datetime_tz, datetime
 from spiders.filters import location, currency, operation, filter_or
 from mytools import timer
 from app import mongo_logging
-from multiprocessing import Pool, Queue, Process
+import multiprocessing
 
+from functools import reduce
 # TODO:
 # - delete some fields, before saving into history
 # + delete from data_active all records without "time_update"
@@ -57,9 +58,10 @@ def func(f_api, f_fetch):
 @timer('[EXE_TIME] >>>>')
 def update_db() -> int:
     update_time = current_datetime_tz()
-    workers = [{'f_api': finance_ua.data_api_finance_ua, 'f_fetch': finance_ua.fetch_data},
+    workers_fun = [{'f_api': finance_ua.data_api_finance_ua, 'f_fetch': finance_ua.fetch_data},
                {'f_api': parse_minfin.data_api_minfin, 'f_fetch': parse_minfin.get_triple_data},
                {'f_api': berlox.data_api_berlox, 'f_fetch': berlox.fetch_data}]
+    workers_zip =
     # with Pool(processes=4) as pool:
     #     doc_set = []
         # def append(docs):
@@ -78,21 +80,22 @@ def update_db() -> int:
     #                 parse_minfin.data_api_minfin(parse_minfin.get_triple_data),
     #                 berlox.data_api_berlox(berlox.fetch_data)]:
 
-    out_q = Queue()
-    procs = []
-    procs_num = 0
-    for i  in workers:
-
-        p = Process(target= func, args=(i['f_api'], i['f_fetch']))
-        procs.append(p)
-        p.start()
-        procs_num += 1
-    doc_set = []
-    for _ in range(procs_num):
-        doc_set += out_q.get()
-    for p in procs:
-        p.join()
-
+    # out_q = Queue()
+    # procs = []
+    # procs_num = 0
+    # for i  in workers:
+    #
+    #     p = Process(target= func, args=(i['f_api'], i['f_fetch']))
+    #     procs.append(p)
+    #     p.start()
+    #     procs_num += 1
+    # doc_set = []
+    # for i in range(procs):
+    #     doc_set += out_q.get()
+    # for p in procs:
+    #     p.join()
+    pool = multiprocessing.Pool() # default == number of CPUs cores
+    doc_set = reduce(lambda x, y: x + y, pool.map(lambda dic: dic[0](), ))
     mongo_insert_history(doc_set, records)
     mongo_update_active(doc_set, update_time)
     mongo_insert_history(parse_minfin_headlines(), news)

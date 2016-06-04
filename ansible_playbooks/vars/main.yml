@@ -1,0 +1,8 @@
+---
+venv_dir: flask
+static_path: /var/www/curs/static
+home_dir: "{{ ansible_user_dir }}"
+app_file: curs-16.5.1.dev2.tar.gz
+conf_dir: /etc/curs
+ssl_certificate: /etc/nginx/ssl/nginx.crt
+ssl_certificate_key: /etc/nginx/ssl/nginx.key

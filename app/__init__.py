@@ -7,11 +7,17 @@
 
 from flask import Flask
 from flask.ext.login import LoginManager
+import os
 # from flask.ext.mongoengine import MongoEngine
 import logging
 import yaml
 import logging.config
-logging.config.dictConfig(yaml.load(open('config/logging.yml', 'r')))
+logging_config = os.path.join('~', '.curs', 'logging.yml')
+if not os.path.isfile(logging_config):
+    logging_config = os.path.join('config', 'logging.yml')
+
+logging.config.dictConfig(yaml.load(open(logging_config, 'r')))
+
 web_logging = logging.getLogger('curs')
 mongo_logging = logging.getLogger('curs.mongo')
 # web_logging = logging.getLogger(__name__)

@@ -65,7 +65,8 @@ setup(
     scripts=['bin/curs'],
 
     data_files=[
-        ('.curs', ['config/flask.cfg', 'config/nginx.conf', 'config/uwsgi.ini']),
+        ('.curs', ['config/flask.cfg', 'config/nginx.conf', 'config/uwsgi.ini', 'config/logging.yml']),
+        # ('logs', ['logs/curs.log']),
         # ('.curs', ['config']),
         # ('/etc/init.d', ['init-script'])
                 ]

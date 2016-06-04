@@ -4,7 +4,8 @@
   command: python3.5 -m venv --without-pip ~/{{ venv_dir }}
 - name: download get-pip.py
   get_url: url=https://bootstrap.pypa.io/get-pip.py
-    dest=~
+    dest=~/get-pip.py
+    force=no
 - name: install pip3.5
   command: ~/{{ venv_dir }}/bin/python3.5 ~/get-pip.py
 - name: copy application package on remote
