@@ -14,4 +14,6 @@
   pip: name='file://{{ home_dir }}/{{ app_file }}'
        virtualenv=~/{{ venv_dir}}
        virtualenv_python=python3.5
+- name: generate logging.yaml
+  template: src=templates/logging.yml.j2 dest={{ home_dir }}/{{ venv_dir }}/.curs/logging.yml
 ...

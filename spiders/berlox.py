@@ -13,7 +13,7 @@ from spiders.check_proxy import proxy_is_used
 from spiders.common_spider import current_datetime_tz, date_handler
 from spiders.simple_encrypt_import import secret
 from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
-from mytools import timer
+from tools.mytools import timer
 
 # user settings
 currency = filters.currency

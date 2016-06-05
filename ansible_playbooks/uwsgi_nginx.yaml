@@ -14,7 +14,7 @@
   command: mkdir -p /etc/nginx/ssl
 
 - name: generating self-signed SSL Certs
-  command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=UA/ST=Kyivska/L=Kyiv/O=priv/CN={{ ansible_fqdn }}" -keyout {{ ssl_certificate }} -out {{ ssl_certificate_key }}
+  command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=UA/ST=Kyivska/L=Kyiv/O=priv/CN={{ ansible_fqdn }}" -keyout {{ ssl_certificate_key }} -out {{ ssl_certificate }}
 
 - name: copy static files
   shell: cp -R {{ home_dir }}/{{ venv_dir }}/lib/python3.5/site-packages/app/static/* {{ static_path }}
@@ -27,6 +27,7 @@
 #  become_method: sudo
 - name: generate curs.conf from template
   template: src=templates/curs.conf.j2 dest={{ conf_dir }}/curs.conf
+
 
 - name: copy uwsgi (curs) script to init.d
 #  file: src={{ home_dir }}/{{ venv_dir }}/bin/curs dest=/etc/init.d/curs state=link

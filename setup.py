@@ -7,7 +7,7 @@ setup(
     name='curs',
 
     # Version number (initial):
-    version='16.05.01.dev2',
+    version='16.05.01.dev3',
 
     # Application author details:
     author='Viktor Tsymbalyuk',
@@ -17,7 +17,8 @@ setup(
     packages=['app',
               'mongo_collector',
               'spiders',
-              'spiders.simple_encrypt_import'],
+              'spiders.simple_encrypt_import',
+              'tools'],
 
 
 
@@ -35,6 +36,7 @@ setup(
                       'flask-wtf',
                       'flask-login',
                       'pymongo',
+                      'PyYAML',
 
                       'pytz',
                       'requests',

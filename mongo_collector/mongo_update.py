@@ -1,14 +1,14 @@
 from pymongo.errors import DuplicateKeyError
 
+from app import mongo_logging
 from mongo_collector.mongo_start import data_active, records, news
 from spiders import berlox, finance_ua, parse_minfin
-from spiders.news_minfin import parse_minfin_headlines
-from spiders.minfin import minfin_headlines
-
 from spiders.common_spider import current_datetime_tz, datetime
 from spiders.filters import location, currency, operation, filter_or
-from mytools import timer
-from app import mongo_logging
+from spiders.minfin import minfin_headlines
+from spiders.news_minfin import parse_minfin_headlines
+from tools.mytools import timer
+# import multiprocessing.dummy as multiprocessing
 import multiprocessing
 
 from functools import reduce
@@ -56,55 +56,52 @@ def func(f_api, f_fetch):
 
 
 @timer('[EXE_TIME] >>>>')
-def update_db() -> int:
+def update_lists() -> int:
     update_time = current_datetime_tz()
-    workers_fun = [{'f_api': finance_ua.data_api_finance_ua, 'f_fetch': finance_ua.fetch_data},
-               {'f_api': parse_minfin.data_api_minfin, 'f_fetch': parse_minfin.get_triple_data},
-               {'f_api': berlox.data_api_berlox, 'f_fetch': berlox.fetch_data}]
-    workers_zip =
-    # with Pool(processes=4) as pool:
-    #     doc_set = []
-        # def append(docs):
-        #     global doc_set
-        #     doc_set = doc_set + docs
-        # # apend =
-        # pool.map(append, [finance_ua.data_api_finance_ua(finance_ua.fetch_data),
-        #             parse_minfin.data_api_minfin(parse_minfin.get_triple_data),
-        #             berlox.data_api_berlox(berlox.fetch_data)])
-        # for i in pool.imap_unordered(empty, [finance_ua.data_api_finance_ua(finance_ua.fetch_data),
-        #             parse_minfin.data_api_minfin(parse_minfin.get_triple_data),
-        #             berlox.data_api_berlox(berlox.fetch_data)]):
-        #     doc_set += i
+    spiders_lists = ((parse_minfin.data_api_minfin, parse_minfin.get_triple_data),
+                     (finance_ua.data_api_finance_ua, finance_ua.fetch_data),
+                     (berlox.data_api_berlox, berlox.fetch_data),)
+    # AttributeError: Can't pickle local object 'update_db.<locals>.<lambda>'
+    # doc_set = reduce(lambda x, y: x + y, pool.map(lambda spider: spider[0](spider[1]), spiders))
+    output_lists = multiprocessing.Queue()
+    alias_lists = lambda param, queue: queue.put(param[0](param[1]))
+    # pool = multiprocessing.Pool()  # default == number of CPUs cores
+    # doc_set = reduce(lambda x, y: x + y, pool.map(func, spiders))
+    processes_lists = [multiprocessing.Process(target=alias_lists, args=(spider, output_lists))
+                       for spider in spiders_lists]
 
+    for process in processes_lists:
+        process.start()
+    # pool.close()
+    # pool.join()
+    for process in processes_lists:
+        process.join(0)
+    doc_set_lists = reduce(lambda x, y: x + y, [output_lists.get() for _ in processes_lists])
+    # -------- single process -----------
     # for doc_set in [finance_ua.data_api_finance_ua(finance_ua.fetch_data),
     #                 parse_minfin.data_api_minfin(parse_minfin.get_triple_data),
     #                 berlox.data_api_berlox(berlox.fetch_data)]:
-
-    # out_q = Queue()
-    # procs = []
-    # procs_num = 0
-    # for i  in workers:
-    #
-    #     p = Process(target= func, args=(i['f_api'], i['f_fetch']))
-    #     procs.append(p)
-    #     p.start()
-    #     procs_num += 1
-    # doc_set = []
-    # for i in range(procs):
-    #     doc_set += out_q.get()
-    # for p in procs:
-    #     p.join()
-    pool = multiprocessing.Pool() # default == number of CPUs cores
-    doc_set = reduce(lambda x, y: x + y, pool.map(lambda dic: dic[0](), ))
-    mongo_insert_history(doc_set, records)
-    mongo_update_active(doc_set, update_time)
-    mongo_insert_history(parse_minfin_headlines(), news)
-    # TODO: [EXE_TIME] >>>> update_db: 2.22981, 2.22981
-    mongo_insert_history(minfin_headlines(), news)
+    mongo_insert_history(doc_set_lists, records)
+    mongo_update_active(doc_set_lists, update_time)
     # delete old records and records without 'time_update'
     result = data_active.delete_many({'$or': [{'time_update': {'$lt': update_time}}, {'time_update': None}]})
     return result.deleted_count
 
+@timer()
+def update_news() -> tuple:
+    update_time = current_datetime_tz()
+    spiders_news = (parse_minfin_headlines, minfin_headlines)
+    output_news = multiprocessing.Queue()
+    alias_news = lambda param, queue: queue.put(param())
+    processes_news = [multiprocessing.Process(target=alias_news, args=(news_site, output_news))
+                      for news_site in spiders_news]
+    for process in processes_news:
+        process.start()
+    for process in processes_news:
+        process.join(0)
+    doc_set_news = reduce(lambda x, y: x + y, [output_news.get() for _ in processes_news])
+    # in return inserted_count, duplicate_count
+    return mongo_insert_history(doc_set_news, news)
 
 
 

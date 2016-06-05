@@ -1,9 +1,14 @@
-import requests
-from spiders.parameters import proxy_is_used, headers, proxies
-from bs4 import BeautifulSoup
-from datetime import datetime
-from spiders.common_spider import local_tz, date_handler
 import json
+from datetime import datetime
+
+import requests
+from bs4 import BeautifulSoup
+
+from spiders.common_spider import local_tz, date_handler
+from spiders.parameters import proxy_is_used, headers, proxies
+from tools.mytools import timer
+
+
 #
 def minfin_headlines_url(url) -> list:
     #url = 'http://www.minfin.gov.ua/news/borg/zovnishni-suverenni-zobovjazannja'
@@ -21,6 +26,7 @@ def minfin_headlines_url(url) -> list:
         headlines.append({'href': href, 'time': time, 'headline': headline, 'source': 'mf'})
     return headlines
 
+@timer()
 def minfin_headlines():
     headlines = []
     for url in ['http://www.minfin.gov.ua/news/borg/zovnishni-suverenni-zobovjazannja',

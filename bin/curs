@@ -17,7 +17,7 @@ user=`whoami`
 # or from conf file for autostart
 . /etc/curs/curs.conf
 
-cmd="$dir/bin/uwsgi --ini $dir/.curs/uwsgi.ini --venv $dir"
+cmd="$dir/bin/uwsgi --ini $dir/.curs/uwsgi.ini --venv $dir --daemonize $dir/curs_uwsgi.log"
 
 
 name=`basename $0`

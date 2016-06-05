@@ -1,3 +1,4 @@
+{{ ansible_managed | comment }}
 version: 1
 formatters:
 #  simple:
@@ -20,12 +21,17 @@ handlers:
     filename: curs.log
     maxBytes: 2048
     backupCount: 3
-  # comment syslog section if windows
+{% set syslog %}
   syslog:
     class: logging.handlers.SysLogHandler
     address: /dev/log
     facility: local5
-
+{% endset %}
+{% if ansible_system != 'Windows' %}
+{{ syslog }}
+{% else %}
+{{ syslog | comment }}
+{% endif %}
 loggers:
   curs:
     level: INFO

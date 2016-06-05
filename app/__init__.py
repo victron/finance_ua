@@ -8,11 +8,13 @@
 from flask import Flask
 from flask.ext.login import LoginManager
 import os
+import sys
+
 # from flask.ext.mongoengine import MongoEngine
 import logging
 import yaml
 import logging.config
-logging_config = os.path.join('~', '.curs', 'logging.yml')
+logging_config = os.path.join(sys.prefix, '.curs', 'logging.yml')
 if not os.path.isfile(logging_config):
     logging_config = os.path.join('config', 'logging.yml')
 

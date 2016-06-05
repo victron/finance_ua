@@ -308,7 +308,6 @@ curs.egg-info/dependency_links.txt
 curs.egg-info/entry_points.txt
 curs.egg-info/requires.txt
 curs.egg-info/top_level.txt
-logs/curs.log
 mongo_collector/__init__.py
 mongo_collector/auto_update.py
 mongo_collector/external_loans.py
@@ -338,3 +337,5 @@ spiders/simple_encrypt_import/ide_config.py
 spiders/simple_encrypt_import/secret.py
 spiders/simple_encrypt_import/secret_data.py
 spiders/simple_encrypt_import/secret_data.pye
+tools/__init__.py
+tools/mytools.py

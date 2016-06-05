@@ -10,7 +10,8 @@ import requests
 from spiders import check_proxy, filters, parameters
 from spiders.common_spider import current_datetime_tz, date_handler
 from spiders.tables import print_table_as_is, reform_table_fix_columns_sizes
-from mytools import timer
+from tools.mytools import timer
+
 # constants and vars
 # USD, EUR, PLN, GBP, RUB
 currency = filters.currency
