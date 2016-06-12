@@ -42,6 +42,9 @@ def parse_minfin_headlines():
         data.append(dic)
     return data
 
+def func(arg):
+    return arg()
+
 if __name__ == '__main__':
     print(json.dumps(parse_minfin_headlines(), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
                      default=date_handler))

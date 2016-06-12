@@ -2,11 +2,9 @@ from pymongo.errors import DuplicateKeyError
 
 from app import mongo_logging
 from mongo_collector.mongo_start import data_active, records, news
-from spiders import berlox, finance_ua, parse_minfin
+from spiders import berlox, finance_ua, parse_minfin, news_minfin, minfin
 from spiders.common_spider import current_datetime_tz, datetime
 from spiders.filters import location, currency, operation, filter_or
-from spiders.minfin import minfin_headlines
-from spiders.news_minfin import parse_minfin_headlines
 from tools.mytools import timer
 # import multiprocessing.dummy as multiprocessing
 import multiprocessing
@@ -51,8 +49,8 @@ def mongo_update_active(docss: list, time: datetime):
             print(docss)
             raise
 
-def func(f_api, f_fetch):
-    return f_api(f_fetch)
+
+
 
 
 @timer('[EXE_TIME] >>>>')
@@ -74,9 +72,9 @@ def update_lists() -> int:
         process.start()
     # pool.close()
     # pool.join()
+    doc_set_lists = reduce(lambda x, y: x + y, [output_lists.get() for _ in processes_lists])
     for process in processes_lists:
         process.join(0)
-    doc_set_lists = reduce(lambda x, y: x + y, [output_lists.get() for _ in processes_lists])
     # -------- single process -----------
     # for doc_set in [finance_ua.data_api_finance_ua(finance_ua.fetch_data),
     #                 parse_minfin.data_api_minfin(parse_minfin.get_triple_data),
@@ -86,22 +84,6 @@ def update_lists() -> int:
     # delete old records and records without 'time_update'
     result = data_active.delete_many({'$or': [{'time_update': {'$lt': update_time}}, {'time_update': None}]})
     return result.deleted_count
-
-@timer()
-def update_news() -> tuple:
-    update_time = current_datetime_tz()
-    spiders_news = (parse_minfin_headlines, minfin_headlines)
-    output_news = multiprocessing.Queue()
-    alias_news = lambda param, queue: queue.put(param())
-    processes_news = [multiprocessing.Process(target=alias_news, args=(news_site, output_news))
-                      for news_site in spiders_news]
-    for process in processes_news:
-        process.start()
-    for process in processes_news:
-        process.join(0)
-    doc_set_news = reduce(lambda x, y: x + y, [output_news.get() for _ in processes_news])
-    # in return inserted_count, duplicate_count
-    return mongo_insert_history(doc_set_news, news)
 
 
 

@@ -12,7 +12,7 @@ from flask import render_template, flash, redirect, url_for, abort, jsonify
 from mongo_collector.mongo_start import aware_times
 from mongo_collector.mongo_start import data_active, bonds
 from mongo_collector.mongo_start import news as news_db
-from mongo_collector.mongo_update import update_lists, mongo_insert_history, update_news
+from mongo_collector.mongo_update import update_lists, mongo_insert_history
 from spiders.common_spider import  main_currencies
 from spiders.minfin import minfin_headlines
 from spiders.news_minfin import parse_minfin_headlines
@@ -110,6 +110,8 @@ def news():
         # insert_result_minfin = mongo_insert_history(minfin_headlines(), news_db)
         # inserted_count += insert_result_minfin[0]
         # duplicate_count += insert_result_minfin[1]
+
+        from mongo_collector.paral import update_news
         inserted_count, duplicate_count = update_news()
         flash('inserted: {}, duplicated: {}'.format(inserted_count, duplicate_count))
     mongo_request = {}

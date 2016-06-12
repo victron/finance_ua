@@ -34,6 +34,10 @@ def minfin_headlines():
         headlines += minfin_headlines_url(url)
     return headlines
 
+def func(param):
+    return param()
+
+
 if __name__ == '__main__':
     print(json.dumps(minfin_headlines(), sort_keys=True, indent=4, separators=(',', ': '),
                      ensure_ascii=False, default=date_handler))

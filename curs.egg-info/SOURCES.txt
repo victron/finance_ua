@@ -315,6 +315,7 @@ mongo_collector/mongo_collect_history.py
 mongo_collector/mongo_start.py
 mongo_collector/mongo_update.py
 mongo_collector/numbersDb.py
+mongo_collector/paral.py
 spiders/__init__.py
 spiders/berlox.py
 spiders/check_proxy.py
