@@ -12,11 +12,11 @@ from flask import render_template, flash, redirect, url_for, abort, jsonify
 from mongo_collector.mongo_start import aware_times
 from mongo_collector.mongo_start import data_active, bonds
 from mongo_collector.mongo_start import news as news_db
-from mongo_collector.mongo_update import update_lists, mongo_insert_history
+# from mongo_collector.mongo_update import update_lists, mongo_insert_history
 from spiders.common_spider import  main_currencies
-from spiders.minfin import minfin_headlines
-from spiders.news_minfin import parse_minfin_headlines
-from spiders.filters import location, currency, operation, filter_or
+# from spiders.minfin import minfin_headlines
+# from spiders.news_minfin import parse_minfin_headlines
+# from spiders.filters import location, currency, operation, filter_or
 from .forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
 from .user import User
 from .views_func import reformat_for_js, reformat_for_js_bonds
@@ -78,6 +78,7 @@ def lists():
 
     if form_update.db.data:
         web_logging.debug('update db pushed')
+        from mongo_collector.paral import update_lists
         active_deleted = update_lists()
         flash('recived db= {}, deleted docs={}'.format(str(form_update.db.data), active_deleted))
         result = data_active.find(mongo_request)

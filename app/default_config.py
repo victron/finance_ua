@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-
+# TODO: put configs in one place
 CSRF_ENABLED = True
 # WTF_CSRF_ENABLED = True
 SECRET_KEY = 'you-will-never-guess'
@@ -13,7 +13,7 @@ OPENID_PROVIDERS = [
     { 'name': 'MyOpenID', 'url': 'https://www.myopenid.com' }]
 
 DB_NAME = 'users'
-DATABASE = MongoClient()[DB_NAME]
+DATABASE = MongoClient(connect=False)[DB_NAME]
 USERS_COLLECTION = DATABASE['users']
 
 
