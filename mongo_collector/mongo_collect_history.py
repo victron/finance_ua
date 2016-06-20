@@ -202,7 +202,8 @@ def ukrstat(start_date: datetime) -> tuple:
     return inserted_count, duplicate_count
 
 if __name__ == '__main__':
-    # ext_history()
+    # collect currencies rates from minfin.ua and nbu auction results
+    ext_history()
     # internal_history()
     # TODO: minor: validate counts of records from ovdp_all and by currency
     # mongo_insert_history(NbuJson().ovdp_all(), bonds)
@@ -232,9 +233,9 @@ if __name__ == '__main__':
             mongo_insert_history(times_from_bonds, aware_times(cur))
 
     # ----------- colect ukrstat -------------------
-    # start_date = datetime.strptime('2006-01', '%Y-%m')
-    # result = ukrstat(start_date)
-    # print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
+    start_date = datetime.strptime('2006-01', '%Y-%m')
+    result = ukrstat(start_date)
+    print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
     # ================================================
 
 

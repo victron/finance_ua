@@ -67,7 +67,7 @@ class TestViews(Login):
         resp = self.app.get('/api/history/usd', follow_redirects=True)
         assert resp.status_code == 200, 'wrong staus code'
         data = json.loads(resp.data.decode())
-        original = [ reformat_for_js(doc) for doc in original_list]
+        original = [reformat_for_js(doc) for doc in original_list]
         self.assertEquals(data['USD'], original)
 
 
