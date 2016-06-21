@@ -56,7 +56,11 @@ class ukrstat():
     def __init__(self):
         self.url = 'http://www.ukrstat.gov.ua/operativ'
 
-    def saldo(self):
+    def saldo(self) -> list:
+        """
+        data from two tables on http://www.ukrstat.gov.ua/imf/arhiv/ztorg_u.htm
+        :return: list of documents
+        """
         self.url = 'http://www.ukrstat.gov.ua/imf/arhiv/ztorg_u.htm'
         response_get = requests.get(self.url)
         soup = BeautifulSoup(response_get.content.decode('1251'), 'html.parser')
@@ -67,10 +71,37 @@ class ukrstat():
         tables_types = {0: 'export',
                         1: 'import'}
         assert len(tables) == 2, 'wrong tables'
-        for type in tables_types:
-            for row in tables[type].find_all('tr')[1:]:
-                for cell in row.find_all('td'):
-                    soup.table.find_all('tr')[13].find_all('td')[3].get_text(strip=True)[:4]
+        out_list = []
+        for type_ in tables_types:
+            for row in tables[type_].find_all('tr')[1:]:
+                cells = row.find_all('td')
+                assert len(cells) == 13, 'wrong cells number'
+                # in first cell year, slice [:4] for limint chars in string,
+                # this will folter such numbers '20141' to '2014'
+                year = int(cells[0].get_text(strip=True)[:4])
+                month = 1
+                for cell in cells[1:]:
+                    doc = {}
+                    doc['_id'] = datetime(year=year, month=month, day=1, hour=17, minute=0, tzinfo=local_tz)
+                    month += 1
+
+                    value = cell.get_text(strip=True)
+                    patern = r'[0-9]'
+                    if not re.match(patern, value):
+                        break   # if no numbers in cell, last cell not filled
+
+                    # TODO: could be problem in future with numbers biger then 4 digits
+                    value = ''.join(filter(lambda x: x.isdigit(), value))
+                    value = float(value[:4])
+                    doc[tables_types[type_]] = value
+                    doc['source'] = 'ukrstat'
+                    out_list.append(doc)
+        assert len(out_list)%2 == 0, 'wrong number of cells'
+        # {**doc1, **doc2} - new syntax in 3.5, merge 2 dicts
+        result = [{**doc1, **doc2} for doc1, doc2 in zip(out_list[:int(len(out_list) / 2)],
+                                                         out_list[int(len(out_list) / 2):])]
+        return result
+
 
 
 
@@ -145,6 +176,8 @@ if __name__ == '__main__':
     #       separators=(',', ': '), ensure_ascii=False, default=date_handler))
     # print(json.dumps(import_stat(datetime.strptime('2016-04', '%Y-%m')), sort_keys=True, indent=4,
     #       separators=(',', ': '), ensure_ascii=False, default=date_handler))
-    print(json.dumps(ukrstat_o().building_index(), sort_keys=True, indent=4, separators=(',', ': '),
+    # print(json.dumps(ukrstat_o().building_index(), sort_keys=True, indent=4, separators=(',', ': '),
+    #                  ensure_ascii=False, default=date_handler))
+    print(json.dumps(ukrstat().saldo(), sort_keys=True, indent=4, separators=(',', ': '),
                      ensure_ascii=False, default=date_handler))
 
