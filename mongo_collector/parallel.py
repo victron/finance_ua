@@ -40,6 +40,7 @@ class writer_news():
         connector.send(self.update_result)
         connector.close()
 
+
 class writer_lists(writer_news):
     def __init__(self, db_name, *funs):
         super().__init__(db_name, *funs)
@@ -48,7 +49,8 @@ class writer_lists(writer_news):
         # aware_times = lambda collection: db_name[collection].with_options(codec_options=CodecOptions(tz_aware=True,
         #
         # TODO: replace hardcoded   'data_active'                                                                                           tzinfo=local_tz))
-        self.data_active = db_name('data_active').with_options(codec_options=CodecOptions(tz_aware=True, tzinfo=local_tz))
+        self.data_active = self.DATABASE['data_active'].with_options(codec_options=CodecOptions(tz_aware=True,
+                                                                                          tzinfo=local_tz))
 
     def update(self, collection, update_time):
         """
@@ -71,35 +73,22 @@ class writer_lists(writer_news):
                 raise
         self.result_delete = self.data_active.delete_many({'$or': [{'time_update': {'$lt': update_time}},
                                                                    {'time_update': None}]})
+        self.result_delete = self.result_delete.deleted_count
         self.update_result = (self.update_result[0], self.result_delete)
         return self.update_result
 
 
-def worker_c(funs, **kargs):
+def workerANDconnector(funs, **kargs):
     from mongo_collector import DB_NAME
-    writer = writer_news(DB_NAME, *funs)
+    if kargs['collection'] == 'records':
+        writer = writer_lists(DB_NAME, *funs)
+    elif kargs['collection'] == 'news':
+        writer = writer_news(DB_NAME, *funs)
+    else:
+        raise ValueError('wrong collection {}'.format(kargs['collection']))
     writer.update(kargs['collection'], kargs['update_time'])
     writer.send(kargs['connector'])
 
-
-
-def worker(news_fun: tuple, **kargs):
-    if len(news_fun) == 1:
-        docs = news_fun[0]()
-    else:
-        # convert tuple into list and put in order from low level to high level functions
-        fun_list = list(news_fun)
-        fun_list.reverse()
-        # docs = fun_list[1](fun_list[0]) #test string
-        docs = reduce(lambda x, y: y(x), fun_list)
-    from mongo_collector.mongo_update import mongo_insert_history
-    from pymongo import MongoClient
-    from mongo_collector import DB_NAME
-    client = MongoClient(connect=False)
-    DATABASE = client[DB_NAME]
-    news = DATABASE[kargs['collection']]
-    kargs['connection'].send(mongo_insert_history(docs, news))
-    kargs['connection'].close()
 
 
 @timer()
@@ -111,7 +100,7 @@ def parent(funcs: list, collection) -> tuple:
     # pipe is a tuple (parent , chield)
     update_time = current_datetime_tz()
     pipes = [multiprocessing.Pipe(duplex=False) for _ in funcs]
-    processes_news = [multiprocessing.Process(target=worker_c, args=(params[0],),
+    processes_news = [multiprocessing.Process(target=workerANDconnector, args=(params[0],),
                                               kwargs={'connector': params[1][1], 'collection': collection,
                                                       'update_time': update_time})
                       for params in zip(funcs, pipes)]
