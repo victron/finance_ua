@@ -8,6 +8,9 @@ from spiders import parameters
 from spiders.check_proxy import proxy_is_used
 from spiders.common_spider import current_datetime_tz, date_handler
 from tools.mytools import timer
+import logging
+
+logger = logging.getLogger('curs.spiders.news_minfin')
 
 # TODO:
 # - convert time into datetime
@@ -20,7 +23,7 @@ proxies = parameters.proxies
 
 urls_dict = {'currency': 'commerce'}
 
-@timer()
+@timer(logging=logger)
 def parse_minfin_headlines():
     news_type = parameters.news_type
     url = 'http://minfin.com.ua/news/' + urls_dict[news_type] + '/'

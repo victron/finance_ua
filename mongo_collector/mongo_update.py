@@ -1,6 +1,6 @@
 from pymongo.errors import DuplicateKeyError
 
-from app import mongo_logging
+
 from mongo_collector.mongo_start import data_active, records, news
 from spiders import berlox, finance_ua, parse_minfin, news_minfin, minfin
 from spiders.common_spider import current_datetime_tz, datetime
@@ -10,6 +10,9 @@ from tools.mytools import timer
 import multiprocessing
 
 from functools import reduce
+import logging
+
+logger = logging.getLogger('curs.mongo_collector.mongo_update')
 # TODO:
 # - delete some fields, before saving into history
 # + delete from data_active all records without "time_update"
@@ -17,7 +20,7 @@ from functools import reduce
 
 time_periods = range(8, 20)
 
-@timer('[EXE_TIME] >>>>')
+@timer(logging=logger)
 def mongo_insert_history(docs: list, collection):
     dublicate_count = 0
     inserted_count = 0
@@ -29,20 +32,20 @@ def mongo_insert_history(docs: list, collection):
         try:
             result = collection.insert_one(temp_doc)
             inserted_count += 1
-            mongo_logging.debug('history insert={}'.format(result.acknowledged))
+            logger.debug('history insert={}'.format(result.acknowledged))
         except DuplicateKeyError as e:
             dublicate_count += 1
-            mongo_logging.debug('duplicate found={}'.format(str(e)))
+            logger.debug('duplicate found={}'.format(str(e)))
     return inserted_count, dublicate_count
 
-@timer()
+@timer(logging=logger)
 def mongo_update_active(docss: list, time: datetime):
     for document in docss:
         document['time_update'] = time
         key = {'bid': document['bid'], 'time': document['time'], 'source': document['source']}
         try:
             result = data_active.replace_one(key, document, upsert=True)  # upsert used to insert a new document if a matching document does not exist.
-            mongo_logging.debug('update result acknowledged={}, '
+            logger.debug('update result acknowledged={}, '
                                 'upserted_id={}'.format(result.acknowledged, result.upserted_id))
         except:
             print(document)
@@ -53,7 +56,7 @@ def mongo_update_active(docss: list, time: datetime):
 
 
 
-@timer('[EXE_TIME] >>>>')
+@timer(logging=logger)
 def update_lists() -> int:
     update_time = current_datetime_tz()
     spiders_lists = ((parse_minfin.data_api_minfin, parse_minfin.get_triple_data),

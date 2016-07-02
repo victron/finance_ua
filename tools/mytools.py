@@ -1,11 +1,11 @@
 import time
 import sys
-# import logging
-from app import mongo_logging
+import logging
+# from app import mongo_logging
 
 
 # logging = logging.getLogger(__name__)
-logging = mongo_logging
+logging = logging.getLogger('curs.tools.mytools')
 
 if sys.platform[:3] == 'win':
     timefunc = time.clock
@@ -32,7 +32,7 @@ def timer1(label='', trace=True): # Аргументы декоратора: с�
 
 
 
-def timer(label='[EXE_TIME] >>>>', trace=True):
+def timer(label='[EXE_TIME] >>>>', trace=True, logging=logging):
     # Декоратор с аргументами: сохраняет арг.
     def onDecorator(func):
         # На этапе декорирования @: сохраняет
@@ -46,8 +46,10 @@ def timer(label='[EXE_TIME] >>>>', trace=True):
             if trace:
                 template = '{} {}: {:.5f}, {:.5f}'
                 values = (label, func.__name__, elapsed, onCall.alltime)
-                # print(template.format(*values))
-                logging.info(template.format(*values))
+                try:
+                    logging.info(template.format(*values))
+                except NameError:
+                    print(template.format(*values))
             return result
         onCall.alltime = 0
         return onCall

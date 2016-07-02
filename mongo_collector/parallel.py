@@ -5,7 +5,9 @@ from multiprocessing.connection import wait
 from functools import reduce
 from tools.mytools import timer
 from mongo_collector.mongo_update import mongo_insert_history
-from app import mongo_logging
+import logging
+
+logger = logging.getLogger('curs.mongo_collector.parallel')
 
 class writer_news():
     def __init__(self, db_name, *funs):
@@ -65,7 +67,7 @@ class writer_lists(writer_news):
             key = {'bid': document['bid'], 'time': document['time'], 'source': document['source']}
             try:
                 result_active = self.data_active.replace_one(key, document, upsert=True)  # upsert used to insert a new document if a matching document does not exist.
-                mongo_logging.debug('update result acknowledged={}, '
+                logger.debug('update result acknowledged={}, '
                                     'upserted_id={}'.format(result_active.acknowledged, result_active.upserted_id))
             except:
                 print(document)
@@ -91,7 +93,7 @@ def workerANDconnector(funs, **kargs):
 
 
 
-@timer()
+@timer(logging=logger)
 def parent(funcs: list, collection) -> tuple:
     """create workers and colect result via pipes
     :return list of results from chields

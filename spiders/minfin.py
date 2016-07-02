@@ -7,6 +7,9 @@ from bs4 import BeautifulSoup
 from spiders.common_spider import local_tz, date_handler
 from spiders.parameters import proxy_is_used, headers, proxies
 from tools.mytools import timer
+import logging
+
+logger = logging.getLogger('curs.spiders.minfin')
 
 
 #
@@ -26,7 +29,7 @@ def minfin_headlines_url(url) -> list:
         headlines.append({'href': href, 'time': time, 'headline': headline, 'source': 'mf'})
     return headlines
 
-@timer()
+@timer(logging=logger)
 def minfin_headlines():
     headlines = []
     for url in ['http://www.minfin.gov.ua/news/borg/zovnishni-suverenni-zobovjazannja',

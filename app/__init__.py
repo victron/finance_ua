@@ -21,7 +21,7 @@ if not os.path.isfile(logging_config):
 logging.config.dictConfig(yaml.load(open(logging_config, 'r')))
 
 web_logging = logging.getLogger('curs')
-mongo_logging = logging.getLogger('curs.mongo')
+# mongo_logging = logging.getLogger('curs.mongo')
 # web_logging = logging.getLogger(__name__)
 
 # web_logging.setLevel(logging.DEBUG)
