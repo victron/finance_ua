@@ -60,6 +60,11 @@ class ukrstat():
         """
         data from two tables on http://www.ukrstat.gov.ua/imf/arhiv/ztorg_u.htm
         :return: list of documents
+        [{
+        '_id': '',
+        'export': '',
+        'import': '',
+        'source': 'ukrstat'}]
         """
         self.url = 'http://www.ukrstat.gov.ua/imf/arhiv/ztorg_u.htm'
         response_get = requests.get(self.url)
@@ -84,7 +89,6 @@ class ukrstat():
                     doc = {}
                     doc['_id'] = datetime(year=year, month=month, day=1, hour=17, minute=0, tzinfo=local_tz)
                     month += 1
-
                     value = cell.get_text(strip=True)
                     patern = r'[0-9]'
                     if not re.match(patern, value):
@@ -116,6 +120,11 @@ class ukrstat_o():
         """
         http://oblstat.kiev.ukrstat.gov.ua/content/p.php3?lang=1&c=955
         :return: list of index for current year
+        [{
+        '_id': '',
+        'index': '',
+        'source' 'ukrstat_obl_k'
+        },]
         """
         params = {'c': '955', 'lang': '1'}
         response_get = requests.get(self.url, params=params)
@@ -138,6 +147,15 @@ class ukrstat_o():
         """
         http://oblstat.kiev.ukrstat.gov.ua/content/p.php3?c=956&lang=1
         :return: dict, m2 in region in quoter period
+        [{
+        '_id': '',
+        'granularity': '',
+        'm2_sum': '',
+        'index_sum': '',
+        'm2_city': '',
+        'index_city': '',
+        'source': 'ukrstat_obl_k'
+        },]
         """
         params = {'c': '956', 'lang': '1'}
         response_get = requests.get(self.url, params=params)
@@ -158,7 +176,8 @@ class ukrstat_o():
         granularity_dict = {'січні–березні': 3, 'квітні-червні': 6, 'липні-вересні': 9, 'жовтні-грудні': 12}
         for month in granularity_dict:
             if table_title.string.find(month) != -1:
-                doc['_id'] = granularity_dict[month]
+                doc['_id'] = datetime(year=datetime.now().year, month=granularity_dict[month], day=1, hour=17, minute=0,
+                                      tzinfo=local_tz)
                 break
         assert doc.get('_id') is not None, 'can\'t get correct period value'
         doc['granularity'] = 3

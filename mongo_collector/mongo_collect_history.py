@@ -2,7 +2,7 @@ import statistics
 from datetime import datetime, timedelta
 
 from bson.dbref import DBRef
-from mongo_update import mongo_insert_history
+from mongo_collector.mongo_update import mongo_insert_history
 from pymongo.errors import DuplicateKeyError
 
 from mongo_collector.external_loans import external_loans_USD

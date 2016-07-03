@@ -14,7 +14,7 @@ from spiders.common_spider import local_tz
 # db = app.config['DATABASE_DATA']
 
 records = DATABASE['records']
-history = DATABASE['history']
+history = DATABASE['history']   # TODO: check if needed
 
 # wraper for collection tz_aware and tzinfo
 aware_times = lambda collection: DATABASE[collection].with_options(codec_options=CodecOptions(tz_aware=True,
@@ -23,6 +23,7 @@ aware_times = lambda collection: DATABASE[collection].with_options(codec_options
 data_active = aware_times('data_active') # pymongo 3.2.2
 news = aware_times('news')
 bonds = aware_times('bonds')
+ukrstat = aware_times('ukrstat')
 
 records.create_index([('bid', pymongo.ASCENDING),
                       ('time', pymongo.ASCENDING),

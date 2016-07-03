@@ -1,7 +1,7 @@
 from pymongo.errors import DuplicateKeyError
 
 
-from mongo_collector.mongo_start import data_active, records, news
+from mongo_collector.mongo_start import data_active, records, news, aware_times
 from spiders import berlox, finance_ua, parse_minfin, news_minfin, minfin
 from spiders.common_spider import current_datetime_tz, datetime
 from spiders.filters import location, currency, operation, filter_or
@@ -19,6 +19,7 @@ logger = logging.getLogger('curs.mongo_collector.mongo_update')
 # - for minfin, if time grate then current - set yesterday date
 
 time_periods = range(8, 20)
+
 
 @timer(logging=logger)
 def mongo_insert_history(docs: list, collection):
@@ -39,54 +40,48 @@ def mongo_insert_history(docs: list, collection):
     return inserted_count, dublicate_count
 
 @timer(logging=logger)
-def mongo_update_active(docss: list, time: datetime):
-    for document in docss:
-        document['time_update'] = time
-        key = {'bid': document['bid'], 'time': document['time'], 'source': document['source']}
-        try:
-            result = data_active.replace_one(key, document, upsert=True)  # upsert used to insert a new document if a matching document does not exist.
-            logger.debug('update result acknowledged={}, '
-                                'upserted_id={}'.format(result.acknowledged, result.upserted_id))
-        except:
-            print(document)
-            print(docss)
-            raise
+def mongo_add_fields(docs: list, collection=None):
+    """
+    if doc not exist in collection - insert
+    if doc exist and same fields - do nothing
+    if doc exist, but some fields missing - add those fields
+    :param docs: list of docs
+    :param collection: pymongo collection, or get collection from source field
+    :return: tuple: (inserted_count, modified_count, duplicate_count)
+    """
+    duplicate_count = 0
+    inserted_count = 0
+    modified_count = 0
+    for d in docs:
+        if collection is None:
+            try:
+                collection = aware_times(d['source'])
+            except:
+                raise
+        find_doc = dict({})
+        find_doc = collection.find_one({'_id': d['_id']})
+        if bool(find_doc):
+            replace_doc = False
+            for field in d:
+                if (field != 'source') and (field not in find_doc):
+                    find_doc[field] = d[field]
+                    replace_doc = True
+            if replace_doc:
+                collection.replace_one({'_id': d['_id']}, find_doc)
+                modified_count += 1
+            else:
+                duplicate_count += 1
+        else:
+            temp_doc = dict(d)
+            result = collection.insert_one(temp_doc)
+            inserted_count += 1
+            logger.debug('history insert={}'.format(result.acknowledged))
+    logger.info('inserted_count={}, modified_count={}, duplicate_count={}'
+                .format(inserted_count, modified_count, duplicate_count))
+    return inserted_count, modified_count, duplicate_count
 
 
 
-
-
-@timer(logging=logger)
-def update_lists() -> int:
-    update_time = current_datetime_tz()
-    spiders_lists = ((parse_minfin.data_api_minfin, parse_minfin.get_triple_data),
-                     (finance_ua.data_api_finance_ua, finance_ua.fetch_data),
-                     (berlox.data_api_berlox, berlox.fetch_data),)
-    # AttributeError: Can't pickle local object 'update_db.<locals>.<lambda>'
-    # doc_set = reduce(lambda x, y: x + y, pool.map(lambda spider: spider[0](spider[1]), spiders))
-    output_lists = multiprocessing.Queue()
-    alias_lists = lambda param, queue: queue.put(param[0](param[1]))
-    # pool = multiprocessing.Pool()  # default == number of CPUs cores
-    # doc_set = reduce(lambda x, y: x + y, pool.map(func, spiders))
-    processes_lists = [multiprocessing.Process(target=alias_lists, args=(spider, output_lists))
-                       for spider in spiders_lists]
-
-    for process in processes_lists:
-        process.start()
-    # pool.close()
-    # pool.join()
-    doc_set_lists = reduce(lambda x, y: x + y, [output_lists.get() for _ in processes_lists])
-    for process in processes_lists:
-        process.join(0)
-    # -------- single process -----------
-    # for doc_set in [finance_ua.data_api_finance_ua(finance_ua.fetch_data),
-    #                 parse_minfin.data_api_minfin(parse_minfin.get_triple_data),
-    #                 berlox.data_api_berlox(berlox.fetch_data)]:
-    mongo_insert_history(doc_set_lists, records)
-    mongo_update_active(doc_set_lists, update_time)
-    # delete old records and records without 'time_update'
-    result = data_active.delete_many({'$or': [{'time_update': {'$lt': update_time}}, {'time_update': None}]})
-    return result.deleted_count
 
 
 
