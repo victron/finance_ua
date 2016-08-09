@@ -42,6 +42,7 @@ setup(
                       'requests',
                       'pycrypto',
                       'beautifulsoup4',
+                      'apscheduler',
 
                       'uwsgi'
 
@@ -52,6 +53,7 @@ setup(
     entry_points={
         'console_scripts': [
             'flask=app.run_flask:main',
+            'curs_auto = mongo_collector.auto_update:main',
             # 'flask2=flask.fcgi'
         ],
     },
@@ -64,7 +66,7 @@ setup(
     #     'app.templates': ['*.html'],
     #     'app.static': ['*'],
     # },
-    scripts=['bin/curs'],
+    scripts=['bin/curs', ],
 
     data_files=[
         ('.curs', ['config/flask.cfg', 'config/nginx.conf', 'config/uwsgi.ini', 'config/logging.yml']),

@@ -41,10 +41,9 @@ job_defaults = {'coalesce': True,
 # scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=kiev_tz)
 # BlockingScheduler: use when the scheduler is the only thing running in your process
 scheduler = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=kiev_tz)
+logger.info('start auto update')
+scheduler.start()
 
-
-
-logger.info('initial update')
 
 auto_list_update = scheduler.add_job(update_lists, 'interval', name='auto_list_update', minutes=5,
                                      id='auto_list_update',
@@ -59,6 +58,12 @@ def ukrstat_shadow():
 
 auto_ukrstat_month = scheduler.add_job(ukrstat_shadow, 'interval', id='auto_ukrstat_update', replace_existing=True,
                                        name='auto_ukrstat_update', days=10, jobstore='longTerm')
-logger.info('start auto update')
-scheduler.start()
+
+def main():
+    logger.debug('main function call')
+    # empty function, just for genera
+    pass
+
+
+
 

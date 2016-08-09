@@ -50,4 +50,10 @@
 #           enabled=yes
 #  become: yes
 #  become_method: sudo
+- name: generate curs_auto  script into init.d
+  template: src=templates/init-script.j2 dest=/etc/init.d/curs_auto mode="a+x"
+  # in ansible2 vars could be inside tasks
+  vars:
+    cmd: $dir/bin/curs_auto
+
 ...

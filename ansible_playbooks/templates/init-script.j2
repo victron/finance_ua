@@ -15,14 +15,13 @@
 dir=`pwd`
 user=`whoami`
 # or from conf file for autostart
-. /etc/curs/curs.conf
+. {{ conf_dir }}/curs.conf
 
-cmd="$dir/bin/uwsgi --ini $dir/.curs/uwsgi.ini --venv $dir --daemonize $dir/curs_uwsgi.log"
+cmd="{{ cmd }}"
 
 
 name=`basename $0`
-#pid_file="/var/run/$name.pid"
-pid_file=`awk '/pidfile/ {print $3}' $dir/.curs/uwsgi.ini`
+pid_file="/var/run/$name.pid"
 stdout_log="/var/log/$name.log"
 stderr_log="/var/log/$name.err"
 
@@ -46,7 +45,7 @@ case "$1" in
         else
             sudo -u "$user" $cmd >> "$stdout_log" 2>> "$stderr_log" &
         fi
-#        echo $! > "$pid_file"
+        echo $! > "$pid_file"
         sleep 3
         if ! is_running; then
             echo "Unable to start, see $stdout_log and $stderr_log"

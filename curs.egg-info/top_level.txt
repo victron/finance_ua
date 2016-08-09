@@ -1,4 +1,0 @@
-app
-mongo_collector
-spiders
-tools
