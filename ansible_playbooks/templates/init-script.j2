@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-# https://github.com/fhd/init-script-template
 ### BEGIN INIT INFO
 # Provides:
 # Required-Start:    $remote_fs $syslog
@@ -10,17 +9,21 @@
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
-# full path to venv directory could be also in second argument
-#dir=$2
+name=`basename $0`
+
 dir=`pwd`
 user=`whoami`
-# or from conf file for autostart
-. {{ conf_dir }}/curs.conf
-
+config_file="{{ conf_dir }}/curs.conf"
+sig=""
 cmd="{{ cmd }}"
 
+# overide environment from config file
+if [ -f "$config_file" ]; then
+    . "$config_file"
+fi
 
-name=`basename $0`
+sig=""
+
 pid_file="/var/run/$name.pid"
 stdout_log="/var/log/$name.log"
 stderr_log="/var/log/$name.err"
@@ -51,25 +54,24 @@ case "$1" in
             echo "Unable to start, see $stdout_log and $stderr_log"
             exit 1
         fi
-
     fi
     ;;
     stop)
     if is_running; then
         echo -n "Stopping $name.."
-
-
-        kill -INT `get_pid`
-        for i in 1 2 3 4 5 6 7 9 10
+        kill "$sig" `get_pid`
+        for i in 1 2 3 4 5 6 7 8 9 10
         # for i in `seq 10`
         do
             if ! is_running; then
                 break
             fi
+
             echo -n "."
             sleep 1
         done
         echo
+
         if is_running; then
             echo "Not stopped; may still be shutting down or shutdown may have failed"
             exit 1
@@ -106,4 +108,3 @@ case "$1" in
 esac
 
 exit 0
-
