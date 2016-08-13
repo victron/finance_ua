@@ -55,5 +55,7 @@
   # in ansible2 vars could be inside tasks
   vars:
     cmd: $dir/bin/curs_auto
+    provider: curs_auto
+    Required_Start: mongodb $network $syslog
 
 ...
