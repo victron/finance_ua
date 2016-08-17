@@ -41,9 +41,6 @@ job_defaults = {'coalesce': True,
 # scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=kiev_tz)
 # BlockingScheduler: use when the scheduler is the only thing running in your process
 scheduler = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=kiev_tz)
-logger.info('start auto update')
-scheduler.start()
-
 
 auto_list_update = scheduler.add_job(update_lists, 'interval', name='auto_list_update', minutes=5,
                                      id='auto_list_update',
@@ -60,9 +57,13 @@ auto_ukrstat_month = scheduler.add_job(ukrstat_shadow, 'interval', id='auto_ukrs
                                        name='auto_ukrstat_update', days=10, jobstore='longTerm')
 
 def main():
-    logger.debug('main function call')
-    # empty function, just for genera
-    pass
+    logger.debug('start auto update')
+    # For BlockingScheduler, you will only want to call start() after you’re done with any initialization steps.
+    scheduler.start()
+
+
+if __name__ == '__main__':
+    main()
 
 
 
