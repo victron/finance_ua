@@ -9,8 +9,7 @@ import sys
 import os
 import yaml
 from mongo_collector.parallel import update_lists, update_news
-from mongo_collector.mongo_update import mongo_add_fields
-from spiders.ukrstat import ukrstat, ukrstat_o
+from mongo_collector.mongo_periodic import ukrstat_shadow
 
 import logging.config
 logging_config = os.path.join(sys.prefix, '.curs', 'logging.yml')
@@ -48,11 +47,8 @@ auto_list_update = scheduler.add_job(update_lists, 'interval', name='auto_list_u
 auto_news_update = scheduler.add_job(update_news, 'interval', name='auto_news_update', minutes=30,
                                      id='auto_news_update',
                                      next_run_time=datetime.now(kiev_tz) + timedelta(minutes=1, seconds=30))
-def ukrstat_shadow():
-    mongo_add_fields(ukrstat().saldo())
-    mongo_add_fields(ukrstat_o().building_index())
-    mongo_add_fields([ukrstat_o().housing_meters()])
-
+# Todo: aspscheduler problem
+# problem with aspscheduler, try to move to another module
 auto_ukrstat_month = scheduler.add_job(ukrstat_shadow, 'interval', id='auto_ukrstat_update', replace_existing=True,
                                        name='auto_ukrstat_update', days=10, jobstore='longTerm')
 
