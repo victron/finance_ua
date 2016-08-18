@@ -202,35 +202,38 @@ def ukrstat_json():
     projection = {'$time': '$id', 'import': True, 'export': True}
     cursor = aware_times('ukrstat').find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
 
+    # data.update({'ukrstat': cursor})
     data.update({'ukrstat': []})
-    previous_doc = None
+    # previous_doc = None
     for doc in cursor:
         doc['time'] = doc['_id']
         del doc['_id']
-        if previous_doc is not None:
-            month = doc['time'].month
-            if month != 1:
-                if month == previous_doc['time'].month + 1:
-                    doc['_import'] = round((doc['import'] - previous_doc['import'])/1000000, 2)
-                    doc['_export'] = round((doc['export'] - previous_doc['export'])/1000000, 2)
-                    doc['saldo'] = doc['_import'] - doc['_export']
-                    previous_doc = dict(doc)
-            else:
-                previous_doc = dict(doc)
-                doc['import'] = round(doc['import']/1000000, 2)
-                doc['export'] = round(doc['export']/1000000, 2)
-                doc['saldo'] = doc['import'] - doc['export']
-        else:
-            previous_doc = dict(doc)
-            doc['import'] = round(doc['import'] / 1000000, 2)
-            doc['export'] = round(doc['export'] / 1000000, 2)
-            doc['saldo'] = doc['import'] - doc['export']
 
+    # below commented for import_stat(date) function, currently migrated to ukrstat().saldo()
+    #     if previous_doc is not None:
+    #         month = doc['time'].month
+    #         if month != 1:
+    #             if month == previous_doc['time'].month + 1:
+    #                 doc['_import'] = round((doc['import'] - previous_doc['import'])/1000000, 2)
+    #                 doc['_export'] = round((doc['export'] - previous_doc['export'])/1000000, 2)
+        doc['saldo'] = doc['import'] - doc['export']
+    #                 previous_doc = dict(doc)
+    #         else:
+    #             previous_doc = dict(doc)
+    #             doc['import'] = round(doc['import']/1000000, 2)
+    #             doc['export'] = round(doc['export']/1000000, 2)
+    #             doc['saldo'] = doc['import'] - doc['export']
+    #     else:
+    #         previous_doc = dict(doc)
+    #         doc['import'] = round(doc['import'] / 1000000, 2)
+    #         doc['export'] = round(doc['export'] / 1000000, 2)
+    #         doc['saldo'] = doc['import'] - doc['export']
+    #
         data['ukrstat'].append(doc)
-    for doc in data['ukrstat']:
-        if '_import' in doc:
-            doc['import'] = doc.pop('_import')
-            doc['export'] = doc.pop('_export')
+    # for doc in data['ukrstat']:
+    #     if '_import' in doc:
+    #         doc['import'] = doc.pop('_import')
+    #         doc['export'] = doc.pop('_export')
     file = jsonify(data)
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'ukrstat' + '.json'
     return file

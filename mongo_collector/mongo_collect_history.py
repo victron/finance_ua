@@ -12,7 +12,9 @@ from spiders.nbu import auction_get_dates, NbuJson, auction_results
 from spiders.parse_minfin import minfin_history
 from spiders.ukrstat import import_stat
 from pymongo.errors import DuplicateKeyError
-
+from spiders.ukrstat import ukrstat as ukrstat_
+from mongo_collector.mongo_update import mongo_add_fields
+from mongo_collector.mongo_start import ukrstat as ukrstat_db
 
 
 def insert_history_embedded(input_document: dict):
@@ -195,6 +197,9 @@ def ukrstat(start_date: datetime) -> tuple:
         except DuplicateKeyError as e:
             print('duplicate found={}'.format(str(e)))
             duplicate_count += 1
+        # protection from None in import_stat(date)
+        except TypeError:
+            pass
         if date.month // 12 == 0:
             date = date.replace(month=(date.month + 1))
         else:
@@ -234,7 +239,8 @@ if __name__ == '__main__':
 
     # ----------- colect ukrstat -------------------
     start_date = datetime.strptime('2006-01', '%Y-%m')
-    result = ukrstat(start_date)
+    # result = ukrstat(start_date)
+    result = mongo_add_fields(ukrstat_().saldo(), ukrstat_db)
     print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
     # ================================================
 
