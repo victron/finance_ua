@@ -14,20 +14,20 @@
 
 # Author: Viktor Tsymbalyuk
 
-name=`basename $0`
-
-dir=`pwd`
-user=`whoami`
+# environment from config file
 config_file="{{ conf_dir }}/curs.conf"
-sig=""
-cmd="{{ cmd }}"
-
-# overide environment from config file
 if [ -f "$config_file" ]; then
     . "$config_file"
 fi
 
+# override configs in script (not recommended)
+name=`basename $0`
+# dir=`pwd`
+# user=`whoami`
 sig=""
+cmd="{{ cmd }}"
+
+
 
 pid_file="/var/run/$name.pid"
 stdout_log="/var/log/$name.log"
