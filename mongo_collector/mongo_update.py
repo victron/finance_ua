@@ -53,10 +53,12 @@ def mongo_add_fields(docs: list, collection=None):
     inserted_count = 0
     modified_count = 0
     for d in docs:
+        # should works if collection exists
         if collection is None:
             try:
                 collection = aware_times(d['source'])
             except:
+                print('problem with mapping \'source\' in doc with colection')
                 raise
         find_doc = dict({})
         find_doc = collection.find_one({'_id': d['_id']})

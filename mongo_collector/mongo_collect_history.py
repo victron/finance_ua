@@ -214,34 +214,35 @@ if __name__ == '__main__':
     # mongo_insert_history(NbuJson().ovdp_all(), bonds)
 
     for currency in ['UAH', 'USD', 'EUR']:
-        doc_list = NbuJson().ovdp_currency(currency)
-        # in json from NBU 'amount' is number of papers, value of paper == 1000
-        doc_list = [dict(doc, amount=doc['amount'] * 1000) for doc in doc_list]
-        if currency == 'USD':
-            doc_list += external_loans_USD
-        mongo_insert_history(doc_list, aware_times('bonds_' + currency))
-        times_from_bonds = []
-        for doc in doc_list:
-            if 'coupon_date' not in doc:
-                times_from_bonds += [{'time': doc[field]} for field in ['repaydate', 'paydate', 'auctiondate']]
-            else:
-                # currently coupon_date available only for infor for external borrows
-                # TODO: borrows for different currencies, if needed
-                coupon_dates = [datetime.strptime(date+'.'+str(year), '%d.%m.%Y').replace(hour=17, tzinfo=local_tz)
-                                for date in doc['coupon_date']
-                                for year in range(2016, int(doc['repaydate'].strftime('%Y'))+1)]
-                times_from_bonds += [{'time': doc['repaydate']}]
-                # Be careful with ref, after delete colection ref still exist on None object
-                times_from_bonds += [{'time': coupon_date, 'bonds': [DBRef('bonds_' + currency, doc['_id'])]}
-                                     for coupon_date in coupon_dates]
-        for cur in ['USD', 'EUR']:
-            mongo_insert_history(times_from_bonds, aware_times(cur))
-
-    # ----------- colect ukrstat -------------------
-    start_date = datetime.strptime('2006-01', '%Y-%m')
-    # result = ukrstat(start_date)
-    result = mongo_add_fields(ukrstat_().saldo(), ukrstat_db)
-    print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
+        print(internal_history())
+    #     doc_list = NbuJson().ovdp_currency(currency)
+    #     # in json from NBU 'amount' is number of papers, value of paper == 1000
+    #     doc_list = [dict(doc, amount=doc['amount'] * 1000) for doc in doc_list]
+    #     if currency == 'USD':
+    #         doc_list += external_loans_USD
+    #     mongo_insert_history(doc_list, aware_times('bonds_' + currency))
+    #     times_from_bonds = []
+    #     for doc in doc_list:
+    #         if 'coupon_date' not in doc:
+    #             times_from_bonds += [{'time': doc[field]} for field in ['repaydate', 'paydate', 'auctiondate']]
+    #         else:
+    #             # currently coupon_date available only for infor for external borrows
+    #             # TODO: borrows for different currencies, if needed
+    #             coupon_dates = [datetime.strptime(date+'.'+str(year), '%d.%m.%Y').replace(hour=17, tzinfo=local_tz)
+    #                             for date in doc['coupon_date']
+    #                             for year in range(2016, int(doc['repaydate'].strftime('%Y'))+1)]
+    #             times_from_bonds += [{'time': doc['repaydate']}]
+    #             # Be careful with ref, after delete colection ref still exist on None object
+    #             times_from_bonds += [{'time': coupon_date, 'bonds': [DBRef('bonds_' + currency, doc['_id'])]}
+    #                                  for coupon_date in coupon_dates]
+    #     for cur in ['USD', 'EUR']:
+    #         mongo_insert_history(times_from_bonds, aware_times(cur))
+    #
+    # # ----------- colect ukrstat -------------------
+    # start_date = datetime.strptime('2006-01', '%Y-%m')
+    # # result = ukrstat(start_date)
+    # result = mongo_add_fields(ukrstat_().saldo(), ukrstat_db)
+    # print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
     # ================================================
 
 
