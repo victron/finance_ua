@@ -20,6 +20,9 @@
         become: yes
         become_method: sudo
         when: ansible_pkg_mgr == "apt"
+      - include: mongod_start.yaml
+        become: yes
+        become_method: sudo
       - include: python.yaml
       - include: uwsgi_nginx.yaml
         become: yes

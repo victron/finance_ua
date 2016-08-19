@@ -1,9 +1,4 @@
 ---
-- name: start mongo
-  service: name=mongod state=started
-           enabled=yes
-  become: yes
-  become_method: sudo
 - name: start uwsgi
   service: name=curs  state=started
            enabled=yes
