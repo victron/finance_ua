@@ -10,6 +10,8 @@ import os
 import yaml
 from mongo_collector.parallel import update_lists, update_news
 from mongo_collector.mongo_periodic import ukrstat_shadow
+from mongo_collector.mongo_collect_history import hourly_history
+from mongo_collector.mongo_collect_history import agg_daily_stat
 
 import logging.config
 logging_config = os.path.join(sys.prefix, '.curs', 'logging.yml')
@@ -47,6 +49,10 @@ auto_list_update = scheduler.add_job(update_lists, 'interval', name='auto_list_u
 auto_news_update = scheduler.add_job(update_news, 'interval', name='auto_news_update', minutes=30,
                                      id='auto_news_update',
                                      next_run_time=datetime.now(kiev_tz) + timedelta(minutes=1, seconds=30))
+hour_stat = scheduler.add_job(hourly_history, 'cron', name='hour_stat', minute=55, id='hour_stat',
+                              replace_existing=True, jobstore='longTerm')
+daily_stat = scheduler.add_job(agg_daily_stat, 'cron', name='daily_stat', hour=18, minute=57, id='daily_stat',
+                               replace_existing=True, jobstore='longTerm')
 # Todo: aspscheduler problem
 # problem with aspscheduler, try to move to another module
 auto_ukrstat_month = scheduler.add_job(ukrstat_shadow, 'interval', id='auto_ukrstat_update', replace_existing=True,

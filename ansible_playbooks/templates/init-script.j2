@@ -1,28 +1,32 @@
 #!/usr/bin/env sh
+# https://github.com/victron/init-script-template/blob/master/template
+
+# https://en.opensuse.org/openSUSE:Packaging_init_scripts
 ### BEGIN INIT INFO
-# Provides:
-# Required-Start:    $remote_fs $syslog
-# Required-Stop:     $remote_fs $syslog
+# Provides:             {{ provider }}
+# Required-Start:       {{ Required_Start }}
+# Required-Stop:     $local_fs  $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Start daemon at boot time
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
-name=`basename $0`
+# Author: Viktor Tsymbalyuk
 
-dir=`pwd`
-user=`whoami`
+# environment from config file
 config_file="{{ conf_dir }}/curs.conf"
-sig=""
-cmd="{{ cmd }}"
-
-# overide environment from config file
 if [ -f "$config_file" ]; then
     . "$config_file"
 fi
 
+# override configs in script (not recommended)
+name=`basename $0`
+# dir=`pwd`
+# user=`whoami`
 sig=""
+cmd="{{ cmd }}"
+
 
 pid_file="/var/run/$name.pid"
 stdout_log="/var/log/$name.log"

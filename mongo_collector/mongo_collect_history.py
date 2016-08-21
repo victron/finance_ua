@@ -15,6 +15,7 @@ from pymongo.errors import DuplicateKeyError
 from spiders.ukrstat import ukrstat as ukrstat_
 from mongo_collector.mongo_update import mongo_add_fields
 from mongo_collector.mongo_start import ukrstat as ukrstat_db
+from mongo_collector import DATABASE
 
 
 def insert_history_embedded(input_document: dict):
@@ -52,6 +53,7 @@ def insert_history_embedded(input_document: dict):
 
 def insert_history(input_document: dict):
     """
+    insert document into collection based on 'source' field
     {'time':
      'buy':
      'sell':
@@ -69,7 +71,7 @@ def insert_history(input_document: dict):
     # delete some fields from temp document before inserting it
     currency = document.pop('currency').upper()
     time = document.pop('time')
-    if document['source'] == 'nbu_auction':
+    if (document['source'] == 'nbu_auction') or (document['source'] == 'nbu'):
         source = document.pop('source')
         db_update.update_one({'time': time},
                            {'$set': {source + '.' + field: document[field] for field in document}}, upsert=True)
@@ -129,20 +131,25 @@ def create_hour_stat_doc2(currency: str, operation: str, collection: data_active
     command_cursor = collection.aggregate(pipeline)
     return [form_output_doc(doc) for doc in command_cursor]
 
-def last_hour_stat(collection: data_active) -> dict:
+def hour_stat(collection: data_active) -> list:
     """
-    result of document
-
+    forms hour statistics
+    result document format:
     { "_id" : { "$oid" : "57015b77f0bccb05021e8182"} ,
     "time" : { "$date" : "2016-04-03T18:00:00.000Z"} ,
     "buy" : 25.92 ,  # median from range
     "source" : "h_stat" ,
     "sell" : 26.05 , # median from range
     "buy_rates" : [ 25.95 , 25.7 , 25.7 , 25.9 , 25.95 , 25.95] ,
-    "sell_rates" : [ 26.05 , 26.03 , 26.1]}
+    "sell_rates" : [ 26.05 , 26.03 , 26.1],
+    "currency": "USD"}
     """
     update_time = collection.find_one({}, {'time_update': True, '_id': False})['time_update']
-    stop_time = update_time.replace(minute=0, second=0, microsecond=0)
+    # stop_time = update_time.replace(minute=0, second=0, microsecond=0)
+    # assume that it called at the end of hour
+    stop_time = datetime.now(tz=local_tz)
+    # stop_time write into db, minute=59 means stat data
+    stop_time = stop_time.replace(minute=59, second=0, microsecond=0)
     start_time = stop_time - timedelta(hours=1)
     location = 'Киев'
     source = 'h_int_stat'
@@ -166,6 +173,10 @@ def last_hour_stat(collection: data_active) -> dict:
 
 
 def ext_history():
+    """
+    collects currencies rates from minfin, nbu rates, nbu auction
+    :return:
+    """
     auction_dates = set()
     for year in ['2014', '2015', '2016']:
         auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
@@ -180,10 +191,116 @@ def ext_history():
                 insert_history(dict(doc, source='d_ext_stat'))
 
 
-def internal_history():
-    # ------- colect stat from own data ---------
-    for doc in last_hour_stat(data_active):
+def hourly_history() -> None:
+    """
+    collects hourly stat from data_active, and put in currency collections
+    :return: None
+    """
+    for doc in hour_stat(data_active):
         insert_history(doc)
+
+
+def daily_stat(day: datetime, collection) -> dict:
+    """
+    create day statistics based on hourly data
+    currently put in stat data for business hours
+    :param day: datetime, date for aggregation hour statistic
+    :param collection:
+    :return:
+    """
+    business_time = (day.replace(hour=9, minute=0), day.replace(hour=17, minute=59))
+    full_time = (day.replace(hour=0, minute=0), day.replace(hour=23, minute=59))
+    time = business_time
+    source = 'd_int_stat'
+    pipeline = [{'$match': {'source': 'h_int_stat',
+                            '$and': [{'time': {'$gte': time[0]}}, {'time': {'$lt': time[1]}}]}},
+                {'$group': {'_id': None, 'sell': {'$avg': '$sell'}, 'sell_rates': {'$push':  '$sell'},
+                                         'buy': {'$avg': '$buy'}, 'buy_rates': {'$push':  '$buy'}}},
+                {'$project': {'_id': False, 'buy': '$buy', 'sell': '$sell', 'sell_rates': '$sell_rates',
+                              'buy_rates': '$buy_rates'}}]
+    command_cursor = collection.aggregate(pipeline)
+    def form_output_doc(document):
+        document['sell'] = round(document['sell'], 2)
+        document['buy'] = round(document['buy'], 2)
+        document['source'] = source
+        document['time'] = time[1]
+        return document
+    # actually one document
+    try:
+        result_doc = [form_output_doc(doc) for doc in command_cursor][0]
+    except IndexError:
+        return {}
+    time = time[1].replace(hour=17, minute=0, second=0, microsecond=0)
+    collection.update_one({'time': time}, {'$set': result_doc}, upsert=True)
+    return result_doc
+
+def agg_daily_stat():
+    """
+    collects daily statistic for internal houly stat or external stat
+    :return:
+    """
+    # find missing stat period
+    # assume call done at the end of day
+    stop_day = datetime.now(tz=local_tz).replace(hour=17, minute=0, second=0, microsecond=0)
+    # get NDU auction dates
+    auction_dates = set()
+    for year in ['2014', '2015', '2016']:
+        auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
+
+    for currency in ['USD', 'EUR', 'RUB']:
+        collection = aware_times(currency)
+        # save data localy to limit acces to external website
+        if currency != 'RUB':
+            # no ext data for RUB
+            minfin_data = minfin_history(currency, stop_day)
+
+        filter = {'$or': [{'source' :'d_ext_stat'}, {'source': 'd_int_stat'}]}
+        projection = {'_id': False, 'time': True}
+        try:
+            last_daily_stat = collection.find(filter=filter, projection=projection).sort('time', -1)[0]
+        except IndexError:
+            ext_history()
+            break
+        print(last_daily_stat)
+        start_day = last_daily_stat['time'] + timedelta(days=1)
+        days = []
+
+        while start_day <= stop_day:
+            days.append(start_day)
+            start_day += timedelta(days=1)
+        print('cur', currency, 'days', days)
+        for day in days:
+            day_stat = daily_stat(day, collection)
+
+            def ext_stat():
+                if currency == 'RUB':
+                    return None
+                for doc in minfin_data:
+                    if doc['time'] == day:
+                        r = insert_history(dict(doc, source='d_ext_stat'))
+                        break
+            # if hourly stat less then 5
+            # overwrite internal daily stat by external stat data
+            if day_stat:
+                if len(day_stat['sell_rates']) < 5:
+                    ext_stat()
+            else:
+                ext_stat()
+            # insert NBU rate
+            insert_history(NbuJson().rate_currency_date(currency, day))
+            # insert auction_results
+            if day in auction_dates:
+                insert_history(auction_results(day))
+
+
+
+
+
+
+
+
+
+
 
 def ukrstat(start_date: datetime) -> tuple:
     duplicate_count = 0
@@ -207,14 +324,14 @@ def ukrstat(start_date: datetime) -> tuple:
     return inserted_count, duplicate_count
 
 if __name__ == '__main__':
-    # collect currencies rates from minfin.ua and nbu auction results
-    ext_history()
-    # internal_history()
-    # TODO: minor: validate counts of records from ovdp_all and by currency
-    # mongo_insert_history(NbuJson().ovdp_all(), bonds)
-
-    for currency in ['UAH', 'USD', 'EUR']:
-        print(internal_history())
+    # # collect currencies rates from minfin.ua and nbu auction results
+    # ext_history()
+    # # internal_history()
+    # # TODO: minor: validate counts of records from ovdp_all and by currency
+    # # mongo_insert_history(NbuJson().ovdp_all(), bonds)
+    #
+    # for currency in ['UAH', 'USD', 'EUR']:
+    #     print(hourly_history())
     #     doc_list = NbuJson().ovdp_currency(currency)
     #     # in json from NBU 'amount' is number of papers, value of paper == 1000
     #     doc_list = [dict(doc, amount=doc['amount'] * 1000) for doc in doc_list]
@@ -243,8 +360,8 @@ if __name__ == '__main__':
     # # result = ukrstat(start_date)
     # result = mongo_add_fields(ukrstat_().saldo(), ukrstat_db)
     # print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
-    # ================================================
-
+    # # ================================================
+    agg_daily_stat()
 
 
 

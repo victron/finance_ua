@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # https://github.com/fhd/init-script-template
 ### BEGIN INIT INFO
-# Provides:
+# Provides:          curs
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5

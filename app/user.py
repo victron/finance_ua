@@ -30,4 +30,11 @@ def load_user(username):
         return None
     return User(u['_id'])
 
+
+# quick notes for user creation
+# from werkzeug.security import check_password_hash, generate_password_hash
+# from pymongo import MongoClient
+# DB_NAME = 'users'
+# DATABASE = MongoClient(connect=False)[DB_NAME]
+# USERS_COLLECTION = DATABASE['users']
 # USERS_COLLECTION.insert_one({'_id': 'test', 'password': generate_password_hash('test', 'sha256')})
