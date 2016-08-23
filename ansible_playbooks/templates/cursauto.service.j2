@@ -1,0 +1,31 @@
+[Unit]
+Description=Auto stat collection for curs app
+After=syslog.target
+After=network.target
+After=mongodb.service
+Requires=mongodb.service
+
+[Service]
+Type=simple
+#PIDFile=/var/run/cursauto.pif
+# path venv
+WorkingDirectory=/home/vic/flask
+
+User=vic
+Group=vic
+
+#Environment=RACK_ENV=production
+
+OOMScoreAdjust=-100
+
+# shell script, created by setuptools, with
+# derective #!/home/vic/flask/bin/python3.5
+ExecStart=/home/vic/flask/bin/curs_auto
+#ExecStop=
+#ExecReload=
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target
+
+multi-user.target

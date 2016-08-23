@@ -70,6 +70,7 @@ def insert_history(input_document: dict):
 
     # delete some fields from temp document before inserting it
     currency = document.pop('currency').upper()
+    # delete "time", in any case pymongo.errors.DuplicateKeyError when call update
     time = document.pop('time')
     if (document['source'] == 'nbu_auction') or (document['source'] == 'nbu'):
         source = document.pop('source')
@@ -231,7 +232,9 @@ def daily_stat(day: datetime, collection) -> dict:
     except IndexError:
         return {}
     time = time[1].replace(hour=17, minute=0, second=0, microsecond=0)
-    collection.update_one({'time': time}, {'$set': result_doc}, upsert=True)
+    document = dict(result_doc)
+    del document['time']
+    collection.update_one({'time': time}, {'$set': document}, upsert=True)
     return result_doc
 
 def agg_daily_stat():
@@ -241,11 +244,22 @@ def agg_daily_stat():
     """
     # find missing stat period
     # assume call done at the end of day
+    def ext_stat(date):
+        if currency == 'RUB':
+            return None
+        for doc in minfin_data:
+            if doc['time'] == date:
+                rersult = insert_history(dict(doc, source='d_ext_stat'))
+                break
+
     stop_day = datetime.now(tz=local_tz).replace(hour=17, minute=0, second=0, microsecond=0)
+
     # get NDU auction dates
     auction_dates = set()
     for year in ['2014', '2015', '2016']:
         auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
+
+
 
     for currency in ['USD', 'EUR', 'RUB']:
         collection = aware_times(currency)
@@ -272,20 +286,13 @@ def agg_daily_stat():
         for day in days:
             day_stat = daily_stat(day, collection)
 
-            def ext_stat():
-                if currency == 'RUB':
-                    return None
-                for doc in minfin_data:
-                    if doc['time'] == day:
-                        r = insert_history(dict(doc, source='d_ext_stat'))
-                        break
             # if hourly stat less then 5
             # overwrite internal daily stat by external stat data
             if day_stat:
                 if len(day_stat['sell_rates']) < 5:
-                    ext_stat()
+                    ext_stat(day)
             else:
-                ext_stat()
+                ext_stat(day)
             # insert NBU rate
             insert_history(NbuJson().rate_currency_date(currency, day))
             # insert auction_results
