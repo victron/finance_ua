@@ -9,7 +9,7 @@ Requires=mongodb.service
 Type=simple
 #PIDFile=/var/run/cursauto.pif
 # path venv
-WorkingDirectory=/home/vic/flask
+WorkingDirectory={{ home_dir }}/{{ venv_dir }}
 
 User=vic
 Group=vic
@@ -18,9 +18,8 @@ Group=vic
 
 OOMScoreAdjust=-100
 
-# shell script, created by setuptools, with
-# derective #!/home/vic/flask/bin/python3.5
-ExecStart=/home/vic/flask/bin/curs_auto
+
+ExecStart={{ home_dir }}/{{ venv_dir }}/bin/
 #ExecStop=
 #ExecReload=
 TimeoutSec=300

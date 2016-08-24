@@ -16,7 +16,9 @@ from spiders.ukrstat import ukrstat as ukrstat_
 from mongo_collector.mongo_update import mongo_add_fields
 from mongo_collector.mongo_start import ukrstat as ukrstat_db
 from mongo_collector import DATABASE
+import logging
 
+logger = logging.getLogger('curs.mongo_collector.mongo_collect_history')
 
 def insert_history_embedded(input_document: dict):
     """
@@ -173,15 +175,19 @@ def hour_stat(collection: data_active) -> list:
     return [form_output_doc(doc) for doc in command_cursor]
 
 
-def ext_history():
+def ext_history(currency=None):
     """
     collects currencies rates from minfin, nbu rates, nbu auction
     :return:
     """
+    if currency is None:
+        currencies = ['USD', 'EUR']
+    else:
+        currencies = [currency]
     auction_dates = set()
     for year in ['2014', '2015', '2016']:
         auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
-    for currency in ['USD', 'EUR']:
+    for currency in currencies:
         for doc in minfin_history(currency, datetime.now()):
             if aware_times(doc['currency']).find({'time': doc['time']}).count() == 0:
             # db.somName.find({"country":{"$exists":True}}).count()
@@ -259,8 +265,6 @@ def agg_daily_stat():
     for year in ['2014', '2015', '2016']:
         auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
 
-
-
     for currency in ['USD', 'EUR', 'RUB']:
         collection = aware_times(currency)
         # save data localy to limit acces to external website
@@ -270,19 +274,29 @@ def agg_daily_stat():
 
         filter = {'$or': [{'source' :'d_ext_stat'}, {'source': 'd_int_stat'}]}
         projection = {'_id': False, 'time': True}
-        try:
-            last_daily_stat = collection.find(filter=filter, projection=projection).sort('time', -1)[0]
-        except IndexError:
-            ext_history()
-            break
-        print(last_daily_stat)
-        start_day = last_daily_stat['time'] + timedelta(days=1)
-        days = []
+        pipeline = [{'$match': {'$or': [{'source' :'d_ext_stat'}, {'source': 'd_int_stat'}]}},
+                    {'$group': {'_id': None, 'max_time': {'$max': '$time'}}},
+                     {'$project': {'_id': False, 'max_time': '$max_time'}}]
+        command_cursor = collection.aggregate(pipeline)
+        if command_cursor.alive:
+            last_daily_stat = command_cursor.next()['max_time']
+            start_day = last_daily_stat + timedelta(days=1)
+        elif currency == 'RUB':
+            pipeline = [{'$match': {'$or': [{'source': 'h_int_stat'}]}},
+                        {'$group': {'_id': None, 'min_time': {'$min': '$time'}}},
+                        {'$project': {'_id': False, 'min_time': '$min_time'}}]
+            command_cursor = collection.aggregate(pipeline)
+            start_day = command_cursor.next()['min_time']
+        else:
+            if currency != 'RUB':
+                ext_history(currency)
+            continue
 
+        days = []
         while start_day <= stop_day:
             days.append(start_day)
             start_day += timedelta(days=1)
-        print('cur', currency, 'days', days)
+        logger.info('daily stat currency=', currency, 'days=', days)
         for day in days:
             day_stat = daily_stat(day, collection)
 
@@ -298,15 +312,6 @@ def agg_daily_stat():
             # insert auction_results
             if day in auction_dates:
                 insert_history(auction_results(day))
-
-
-
-
-
-
-
-
-
 
 
 def ukrstat(start_date: datetime) -> tuple:
