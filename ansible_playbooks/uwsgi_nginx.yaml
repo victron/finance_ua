@@ -57,5 +57,9 @@
     cmd: $dir/bin/curs_auto
     provider: curs_auto
     Required_Start: mongodb $network $syslog
+  when: ansible_service_mgr == "upstart"
 
+- name: generate cursauto systemd config
+  template: src=templates/systemd.service.j2 dest=/etc/systemd/system/cursauto.service
+  when: ansible_service_mgr == "systemd"
 ...

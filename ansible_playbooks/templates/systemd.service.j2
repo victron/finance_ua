@@ -1,3 +1,4 @@
+{{ ansible_managed | comment }}
 [Unit]
 Description=Auto stat collection for curs app
 After=syslog.target
@@ -11,15 +12,15 @@ Type=simple
 # path venv
 WorkingDirectory={{ home_dir }}/{{ venv_dir }}
 
-User=vic
-Group=vic
+User={{ remote_user }}
+Group={{ remote_user }}
 
 #Environment=RACK_ENV=production
 
 OOMScoreAdjust=-100
 
 
-ExecStart={{ home_dir }}/{{ venv_dir }}/bin/
+ExecStart={{ home_dir }}/{{ venv_dir }}/{{ cursauto }}
 #ExecStop=
 #ExecReload=
 TimeoutSec=300
@@ -27,4 +28,3 @@ TimeoutSec=300
 [Install]
 WantedBy=multi-user.target
 
-multi-user.target
