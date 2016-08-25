@@ -227,8 +227,12 @@ def daily_stat(day: datetime, collection) -> dict:
                               'buy_rates': '$buy_rates'}}]
     command_cursor = collection.aggregate(pipeline)
     def form_output_doc(document):
-        document['sell'] = round(document['sell'], 2)
-        document['buy'] = round(document['buy'], 2)
+        if collection.name == 'RUB':
+            round_dig = 4
+        else:
+            round_dig = 2
+        document['sell'] = round(document['sell'], round_dig)
+        document['buy'] = round(document['buy'], round_dig)
         document['source'] = source
         document['time'] = time[1]
         return document

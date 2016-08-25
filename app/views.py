@@ -162,7 +162,7 @@ def history_json(currency):
 
 
     if currency in main_currencies:
-        mongo_request = {}
+        mongo_request = {"$or": [{"source": "d_int_stat"}, {"source": "d_ext_stat"}]}
         projection = {'_id': False, 'time': True, 'sell': True, 'buy': True, 'nbu_rate': True,
                       'nbu_auction.amount_requested': True, 'nbu_auction.amount_accepted_all': True,
                       'nbu_auction.operation': True}
