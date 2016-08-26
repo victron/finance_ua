@@ -1,0 +1,16 @@
+---
+- block:
+  - name: install nginx
+    apt: name=nginx state=present
+  - name: generate nginx.conf from template
+    template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  - name: make static directory
+    command: mkdir -p {{ static_path }}
+  - name: create ssl directory in nginx
+    command: mkdir -p /etc/nginx/ssl
+  - name: generating self-signed SSL Certs
+    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=UA/ST=Kyivska/L=Kyiv/O=priv/CN={{ ansible_fqdn }}" -keyout {{ ssl_certificate_key }} -out {{ ssl_certificate }}
+    notify:
+      - start nginx
+  become: yes
+  become_method: sudo

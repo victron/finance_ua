@@ -1,0 +1,10 @@
+---
+- name: prepare config mongodb.service
+  template: src=mongodb.service.j2 dest=/etc/systemd/system/mongodb.service
+  when: ansible_service_mgr == "systemd"
+  become: yes
+  become_method: sudo
+- name: start mongodb
+  service: name=mongodb state=started enabled=yes
+  become: yes
+  become_method: sudo

@@ -15,6 +15,9 @@
 - name: install  mongodb-org
   apt: name=mongodb-org
     state=present
+  notify:
+    - prepare config mongodb.service
+
 - name: install nginx
   apt: name=nginx state=present
 

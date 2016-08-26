@@ -18,7 +18,7 @@ ansible_connection = local
 ansible_connection = paramiko
 ansible_port = 2222
 ansible_python_interpreter=/usr/bin/python
-remote_user = vagrant
+#remote_user = vagrant
 
 [inna:vars]
 ansible_python_interpreter=/usr/bin/python

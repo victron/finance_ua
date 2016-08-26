@@ -1,10 +1,31 @@
 ---
 venv_dir: flask
+remote_user: vic
 home_dir: "{{ ansible_user_dir }}"
-cursauto: bin/curs_auto
 app_file: curs-16.5.1.dev3.tar.gz
 conf_dir: /etc/curs
 # nginx
 static_path: /var/www/curs/static
 ssl_certificate: /etc/nginx/ssl/nginx.crt
 ssl_certificate_key: /etc/nginx/ssl/nginx.key
+# vars for curs app
+curs:
+  after:
+    - syslog.target
+    - network.target
+    - mongodb.service
+  requires:
+    - mongodb.service
+    - nginx.service
+  cmd: "{{ home_dir }}/{{ venv_dir }}/bin/uwsgi --ini {{ home_dir }}/{{ venv_dir }}/.curs/uwsgi.ini --venv {{ home_dir }}/{{ venv_dir }} --daemonize {{ home_dir }}/{{ venv_dir }}/curs_uwsgi.log"
+
+# vars for cursauto script
+cursauto:
+  after:
+    - syslog.target
+    - network.target
+    - mongodb.service
+  requires:
+    - mongodb.service
+  cmd: "{{ home_dir }}/{{ venv_dir }}/bin/curs_auto"
+

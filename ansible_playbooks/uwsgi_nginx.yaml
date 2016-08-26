@@ -1,5 +1,5 @@
 ---
-# copy nginx config, statics and starts
+# ---------- copy nginx config, statics and starts ----------
 #- name: copy nginx config
 #  command: cp {{ venv_dir }}/.curs/nginx.conf /etc/nginx/nginx.conf chdir={{ home_dir }}
 #  become: yes
@@ -28,13 +28,24 @@
 - name: generate curs.conf from template
   template: src=templates/curs.conf.j2 dest={{ conf_dir }}/curs.conf
 
-
+# -------------- curs configs ---------------
 - name: copy uwsgi (curs) script to init.d
-#  file: src={{ home_dir }}/{{ venv_dir }}/bin/curs dest=/etc/init.d/curs state=link
   command: cp {{ home_dir }}/{{ venv_dir }}/bin/curs /etc/init.d/curs
   notify:
     - start uwsgi
     - start nginx
+  when: ansible_service_mgr == "upstart"
+
+- name: generate curs systemd config
+  template: src=templates/systemd.service.j2 dest=/etc/systemd/system/curs.service
+  with_items:
+    - "{{ curs }}"
+  when: ansible_service_mgr == "systemd"
+  notify:
+    - start uwsgi
+    - start nginx
+
+
 #- name: start nginx
 #  service: name=nginx state=restarted
 #           enabled=yes
@@ -50,6 +61,7 @@
 #           enabled=yes
 #  become: yes
 #  become_method: sudo
+# -------------- cursauto configs ---------------
 - name: generate curs_auto  script into init.d
   template: src=templates/init-script.j2 dest=/etc/init.d/curs_auto mode="a+x"
   # in ansible2 vars could be inside tasks
@@ -58,8 +70,10 @@
     provider: curs_auto
     Required_Start: mongodb $network $syslog
   when: ansible_service_mgr == "upstart"
-
 - name: generate cursauto systemd config
   template: src=templates/systemd.service.j2 dest=/etc/systemd/system/cursauto.service
+  with_items:
+    - "{{ cursauto }}"
   when: ansible_service_mgr == "systemd"
+
 ...

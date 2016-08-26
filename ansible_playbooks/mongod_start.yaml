@@ -5,8 +5,8 @@
 - name: start mongo (systemd)
   systemd: name=mongodb state=stopped enabled=yes
   when: ansible_service_mgr == "systemd"
-- name: start mongo (init)
+- name: start mongo
   service: name=mongodb state=started enabled=yes
-  when: ansible_service_mgr == "upstart"
+#  when: ansible_service_mgr == "upstart"
 
 
