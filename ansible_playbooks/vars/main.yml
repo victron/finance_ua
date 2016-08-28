@@ -1,7 +1,9 @@
 ---
 venv_dir: flask
 remote_user: vic
-home_dir: "{{ ansible_user_dir }}"
+app_user: curs
+#home_dir: "{{ ansible_user_dir }}"
+home_dir: /opt/{{ app_user }}
 app_file: curs-16.5.1.dev3.tar.gz
 conf_dir: /etc/curs
 # nginx
@@ -17,6 +19,8 @@ curs:
   requires:
     - mongodb.service
     - nginx.service
+  # /var/run need spesial write permitions
+  pidfile: /tmp/curs.pid
   cmd: "{{ home_dir }}/{{ venv_dir }}/bin/uwsgi --ini {{ home_dir }}/{{ venv_dir }}/.curs/uwsgi.ini --venv {{ home_dir }}/{{ venv_dir }} --daemonize {{ home_dir }}/{{ venv_dir }}/curs_uwsgi.log"
 
 # vars for cursauto script

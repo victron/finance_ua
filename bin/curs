@@ -17,12 +17,14 @@ user=`whoami`
 # or from conf file for autostart
 . /etc/curs/curs.conf
 
-cmd="$dir/bin/uwsgi --ini $dir/.curs/uwsgi.ini --venv $dir --daemonize $dir/curs_uwsgi.log"
+pid_file="/var/run/uwsgi.pid"
+
+cmd="$dir/bin/uwsgi --ini $dir/.curs/uwsgi.ini --venv $dir --pidfile $pid_file --daemonize $dir/curs_uwsgi.log"
 
 
 name=`basename $0`
 #pid_file="/var/run/$name.pid"
-pid_file=`awk '/pidfile/ {print $3}' $dir/.curs/uwsgi.ini`
+
 stdout_log="/var/log/$name.log"
 stderr_log="/var/log/$name.err"
 

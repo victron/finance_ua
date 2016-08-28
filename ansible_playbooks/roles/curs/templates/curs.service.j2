@@ -1,6 +1,6 @@
 {{ ansible_managed | comment }}
 [Unit]
-Description=Auto stat collection for curs app
+Description=WEB curs app
 {% for service in item['after'] %}
 After={{ service }}
 {% endfor %}
@@ -10,10 +10,15 @@ After={{ service }}
 Requires={{ service }}
 {% endfor %}
 
+
 [Service]
-Type=simple
-# path venv
+Type=forking
 WorkingDirectory={{ home_dir }}/{{ venv_dir }}
+#Restart=always
+KillSignal=SIGQUIT
+#KillSignal=SIGINT
+PIDFile={{ item['pidfile'] }}
+ExecStart={{ item['cmd'] }} --pidfile {{ item['pidfile'] }}
 
 User={{ app_user }}
 Group={{ app_user }}
@@ -22,11 +27,10 @@ Group={{ app_user }}
 
 OOMScoreAdjust=-100
 
-
-ExecStart={{ item['cmd'] }}
 #ExecStop=
 #ExecReload=
 TimeoutSec=300
+StandardError=syslog
 
 [Install]
 WantedBy=multi-user.target
