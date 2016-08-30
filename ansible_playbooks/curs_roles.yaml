@@ -8,7 +8,9 @@
 # or put in meta into dependencies:
     - mongodb
     - python3
-    - nginx
+    - role: nginx
+      tags:
+        - nginx
     - role: curs
       tags:
         - curs

@@ -38,6 +38,9 @@
          virtualenv_python=python3.5
   - name: generate logging.yaml
     template: src=logging.yml.j2 dest={{ home_dir }}/{{ venv_dir }}/.curs/logging.yml
+    notify:
+      - start uwsgi
+      - start cursauto
   become: yes
   become_user: "{{ app_user }}"
   become_method: sudo
@@ -47,7 +50,6 @@
   - name: copy static files
     shell: cp -R {{ home_dir }}/{{ venv_dir }}/lib/python3.5/site-packages/app/static/* {{ static_path }}
     notify:
-      - start uwsgi
       - start nginx
 
     # -------------- curs configs ---------------
@@ -72,7 +74,7 @@
       - reload systemd
       - start uwsgi
       - start nginx
-      - start cursauto
+
 
   # -------------- cursauto configs ---------------
   - name: generate curs_auto  script into init.d
