@@ -83,6 +83,24 @@ def insert_history(input_document: dict):
         db_update.update_one({'time': time}, {'$set': document}, upsert=True)
 
 
+def insert_history_currency(input_document: dict):
+    """
+    insert or update document in collection based on currency field
+    :param input_document:
+    :return:
+    """
+    if input_document == {} or input_document['currency'] not in ['USD', 'EUR', 'RUB']:
+        return None
+    document = dict(input_document)
+    db_update = aware_times(document['currency'])
+    currency = document.pop('currency').upper()
+    time = document.pop('time')
+    source = document.pop('source')
+    result = db_update.update_one({'time': time}, {'$set': document}, upsert=True)
+    return result
+
+
+
 def create_hour_stat_doc(currency: str, operation: str, collection: data_active) -> dict:
     """
     collect history for all hour periods in active data. Max, min, avg
@@ -312,7 +330,7 @@ def agg_daily_stat():
             else:
                 ext_stat(day)
             # insert NBU rate
-            insert_history(NbuJson().rate_currency_date(currency, day))
+            insert_history_currency(NbuJson().rate_currency_date(currency, day))
             # insert auction_results
             if day in auction_dates:
                 insert_history(auction_results(day))

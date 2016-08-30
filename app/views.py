@@ -15,7 +15,7 @@ from mongo_collector.mongo_start import news as news_db
 from spiders.common_spider import  main_currencies
 from .forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
 from .user import User
-from .views_func import reformat_for_js, reformat_for_js_bonds
+from .views_func import reformat_for_js, reformat_for_js_bonds, bonds_json_lite
 from mongo_collector.parallel import update_lists
 from mongo_collector.parallel import update_news
 # web_logging.getLogger(__name__)
@@ -277,4 +277,7 @@ def bonds_json2():
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds2' + '.json'
     return file
 
-
+@app.route('/api/bonds3')
+@login_required
+def bonds_json3():
+    return bonds_json_lite()
