@@ -4,3 +4,11 @@
            enabled=yes
   become: yes
   become_method: sudo
+
+- name: create letsencrypt config file
+  template: src=letsencrypt.conf.j2 dest=/etc/letsencrypt/letsencrypt.conf
+  become: yes
+  become_method: sudo
+
+- name: start letsencrypt
+  command: letsencrypt certonly --config /etc/letsencrypt/letsencrypt.conf

@@ -2,15 +2,35 @@
 - block:
   - name: install nginx
     apt: name=nginx state=present
+
+  # need to test --------- letsencrypt ---------
+    # don't forget about cron
+    # 17 21 * * 6 /usr/bin/letsencrypt renew >>  /var/log/letsencrypt/le-renew.log
+  - name: install letsencrypt
+    apt: name=letsencrypt state=present
+    notify:
+      - create letsencrypt config file
+      - start letsencrypt
+# --------------------------------
+
   - name: generate nginx.conf from template
     template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  - name: Create a Configuration SSL Key and Certificate Snippet
+    template: src=ssl-letsencrypt.j2 dest=/etc/nginx/snippets/ssl-{{ fqdn }}.conf
+  - name: Create a Configuration Snippet with Strong Encryption Settings
+    template: src=ssl-params.conf.j2 dest=/etc/nginx/snippets/ssl-params.conf
   - name: make static directory
     command: mkdir -p {{ static_path }}
-  - name: create ssl directory in nginx
-    command: mkdir -p /etc/nginx/ssl
-  - name: generating self-signed SSL Certs
-    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=UA/ST=Kyivska/L=Kyiv/O=priv/CN={{ ansible_fqdn }}" -keyout {{ ssl_certificate_key }} -out {{ ssl_certificate }}
+  - name: Generate Strong Diffie-Hellman Group
+    command: openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
     notify:
       - start nginx
+
+#  - name: create ssl directory in nginx
+#    command: mkdir -p /etc/nginx/ssl
+#  - name: generating self-signed SSL Certs
+#    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=UA/ST=Kyivska/L=Kyiv/O=priv/CN={{ ansible_fqdn }}" -keyout {{ ssl_certificate_key }} -out {{ ssl_certificate }}
+#    notify:
+#      - start nginx
   become: yes
   become_method: sudo

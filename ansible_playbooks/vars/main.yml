@@ -1,4 +1,7 @@
 ---
+fqdn: innad.tk
+# ansible_fqdn from ansible setup
+lets_email: viktor.tsymbalyuk@gmail.com
 venv_dir: flask
 remote_user: vic
 app_user: curs

@@ -34,8 +34,9 @@ http {
     # Configuration for Nginx
 server {
     listen 80;
-    server_name {{ ansible_fqdn }};
-    return 301 https://{{ ansible_fqdn }}$request_uri;
+    listen [::]:80 default_server;
+    server_name {{ fqdn }};
+    return 301 https://{{ fqdn }}$request_uri;
 }
     server {
 
@@ -43,9 +44,13 @@ server {
 #        listen 80;
 # ------ SSL block -----------------
         listen 443 ssl;
-        server_name {{ ansible_fqdn }};
-        ssl_certificate {{ ssl_certificate }};
-        ssl_certificate_key {{ ssl_certificate_key }};
+        listen [::]:443 ssl;
+        server_name {{ fqdn }};
+        include snippets/ssl-{{ fqdn }}.conf;
+        include snippets/ssl-params.conf;
+# direct path to certs
+#        ssl_certificate {{ ssl_certificate }};
+#        ssl_certificate_key {{ ssl_certificate_key }};
 # ==================================
         # Settings to by-pass for static files 
 #        location ^~ /static/  {
@@ -55,6 +60,12 @@ server {
 #            root /app/static/;
 
 #        }
+        # letsencrypt Webroot plugin works by placing a special file
+        location ~ /.well-known {
+                root /var/www/html/;
+                allow all;
+                }
+
        # copy 'statics' from app/static in folder below
     	location /static/  {
 		root /var/www/curs/;
