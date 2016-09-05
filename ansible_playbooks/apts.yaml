@@ -16,8 +16,8 @@
   apt: name=mongodb-org
     state=present
   notify:
-    - start mongo
-#    update_cache=yes
+    - prepare config mongodb.service
+
 - name: install nginx
   apt: name=nginx state=present
 

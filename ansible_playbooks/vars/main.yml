@@ -1,8 +1,38 @@
 ---
+fqdn: innad.tk
+# ansible_fqdn from ansible setup
+lets_email: viktor.tsymbalyuk@gmail.com
 venv_dir: flask
-static_path: /var/www/curs/static
-home_dir: "{{ ansible_user_dir }}"
+remote_user: vic
+app_user: curs
+#home_dir: "{{ ansible_user_dir }}"
+home_dir: /opt/{{ app_user }}
 app_file: curs-16.5.1.dev3.tar.gz
 conf_dir: /etc/curs
+# nginx
+static_path: /var/www/curs/static
 ssl_certificate: /etc/nginx/ssl/nginx.crt
 ssl_certificate_key: /etc/nginx/ssl/nginx.key
+# vars for curs app
+curs:
+  after:
+    - syslog.target
+    - network.target
+    - mongodb.service
+  requires:
+    - mongodb.service
+    - nginx.service
+  # /var/run need spesial write permitions
+  pidfile: /tmp/curs.pid
+  cmd: "{{ home_dir }}/{{ venv_dir }}/bin/uwsgi --ini {{ home_dir }}/{{ venv_dir }}/.curs/uwsgi.ini --venv {{ home_dir }}/{{ venv_dir }} --daemonize {{ home_dir }}/{{ venv_dir }}/curs_uwsgi.log"
+
+# vars for cursauto script
+cursauto:
+  after:
+    - syslog.target
+    - network.target
+    - mongodb.service
+  requires:
+    - mongodb.service
+  cmd: "{{ home_dir }}/{{ venv_dir }}/bin/curs_auto"
+

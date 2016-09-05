@@ -15,7 +15,7 @@ from mongo_collector.mongo_start import news as news_db
 from spiders.common_spider import  main_currencies
 from .forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
 from .user import User
-from .views_func import reformat_for_js, reformat_for_js_bonds
+from .views_func import reformat_for_js, reformat_for_js_bonds, bonds_json_lite
 from mongo_collector.parallel import update_lists
 from mongo_collector.parallel import update_news
 # web_logging.getLogger(__name__)
@@ -162,7 +162,7 @@ def history_json(currency):
 
 
     if currency in main_currencies:
-        mongo_request = {}
+        mongo_request = {"$or": [{"source": "d_int_stat"}, {"source": "d_ext_stat"}]}
         projection = {'_id': False, 'time': True, 'sell': True, 'buy': True, 'nbu_rate': True,
                       'nbu_auction.amount_requested': True, 'nbu_auction.amount_accepted_all': True,
                       'nbu_auction.operation': True}
@@ -202,35 +202,38 @@ def ukrstat_json():
     projection = {'$time': '$id', 'import': True, 'export': True}
     cursor = aware_times('ukrstat').find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
 
+    # data.update({'ukrstat': cursor})
     data.update({'ukrstat': []})
-    previous_doc = None
+    # previous_doc = None
     for doc in cursor:
         doc['time'] = doc['_id']
         del doc['_id']
-        if previous_doc is not None:
-            month = doc['time'].month
-            if month != 1:
-                if month == previous_doc['time'].month + 1:
-                    doc['_import'] = round((doc['import'] - previous_doc['import'])/1000000, 2)
-                    doc['_export'] = round((doc['export'] - previous_doc['export'])/1000000, 2)
-                    doc['saldo'] = doc['_import'] - doc['_export']
-                    previous_doc = dict(doc)
-            else:
-                previous_doc = dict(doc)
-                doc['import'] = round(doc['import']/1000000, 2)
-                doc['export'] = round(doc['export']/1000000, 2)
-                doc['saldo'] = doc['import'] - doc['export']
-        else:
-            previous_doc = dict(doc)
-            doc['import'] = round(doc['import'] / 1000000, 2)
-            doc['export'] = round(doc['export'] / 1000000, 2)
-            doc['saldo'] = doc['import'] - doc['export']
 
+    # below commented for import_stat(date) function, currently migrated to ukrstat().saldo()
+    #     if previous_doc is not None:
+    #         month = doc['time'].month
+    #         if month != 1:
+    #             if month == previous_doc['time'].month + 1:
+    #                 doc['_import'] = round((doc['import'] - previous_doc['import'])/1000000, 2)
+    #                 doc['_export'] = round((doc['export'] - previous_doc['export'])/1000000, 2)
+        doc['saldo'] = doc['import'] - doc['export']
+    #                 previous_doc = dict(doc)
+    #         else:
+    #             previous_doc = dict(doc)
+    #             doc['import'] = round(doc['import']/1000000, 2)
+    #             doc['export'] = round(doc['export']/1000000, 2)
+    #             doc['saldo'] = doc['import'] - doc['export']
+    #     else:
+    #         previous_doc = dict(doc)
+    #         doc['import'] = round(doc['import'] / 1000000, 2)
+    #         doc['export'] = round(doc['export'] / 1000000, 2)
+    #         doc['saldo'] = doc['import'] - doc['export']
+    #
         data['ukrstat'].append(doc)
-    for doc in data['ukrstat']:
-        if '_import' in doc:
-            doc['import'] = doc.pop('_import')
-            doc['export'] = doc.pop('_export')
+    # for doc in data['ukrstat']:
+    #     if '_import' in doc:
+    #         doc['import'] = doc.pop('_import')
+    #         doc['export'] = doc.pop('_export')
     file = jsonify(data)
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'ukrstat' + '.json'
     return file
@@ -274,4 +277,7 @@ def bonds_json2():
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds2' + '.json'
     return file
 
-
+@app.route('/api/bonds3')
+@login_required
+def bonds_json3():
+    return bonds_json_lite()

@@ -1,0 +1,49 @@
+{{ ansible_managed | comment }}
+version: 1
+formatters:
+#  simple:
+  log_format:
+    format: '{asctime} - {name} - {levelname:5s} {filename} LINE: {lineno} {message}'
+    style: '{'
+    msg: curs
+#    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: log_format
+    stream: ext://sys.stdout
+#    filters: [allow_foo]
+  file:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: log_format
+    filename: curs.log
+    maxBytes: 2048
+    backupCount: 3
+{% set syslog %}
+  syslog:
+    class: logging.handlers.SysLogHandler
+    address: /dev/log
+    facility: local5
+{% endset %}
+{% if ansible_system != 'Windows' %}
+{{ syslog }}
+{% else %}
+{{ syslog | comment }}
+{% endif %}
+loggers:
+  curs:
+    level: INFO
+#    handlers: [file, syslog]
+    handlers: [file]
+    propagate: yes
+  curs.mongo:
+    level: INFO
+#    handlers: [file, syslog]
+    handlers: [file]
+    propagate: yes
+root:
+  level: WARNING
+#  handlers: [console, file, syslog]
+  handlers: [file, console]

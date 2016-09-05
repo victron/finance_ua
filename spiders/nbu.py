@@ -177,6 +177,6 @@ if __name__ == '__main__':
     #                  separators=(',', ': '), ensure_ascii=False, default=date_handler))
     # print(json.dumps(NbuJson().rate_currency_date('USD', datetime.strptime('27.03.2016', '%d.%m.%Y')),
     #                  sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
-    # print(NbuJson().rate_currency_date('USD', datetime.strptime('27.03.2016', '%d.%m.%Y')))
-    print(NbuJson().ovdp_all())
+    print(NbuJson().rate_currency_date('EUR', datetime.strptime('26.08.2016', '%d.%m.%Y')))
+    # print(NbuJson().ovdp_all())
 

@@ -20,6 +20,9 @@
     }
 
 // DEFINE CHART PLUGINS
+    // -------------- DOCUMENTATION ---------------------------
+// https://docs.amcharts.com/3/javascriptstockchart/PeriodSelector
+    //////////////////////////////////////////////////////////////
 AmCharts.averageGraphs = 0;
 AmCharts.addMovingAverage = function (dataSet, panel, field, graph) {
     // update dataset
@@ -51,10 +54,16 @@ AmCharts.addMovingAverage = function (dataSet, panel, field, graph) {
 // CHART DATA
 //  TODO: legendPeriodValueText
 //var usd ={{usd|safe}}; // old method inserd data in script
-var eur = get_json('/api/history/' + 'EUR')['EUR'];
-var usd = get_json('/api/history/' + 'USD')['USD'];
+{#var eur = get_json('/api/history/' + 'EUR')['EUR'];#}
+{#var usd = get_json('/api/history/' + 'USD')['USD'];#}
+{#var rub = get_json('/api/history/' + 'RUB')['RUB'];#}
 {#var repaydate = get_json('/api/bonds')['repaydate'];#}
-var usd_bonds = get_json('/api/bonds2')['USD'];
+{#var usd_bonds = get_json('/api/bonds2')['USD'];#}
+var file = get_json('/api/bonds3');
+var usd = file['USD'];
+var eur = file['EUR'];
+var rub = file['RUB'];
+
 var ukrstat = get_json('/api/ukrstat')['ukrstat'];
 //var chartData ={{rub|safe}};
 // CHART CONFIG
@@ -62,7 +71,7 @@ var chartConfig = {
 	type: "stock",
     "theme": "none",
 //    pathToImages: "http://www.amcharts.com/lib/3/images/",
-{#    dataDateFormat: "YYYY-MM-DD_JJ",#}
+    dataDateFormat: "YYYY-MM-DD_JJ",
 	dataSets: [{
         title: "USD",
         fieldMappings: [{
@@ -108,27 +117,41 @@ var chartConfig = {
             fromField: "sum_coupon",
             toField: "sum_coupon"
         }],
-			dataProvider: usd_bonds,
+			dataProvider: usd,
             categoryField: "time"
 
     }, {
-        "title": "EUR",
-        "fieldMappings": [ {
-            "fromField": "sell",
-            "toField": "sell"
+        title: "EUR",
+        fieldMappings: [ {
+            fromField: "sell",
+            toField: "sell"
         }, {
-            "fromField": "buy",
-            "toField": "buy"
+            fromField: "buy",
+            toField: "buy"
         }, {
-                fromField: "nbu_rate",
-                toField: "nbu_rate"
+            fromField: "nbu_rate",
+            toField: "nbu_rate"
         }],
-          "dataProvider": eur,
-          "categoryField": "time"
+          dataProvider: eur,
+          categoryField: "time"
+    }, {
+        title: "RUB",
+        fieldMappings: [ {
+            fromField: "sell",
+            toField: "sell"
+        }, {
+            fromField: "buy",
+            toField: "buy"
+        }, {
+            fromField: "nbu_rate",
+            toField: "nbu_rate"
+        }],
+          dataProvider: rub,
+          categoryField: "time"
     }],
 
     categoryAxesSettings: {
-    minPeriod: "hh"
+    minPeriod: "DD"
     },
 
 	panels: [{
@@ -149,7 +172,7 @@ var chartConfig = {
                 lineColor: "green",
                 useDataSetColors: false,
                 precision: 2,
-                connect: false,
+                connect: false
 
 			}, {
                 id: "sell",
@@ -165,7 +188,7 @@ var chartConfig = {
                 useDataSetColors: false,
                 periodValue: "Average",
                 precision: 2,
-                connect: false,
+                connect: false
 			}, {
 				valueField: "nbu_rate",
                 title: "NBU",
@@ -298,26 +321,37 @@ var chartConfig = {
 	periodSelector: {
         position: "left",
 
-		periods: [{
-			period: "DD",
-			selected: true,
-			count: 1,
-			label: "day"
-		},{
-			period: "WW",
-			selected: true,
-			count: 1,
-			label: "week"
-		},{
-			period: "MM",
-			selected: false,
-			count: 1,
-			label: "1 month"
-		}, {
-			period: "YYYY",
-			count: 1,
-			label: "1 year"
-		}, {
+		periods: [
+{#		{#}
+{#			period: "WW",#}
+{#			selected: true,#}
+{#			count: 1,#}
+{#			label: "week"#}
+{#		},{#}
+{#			period: "MM",#}
+{#			selected: false,#}
+{#			count: 1,#}
+{#			label: "1 month"#}
+{#		},{#}
+{#			period: "MM",#}
+{#			selected: false,#}
+{#			count: 3,#}
+{#			label: "3 month"#}
+{#		},{#}
+{#			period: "MM",#}
+{#			selected: false,#}
+{#			count: 6,#}
+{#			label: "6 month"#}
+{#		}, {#}
+{#			period: "YYYY",#}
+{#			count: 1,#}
+{#			label: "1 year"#}
+{#		},{#}
+{#			period: "YYYY",#}
+{#			count: 2,#}
+{#			label: "2 year"#}
+{#		}, #}
+            {
 			period: "YTD",
 			label: "YTD"
 		}, {
@@ -379,7 +413,7 @@ var chartConfig_ukrstat = {
                 lineColor: "green",
                 useDataSetColors: false,
                 precision: 2,
-                connect: false,
+                connect: false
 
 			}],
 
@@ -452,6 +486,14 @@ var chartConfig_ukrstat = {
 		}, {
 			period: "YTD",
 			label: "YTD"
+		}, {
+			period: "YYYY",
+			count: 2,
+			label: "2 year"
+		},{
+			period: "YYYY",
+			count: 3,
+			label: "3 year"
 		}, {
 			period: "MAX",
 			label: "MAX"

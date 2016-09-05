@@ -1,0 +1,37 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=WEB curs app
+{% for service in item['after'] %}
+After={{ service }}
+{% endfor %}
+#After=network.target
+#After=mongodb.service
+{% for service in item['requires'] %}
+Requires={{ service }}
+{% endfor %}
+
+
+[Service]
+Type=forking
+WorkingDirectory={{ home_dir }}/{{ venv_dir }}
+#Restart=always
+KillSignal=SIGQUIT
+#KillSignal=SIGINT
+PIDFile={{ item['pidfile'] }}
+ExecStart={{ item['cmd'] }} --pidfile {{ item['pidfile'] }}
+
+User={{ remote_user }}
+Group={{ remote_user }}
+
+#Environment=RACK_ENV=production
+
+OOMScoreAdjust=-100
+
+#ExecStop=
+#ExecReload=
+TimeoutSec=300
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
+
