@@ -90,32 +90,32 @@ var chartConfig = {
             fromField: "amount_accepted_all",
             toField: "amount_accepted_all"
         },{
-            fromField: "pay_amount_UAH",
-            toField: "pay_amount_UAH"
+            fromField: "UAH_coupon",
+            toField: "UAH_coupon"
         },{
-            fromField: "pay_amount_USD",
-            toField: "pay_amount_USD"
+            fromField: "UAH_income",
+            toField: "UAH_income"
         },{
-            fromField: "pay_amountn_UAH",
-            toField: "pay_amountn_UAH"
+            fromField: "UAH_return",
+            toField: "UAH_return"
         },{
-            fromField: "pay_amountn_USD",
-            toField: "pay_amountn_USD"
+            fromField: "USD_coupon",
+            toField: "USD_coupon"
         },{
-            fromField: "repay_amount_UAH",
-            toField: "repay_amount_UAH"
+            fromField: "USD_income",
+            toField: "USD_income"
         },{
-            fromField: "repay_amountn_UAH",
-            toField: "repay_amountn_UAH"
+            fromField: "USD_return",
+            toField: "USD_return"
         },{
-            fromField: "repay_amount_USD",
-            toField: "repay_amount_USD"
+            fromField: "EUR_coupon",
+            toField: "EUR_coupon"
         },{
-            fromField: "repay_amountn_USD",
-            toField: "repay_amountn_USD"
+            fromField: "EUR_income",
+            toField: "EUR_income"
         },{
-            fromField: "sum_coupon",
-            toField: "sum_coupon"
+            fromField: "EUR_return",
+            toField: "EUR_return"
         }],
 			dataProvider: usd,
             categoryField: "time"
@@ -131,6 +131,39 @@ var chartConfig = {
         }, {
             fromField: "nbu_rate",
             toField: "nbu_rate"
+        }, {
+            fromField: "amount_requested",
+            toField: "amount_requested"
+        }, {
+            fromField: "amount_accepted_all",
+            toField: "amount_accepted_all"
+        },{
+            fromField: "UAH_coupon",
+            toField: "UAH_coupon"
+        },{
+            fromField: "UAH_income",
+            toField: "UAH_income"
+        },{
+            fromField: "UAH_return",
+            toField: "UAH_return"
+        },{
+            fromField: "USD_coupon",
+            toField: "USD_coupon"
+        },{
+            fromField: "USD_income",
+            toField: "USD_income"
+        },{
+            fromField: "USD_return",
+            toField: "USD_return"
+        },{
+            fromField: "EUR_coupon",
+            toField: "EUR_coupon"
+        },{
+            fromField: "EUR_income",
+            toField: "EUR_income"
+        },{
+            fromField: "EUR_return",
+            toField: "EUR_return"
         }],
           dataProvider: eur,
           categoryField: "time"
@@ -145,6 +178,39 @@ var chartConfig = {
         }, {
             fromField: "nbu_rate",
             toField: "nbu_rate"
+        }, {
+            fromField: "amount_requested",
+            toField: "amount_requested"
+        }, {
+            fromField: "amount_accepted_all",
+            toField: "amount_accepted_all"
+        },{
+            fromField: "UAH_coupon",
+            toField: "UAH_coupon"
+        },{
+            fromField: "UAH_income",
+            toField: "UAH_income"
+        },{
+            fromField: "UAH_return",
+            toField: "UAH_return"
+        },{
+            fromField: "USD_coupon",
+            toField: "USD_coupon"
+        },{
+            fromField: "USD_income",
+            toField: "USD_income"
+        },{
+            fromField: "USD_return",
+            toField: "USD_return"
+        },{
+            fromField: "EUR_coupon",
+            toField: "EUR_coupon"
+        },{
+            fromField: "EUR_income",
+            toField: "EUR_income"
+        },{
+            fromField: "EUR_return",
+            toField: "EUR_return"
         }],
           dataProvider: rub,
           categoryField: "time"
@@ -240,19 +306,8 @@ var chartConfig = {
 			title: "bonds",
 			percentHeight: 25,
 			stockGraphs: [{
-                valueField: "repay_amount_UAH",
-                title: "repay_amount_UAH",
-                type: "column",
-                showBalloon: true,
-                fillAlphas: 0,
-                lineColor: "blue",
-                useDataSetColors: false,
-                periodValue: "Sum",
-                precision: 2
-
-            },{
-                valueField: "repay_amountn_UAH",
-                title: "repay_amountn_UAH",
+                valueField: "UAH_return",
+                title: "UAH_return",
                 type: "column",
                 showBalloon: true,
                 fillAlphas: 1,
@@ -262,19 +317,30 @@ var chartConfig = {
                 precision: 2
 
             },{
-                valueField: "repay_amount_USD",
-                title: "repay_amount_USD",
+                valueField: "UAH_coupon",
+                title: "UAH_coupon",
                 type: "column",
                 showBalloon: true,
-                fillAlphas: 0,
-                lineColor: "green",
+                fillAlphas: 1,
+                lineColor: "blue",
                 useDataSetColors: false,
                 periodValue: "Sum",
                 precision: 2
 
             },{
-                valueField: "repay_amountn_USD",
-                title: "repay_amountn_USD",
+                valueField: "UAH_income",
+                title: "UAH_income",
+                type: "column",
+                showBalloon: true,
+                fillAlphas: 1,
+                lineColor: "blue",
+                useDataSetColors: false,
+                periodValue: "Sum",
+                precision: 2
+
+            },{
+                valueField: "USD_return",
+                title: "USD_return",
                 type: "column",
                 showBalloon: true,
                 fillAlphas: 1,
@@ -284,12 +350,56 @@ var chartConfig = {
                 precision: 2
 
             },{
-                valueField: "sum_coupon",
-                title: "sum_coupon",
+                valueField: "USD_coupon",
+                title: "USD_coupon",
                 type: "column",
                 showBalloon: true,
                 fillAlphas: 1,
-                lineColor: "red",
+                lineColor: "green",
+                useDataSetColors: false,
+                periodValue: "Sum",
+                precision: 2
+
+            },{
+                valueField: "USD_income",
+                title: "USD_income",
+                type: "column",
+                showBalloon: true,
+                fillAlphas: 1,
+                lineColor: "green",
+                useDataSetColors: false,
+                periodValue: "Sum",
+                precision: 2
+
+            },{
+                valueField: "EUR_return",
+                title: "EUR_return",
+                type: "column",
+                showBalloon: true,
+                fillAlphas: 1,
+                lineColor: "yelow",
+                useDataSetColors: false,
+                periodValue: "Sum",
+                precision: 2
+
+            },{
+                valueField: "EUR_coupon",
+                title: "EUR_coupon",
+                type: "column",
+                showBalloon: true,
+                fillAlphas: 1,
+                lineColor: "yelow",
+                useDataSetColors: false,
+                periodValue: "Sum",
+                precision: 2
+
+            },{
+                valueField: "EUR_income",
+                title: "EUR_income",
+                type: "column",
+                showBalloon: true,
+                fillAlphas: 1,
+                lineColor: "yelow",
                 useDataSetColors: false,
                 periodValue: "Sum",
                 precision: 2

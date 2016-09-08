@@ -12,6 +12,7 @@ octothorpe2 = lambda doc: dict(doc, amount_accepted_all=doc['amount_accepted_all
 
 def reformat_for_js_bonds(doc: dict) -> dict:
     # add in doc coupon pay
+    # ----- could delete ----
     if 'bonds' in doc:
         sum_amount = 0
         for bond in doc.pop('bonds'):
@@ -22,8 +23,10 @@ def reformat_for_js_bonds(doc: dict) -> dict:
                 print(bond_doc)
                 print('!!! check if $ref inside \'bonds\' exists !!!')
         doc['sum_coupon'] = sum_amount
+    # ==========================
     doc['time'] = doc['time'].strftime('%Y-%m-%d_%H')
     return octothorpe2(doc)
+
 
 def reformat_for_js(doc):
     if 'nbu_auction' in doc:
@@ -32,6 +35,7 @@ def reformat_for_js(doc):
         del doc['nbu_auction']
     doc['time'] = doc['time'].strftime('%Y-%m-%d_%H')
     return doc
+
 
 def bonds_json_lite():
     bond_currencies = ['UAH', 'USD', 'EUR']
@@ -76,5 +80,72 @@ def bonds_json_lite():
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'int_bonds2' + '.json'
     return file
 
+def bonds_json_lite2():
+    usd = aware_times('USD')
+    eur = aware_times('EUR')
+    rub = aware_times('RUB')
+    bonds_payments = aware_times('bonds_payments')
+    min_date = datetime(year=2014, month=8, day=1, hour=17, minute=0, second=0, microsecond=0, tzinfo=local_tz)
+    match_currencyf = {'time': {'$gte': min_date}, 'source': {'$ne': 'h_int_stat'}}
+    all_dates = set([doc['time'] for doc in usd.find(match_currencyf, {'_id': False, 'time': True})])
+    all_dates.update([doc['time'] for doc in eur.find(match_currencyf, {'_id': False, 'time': True})])
+    all_dates.update([doc['time'] for doc in rub.find(match_currencyf, {'_id': False, 'time': True})])
+    all_dates.update([doc['time'] for doc in bonds_payments.find({'time': {'$gte': min_date}}, {'_id': False, 'time': True})])
+    # lookup = [{'$lookup': {'from': 'bonds_payments', 'localField': 'time', 'foreignField': 'time', 'as': 'payments'}}]
+    # --------- colect all bonds --------
+    group_bonds = {'$group': {'_id': {'time' : '$time', 'currency': '$currency', 'pay_type': '$pay_type'},
+                              'cash': {'$sum': '$cash'}}}
+    project_bonds = {'$project': {'_id': False, 'currency': '$_id.currency', 'pay_type': '$_id.pay_type',
+                                  'time': '$_id.time', 'cash': '$cash'}}
+    command_cursor = bonds_payments.aggregate([group_bonds, project_bonds])
+    bonds = {}
+    # put bonds in dict
+    # { time: {currency<1>_pay_type<1>: cash<1>,
+    #          currency<2>_pay_type<1>: cash<2>,}}
+    for doc in command_cursor:
+        bonds[doc['time']] = {}
+        if doc['pay_type'] == 'income':
+            multiply = -1000000
+        else:
+            # (doc['pay_type'] == 'coupon') or (doc['pay_type'] == 'return'):
+            multiply = 1000000
+        bonds[doc['time']][doc['currency'] + '_' + doc['pay_type']] = round(doc['cash'] / multiply, 2)
+
+    #     ------- collect all currencies ----------
+
+    project_currency = {'$project': {'_id': False, 'buy': True, 'sell': True,
+                        'amount_accepted_all': '$nbu_auction.amount_accepted_all',
+                        'amount_requested': '$nbu_auction.amount_requested',
+                        'nbu_auction_operation': '$nbu_auction.operation', 'nbu_rate': True, 'time': True}}
+    match_currency = {'$match': {'source': {'$ne': 'h_int_stat'}}}
+    project_currencyf = {'_id': False, 'buy': True, 'sell': True,
+                        'nbu_auction.amount_accepted_all': True,
+                        'nbu_auction.amount_requested': True,
+                        'nbu_auction.operation': True, 'nbu_rate': True, 'time': True}
+
+    data = {}
+    data_out = {}
+    # ---- create dict data with key time -------
+    for currency in ['USD', 'EUR', 'RUB']:
+        cursor = aware_times(currency).find(match_currencyf, project_currencyf)
+        data[currency] = {}
+        for doc in cursor:
+            data[currency][doc['time']] = {}
+            data[currency][doc['time']].update(reformat_for_js(doc))
+    # ----- create doc with data from currencies and bonds, and put in a out_data[currency] sorted list
+        data_out[currency] = []
+        for date in sorted(all_dates):
+            doc1 = data[currency].get(date, {})
+            doc1.update(bonds.get(date, {}))
+            doc1['time'] = date.strftime('%Y-%m-%d_%H')
+            data_out[currency].append(doc1)
+            print(data_out[currency][-1:])
+    del data
+    file = jsonify(data_out)
+    file.headers['Content-Disposition'] = 'attachment;filename=' + 'bonds_curr' + '.json'
+    return file
+
+
+
 if __name__ == '__main__':
-    pass
+    bonds_json_lite2()
