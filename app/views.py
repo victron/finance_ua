@@ -8,7 +8,7 @@ from app import app, web_logging
 # no environment config, default used
 # /home/vic/flask/lib/python3.5/site-packages/flask/exthook.py:71: ExtDeprecationWarning: Importing flask.ext.wtf is deprecated, use flask_wtf instead
 from flask.ext.login import login_user, logout_user, login_required
-from flask import render_template, flash, redirect, url_for, abort, jsonify
+from flask import render_template, flash, redirect, url_for, abort, jsonify, request
 from mongo_collector.mongo_start import aware_times
 from mongo_collector.mongo_start import data_active, bonds
 from mongo_collector.mongo_start import news as news_db
@@ -18,6 +18,8 @@ from .user import User
 from .views_func import reformat_for_js, reformat_for_js_bonds, bonds_json_lite, bonds_json_lite2
 from mongo_collector.parallel import update_lists
 from mongo_collector.parallel import update_news
+from datetime import datetime, timedelta
+from spiders.common_spider import local_tz
 # web_logging.getLogger(__name__)
 
 
@@ -60,23 +62,43 @@ def lists():
     filter_recieved = {'location': form_filter.locations.data, 'operation': form_filter.operations.data,
                         'currency': form_filter.currencies.data, 'source': form_filter.sources.data,
                         '$text': {'$search': form_filter.text.data}}
-    mongo_request = dict(filter_recieved)
     direction_dict = {'ASCENDING': pymongo.ASCENDING, 'DESCENDING': pymongo.DESCENDING}
+    # --- filter for top orders ---
+    current_time = datetime.now(tz=local_tz)
+    try:
+        time_delta = timedelta(hours=form_filter.top_hours.data)
+    except TypeError:
+        time_delta = timedelta(hours=1)
+    top_start_time = current_time - time_delta
+    top_filter = {**filter_recieved, 'time': {'$gte': top_start_time}}
+    top_limit = form_filter.top_limit.data
+    if form_filter.operations.data == 'buy':
+        top_sort = [('rate', pymongo.DESCENDING)]
+    else:
+        top_sort = [('rate', pymongo.ASCENDING)]
+
+
     sort_list = [(group_order.form.sort_field.data, direction_dict[group_order.form.sort_direction.data])
                  for group_order in form_filter.sort_order if group_order.form.sort_field.data != 'None']
     print(sort_list)
     # sort_list = [('time', pymongo.DESCENDING)]
-    for key, val in filter_recieved.items():
-        if (val == 'None' or val == 'all') and key != '$text':
-            del mongo_request[key]
-        elif key == '$text' and (val == {'$search': ''} or val == {'$search': None}):
-            del mongo_request[key]
+    def mongo_request(original: dict) -> dict:
+
+        mongo_dict = dict(original)
+        for key, val in original.items():
+            if (val == 'None' or val == 'all') and key != '$text':
+                del mongo_dict[key]
+            elif key == '$text' and (val == {'$search': ''} or val == {'$search': None}):
+                del mongo_dict[key]
+        return mongo_dict
 
     if form_update.db.data:
         web_logging.debug('update db pushed')
         active_deleted = update_lists()
         flash('recived db= {}, deleted docs={}'.format(str(form_update.db.data), active_deleted))
-        result = data_active.find(mongo_request)
+        flash('top_filter: {}, top_sort: {}, top_limit: {}'.format(top_filter, top_sort, top_limit))
+        result = data_active.find(mongo_request(filter_recieved))
+        result_top = data_active.find(mongo_request(top_filter), sort=top_sort, limit=top_limit)
         # replace validate_on_submit to is_submitted in reason sort_order in class Filter
         # TODO: form validation !!!, currently buldin form validators=[Optional()]
     elif form_filter.validate_on_submit():
@@ -86,15 +108,25 @@ def lists():
                                    operation=filter_recieved['operation'], currency=filter_recieved['currency'],
                                    source=filter_recieved['source']))
         flash('Sort: {sort_list}'.format(sort_list=sort_list))
-        result = data_active.find(mongo_request, sort=(sort_list))
+        flash('top_filter: {}, top_sort: {}, top_limit: {}'.format(top_filter, top_sort, top_limit))
+        result = data_active.find(mongo_request(filter_recieved), sort=sort_list)
+        result_top = data_active.find(mongo_request(top_filter), sort=top_sort, limit=top_limit)
+    elif request.method == 'POST' and not form_filter.validate():
+        result = []
+        result_top = []
+        # result = data_active.find(mongo_request(filter_recieved), sort=([('time', pymongo.DESCENDING)]))
+        # result_top = data_active.find(mongo_request(top_filter), sort=top_sort, limit=top_limit)
     else:
-        result = data_active.find(mongo_request, sort=([('time', pymongo.DESCENDING)]))
+        # default (initial) page
+        result = data_active.find(mongo_request(filter_recieved), sort=([('time', pymongo.DESCENDING)]))
+        result_top = data_active.find(mongo_request(top_filter), sort=top_sort, limit=top_limit)
 
     return render_template('lists.html',
                            title='Lists',
                            form_update=form_update,
                            form_filter=form_filter,
-                           result=result)
+                           result=result,
+                           result_top=result_top)
 
 
 @app.route('/news', methods=['GET', 'POST'])

@@ -1,5 +1,5 @@
-from wtforms import StringField, SelectField, SubmitField, PasswordField, FormField, FieldList
-from wtforms.validators import DataRequired, Optional
+from wtforms import StringField, SelectField, SubmitField, PasswordField, FormField, FieldList, IntegerField
+from wtforms.validators import DataRequired, Optional, NumberRange
 
 from flask.ext.wtf import Form
 from mongo_collector.mongo_update import get_selection
@@ -27,6 +27,8 @@ class SortForm(Form):
 class FilterBase(Form):
     locations, operations, currencies, sources = get_selection()
     text = StringField('text', validators=[Optional()])
+    top_limit = IntegerField('number in top to show', [NumberRange(min=1, max=10)], default=7)
+    top_hours = IntegerField('number of hours to show', [NumberRange(min=1, max=5)], default=1)
     all_options = [('all', 'all')]
     locations = SelectField('locations', choices=all_options + [(city, city) for city in locations], default='Киев')
     operations = SelectField('operations', choices=all_options +

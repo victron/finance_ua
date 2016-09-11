@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 # TODO: put configs in one place
 CSRF_ENABLED = True
-# WTF_CSRF_ENABLED = True
+WTF_CSRF_ENABLED = True
 SECRET_KEY = 'you-will-never-guess'
 # MONGODB_SETTINGS = {'DB': "my_tumble_log"}
 

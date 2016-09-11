@@ -5,7 +5,15 @@
     {{form_update.db}}
     <!--<input type="submit" value="Update">-->
 </form>
-
+{% if form_filter.errors %}
+    <ul class="errors">
+        {% for field_name, field_errors in form_filter.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <li>{{ form_filter[field_name].label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endif %}
 <form action="" method="post" name="filter">
     {{form_filter.hidden_tag()}}
     <p>
@@ -30,10 +38,17 @@
             {{i.form.sort_field}}
             {{i.form.sort_direction}}<br>
         {% endfor %}
+        Number in top: {{ form_filter.top_limit(maxlength=2, size=3) }} Hours in top: {{ form_filter.top_hours(maxlength=2, size=3) }}
         <br><input type="submit" value="Filter">
     </p>
 </form>
-
+----------------- top ---------------
+{% for res_t in result_top %}
+    <div><p>
+    {{res_t.source}}
+    <b>{{res_t.time}}</b> {{res_t.amount}} <b>{{res_t.rate}}</b>  {{res_t.phone}} {{res_t.comment}}</p></div>
+{% endfor %}
+=====================================
 {% for res in result %}
 <div><p>
     {{res.source}}
