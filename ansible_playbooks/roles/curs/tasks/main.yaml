@@ -28,6 +28,39 @@
     become_method: sudo
   when: not venv_result.stat.exists
 
+# ------------------ remove application if installed ----------
+  # ------- stop services -----------
+- block:
+  - name: stop curs.service
+    service: name=curs  state=stopped
+  - name: stop cursauto.service
+    service: name=cursauto  state=stopped
+  become: yes
+  become_method: sudo
+
+  # remove app from venv and home dir
+- block:
+  - name: remove application from env
+    pip: name=curs
+         virtualenv={{ home_dir }}/{{ venv_dir }}
+         virtualenv_python=python3.5
+         state=absent
+  - name: delete previos file package
+    file: name=/{{ home_dir }}/{{ app_file }}
+      state=absent
+  become: yes
+  become_user: "{{ app_user }}"
+  become_method: sudo
+
+# ---------- create package localy ----------------
+- name: generate wheel
+  command: python3.5 setup.py bdist_wheel
+  args:
+    chdir: ../
+  delegate_to: 127.0.0.1
+  # local_action: command /usr/bin/take_out_of_pool {{ inventory_hostname }}
+# =======================================================
+
 - block:
   - name: copy application package on remote
     copy: src=../dist/{{ app_file }} dest={{ home_dir }}/
