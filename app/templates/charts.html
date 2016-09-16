@@ -60,6 +60,7 @@ AmCharts.addMovingAverage = function (dataSet, panel, field, graph) {
 {#var repaydate = get_json('/api/bonds')['repaydate'];#}
 {#var usd_bonds = get_json('/api/bonds2')['USD'];#}
 var file = get_json('/api/bonds3');
+var ovdp = get_json('/api/ovdp');
 var usd = file['USD'];
 var eur = file['EUR'];
 var rub = file['RUB'];
@@ -215,7 +216,9 @@ var chartConfig = {
           dataProvider: rub,
           categoryField: "time"
     }],
-
+     // EVENTS
+    "stockEvents": ovdp,
+    
     categoryAxesSettings: {
     minPeriod: "DD"
     },

@@ -32,7 +32,7 @@ def parse_minfin_headlines():
     else:
         responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
 
-    soup = BeautifulSoup(responce_get.text, "html.parser")
+    soup = BeautifulSoup(responce_get.text, 'html.parser')
     current_date = current_datetime_tz()
     data = []
     for news in soup.body.table.find_all(attrs={'class': ['title']}):
@@ -45,8 +45,6 @@ def parse_minfin_headlines():
         data.append(dic)
     return data
 
-def func(arg):
-    return arg()
 
 if __name__ == '__main__':
     print(json.dumps(parse_minfin_headlines(), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,

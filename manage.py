@@ -11,7 +11,7 @@ manager = Manager(app)
 
 
 # Включение по умолчанию отладчика и перезагрузки
-manager.add_command("runserver", Server(
+manager.add_command('runserver', Server(
     use_debugger = True,
     use_reloader = True,
     host = '127.0.0.1')

@@ -4,7 +4,7 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-from spiders.common_spider import local_tz, date_handler
+from spiders.common_spider import local_tz, date_handler, current_datetime_tz
 from spiders.parameters import proxy_is_used, headers, proxies
 from tools.mytools import timer
 import logging
@@ -24,7 +24,7 @@ def minfin_headlines_url(url) -> list:
     headlines = []
     for i in soup.body.find('div', attrs={'class': ['posts-box__list', 'float-nav-wr']}).find_all('div', attrs={'class': 'text'}):
         href = 'http://www.minfin.gov.ua' + i.a['href']
-        time = datetime.strptime(i.span.get_text(), '%m/%d/%y').replace(hour=17, tzinfo=local_tz)
+        time = datetime.strptime(i.span.get_text(), '%m/%d/%y').replace(tzinfo=local_tz)
         headline = i.find('div', attrs={'class': 'text_i'}).get_text(strip=True)
         headlines.append({'href': href, 'time': time, 'headline': headline, 'source': 'mf'})
     return headlines
@@ -37,11 +37,34 @@ def minfin_headlines():
         headlines += minfin_headlines_url(url)
     return headlines
 
-def func(param):
-    return param()
+
+def announcement_ovdp() -> list:
+    url = 'http://www.minfin.gov.ua/news/view/informatsiia-shchodo-auktsioniv-ovdp'
+    responce_get = requests.get(url, headers=headers)
+    soup = BeautifulSoup(responce_get.text, 'html.parser')
+    current_date = current_datetime_tz()
+    data = []
+    for news in soup.body.table.tbody.find_all('tr'):
+        dic = {'time_auction': news.td.get_text(),
+               'time': current_date,
+               'href_announce': news.td.next_sibling.a['href'],
+               'href_results': news.td.next_sibling.next_sibling.a['href'],
+               'source': 'mf',
+               'headline': 'OVDP announcement'}
+        dic['time'] = datetime.strptime(dic['time'], '%d.%m.%Y').replace(hour=17, tzinfo=local_tz)
+
+        if not dic['href_announce'].startswith('http://'):
+            dic['href_announce'] = 'http://www.minfin.gov.ua' + dic['href_announce']
+        if not dic['href_results'].startswith('http://'):
+            dic['href_results'] = 'http://www.minfin.gov.ua' + dic['href_results']
+        dic['href'] = dic['time_auction']
+        data.append(dic)
+    return data
 
 
 if __name__ == '__main__':
     print(json.dumps(minfin_headlines(), sort_keys=True, indent=4, separators=(',', ': '),
+                     ensure_ascii=False, default=date_handler))
+    print(json.dumps(announcement_ovdp(), sort_keys=True, indent=4, separators=(',', ': '),
                      ensure_ascii=False, default=date_handler))
 

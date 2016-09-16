@@ -90,7 +90,8 @@ def bonds_json_lite2():
     all_dates = set([doc['time'] for doc in usd.find(match_currencyf, {'_id': False, 'time': True})])
     all_dates.update([doc['time'] for doc in eur.find(match_currencyf, {'_id': False, 'time': True})])
     all_dates.update([doc['time'] for doc in rub.find(match_currencyf, {'_id': False, 'time': True})])
-    all_dates.update([doc['time'] for doc in bonds_payments.find({'time': {'$gte': min_date}}, {'_id': False, 'time': True})])
+    all_dates.update([doc['time'] for doc in bonds_payments.find({'time': {'$gte': min_date}},
+                                                                 {'_id': False, 'time': True})])
     # lookup = [{'$lookup': {'from': 'bonds_payments', 'localField': 'time', 'foreignField': 'time', 'as': 'payments'}}]
     # --------- colect all bonds --------
     group_bonds = {'$group': {'_id': {'time' : '$time', 'currency': '$currency', 'pay_type': '$pay_type'},
@@ -146,6 +147,22 @@ def bonds_json_lite2():
     return file
 
 
+def stock_events():
+    ovdp_match_find = {'source': 'mf', 'headline': 'OVDP announcement'}
+    ovdp_project_find = {'_id': False, 'time_auction': True, 'headline': True}
+    command_cursor = aware_times('news').find(ovdp_match_find, ovdp_project_find,
+                                              sort=[('time_auction', pymongo.ASCENDING)])
+    data = []
+    for doc in command_cursor:
+        doc['date'] = doc.pop('time_auction').strftime('%Y-%m-%d_%H')
+        doc['text'] = 'O'
+        doc['description'] = doc.pop('headline')
+        doc['graph'] = 'Cash'
+        data.append(doc)
+    file = jsonify(data)
+    file.headers['Content-Disposition'] = 'attachment;filename=' + 'events' + '.json'
+    return file
 
 if __name__ == '__main__':
     bonds_json_lite2()
+    # print(stock_events())
