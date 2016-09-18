@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {% block header %}{% endblock %}
     {% if title %}
     <title>{{title}} - microblog</title>
         {% if title == 'Charts' %}
