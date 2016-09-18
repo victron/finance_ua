@@ -18,6 +18,7 @@ logging_config = os.path.join(sys.prefix, '.curs', 'logging.yml')
 if not os.path.isfile(logging_config):
     logging_config = os.path.join('config', 'logging.yml')
 
+# TODO: window compatibility
 logging.config.dictConfig(yaml.load(open(logging_config, 'r')))
 
 web_logging = logging.getLogger('curs')

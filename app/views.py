@@ -15,7 +15,7 @@ from mongo_collector.mongo_start import news as news_db
 from spiders.common_spider import  main_currencies
 from .forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
 from .user import User
-from .views_func import reformat_for_js, reformat_for_js_bonds, bonds_json_lite, bonds_json_lite2
+from .views_func import reformat_for_js, reformat_for_js_bonds, bonds_json_lite, bonds_json_lite2, stock_events
 from mongo_collector.parallel import update_lists
 from mongo_collector.parallel import update_news
 from datetime import datetime, timedelta
@@ -313,3 +313,9 @@ def bonds_json2():
 @login_required
 def bonds_json3():
     return bonds_json_lite2()
+
+
+@app.route('/api/ovdp')
+@login_required
+def ovdp():
+    return stock_events()
