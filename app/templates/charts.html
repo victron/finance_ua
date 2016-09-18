@@ -119,7 +119,9 @@ var chartConfig = {
             toField: "EUR_return"
         }],
 			dataProvider: usd,
-            categoryField: "time"
+            categoryField: "time",
+         // EVENTS
+        stockEvents: ovdp
 
     }, {
         title: "EUR",
@@ -216,9 +218,7 @@ var chartConfig = {
           dataProvider: rub,
           categoryField: "time"
     }],
-     // EVENTS
-    "stockEvents": ovdp,
-    
+
     categoryAxesSettings: {
     minPeriod: "DD"
     },
@@ -230,7 +230,7 @@ var chartConfig = {
 			percentHeight: 50,
 
 			stockGraphs: [{
-				id: "Cash",
+				id: "cash",
                 title: "buy",
 				valueField: "buy",
 				comparable: true,

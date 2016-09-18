@@ -148,16 +148,19 @@ def bonds_json_lite2():
 
 
 def stock_events():
-    ovdp_match_find = {'source': 'mf', 'headline': 'OVDP announcement'}
+    # time_auction is exists (not null)
+    ovdp_match_find = {'source': 'mf', 'time_auction': {'$ne': None}}
     ovdp_project_find = {'_id': False, 'time_auction': True, 'headline': True}
     command_cursor = aware_times('news').find(ovdp_match_find, ovdp_project_find,
                                               sort=[('time_auction', pymongo.ASCENDING)])
     data = []
     for doc in command_cursor:
         doc['date'] = doc.pop('time_auction').strftime('%Y-%m-%d_%H')
-        doc['text'] = 'O'
+        doc['text'] = 'A'
         doc['description'] = doc.pop('headline')
-        doc['graph'] = 'Cash'
+        doc['graph'] = 'sell'
+        doc['showOnAxis'] = True
+        doc['type'] = 'pin'
         data.append(doc)
     file = jsonify(data)
     file.headers['Content-Disposition'] = 'attachment;filename=' + 'events' + '.json'

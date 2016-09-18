@@ -50,14 +50,14 @@ def announcement_ovdp() -> list:
                'href_announce': news.td.next_sibling.a['href'],
                'href_results': news.td.next_sibling.next_sibling.a['href'],
                'source': 'mf',
-               'headline': 'OVDP announcement'}
-        dic['time'] = datetime.strptime(dic['time'], '%d.%m.%Y').replace(hour=17, tzinfo=local_tz)
+               'headline': 'OVDP ' + news.td.get_text()}
+        dic['time_auction'] = datetime.strptime(dic['time_auction'], '%d.%m.%Y').replace(hour=17, tzinfo=local_tz)
 
         if not dic['href_announce'].startswith('http://'):
             dic['href_announce'] = 'http://www.minfin.gov.ua' + dic['href_announce']
         if not dic['href_results'].startswith('http://'):
             dic['href_results'] = 'http://www.minfin.gov.ua' + dic['href_results']
-        dic['href'] = dic['time_auction']
+        dic['href'] = dic['headline']
         data.append(dic)
     return data
 
