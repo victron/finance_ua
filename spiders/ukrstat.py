@@ -173,7 +173,7 @@ class ukrstat_o():
         values = string.find_all(string=re.compile('[0-9]'))
         assert len(values) == 4, 'wrong data in values'
         doc = {}
-        granularity_dict = {'січні–березні': 3, 'квітні-червні': 6, 'липні-вересні': 9, 'жовтні-грудні': 12}
+        granularity_dict = {'січні–березні': 3, 'січні-червні': 6, 'січні-вересні': 9, 'січні-грудні': 12}
         for month in granularity_dict:
             if table_title.string.find(month) != -1:
                 doc['_id'] = datetime(year=datetime.now().year, month=granularity_dict[month], day=1, hour=17, minute=0,

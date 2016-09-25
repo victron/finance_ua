@@ -58,8 +58,8 @@ daily_bonds = scheduler.add_job(update_bonds, 'cron', name='daily_bonds', hour=1
 
 # Todo: aspscheduler problem
 # problem with aspscheduler, try to move to another module
-auto_ukrstat_month = scheduler.add_job(ukrstat_shadow, 'interval', id='auto_ukrstat_update', replace_existing=True,
-                                       name='auto_ukrstat_update', days=10, jobstore='longTerm')
+auto_ukrstat_month = scheduler.add_job(ukrstat_shadow, 'cron', id='auto_ukrstat_update', replace_existing=True,
+                                       name='auto_ukrstat_update', hour=16, minute=15, jobstore='longTerm')
 
 def main():
     logger.debug('start auto update')

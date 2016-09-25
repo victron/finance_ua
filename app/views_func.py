@@ -84,6 +84,7 @@ def bonds_json_lite2():
     usd = aware_times('USD')
     eur = aware_times('EUR')
     rub = aware_times('RUB')
+    ovdp = aware_times('news')
     bonds_payments = aware_times('bonds_payments')
     min_date = datetime(year=2014, month=8, day=1, hour=17, minute=0, second=0, microsecond=0, tzinfo=local_tz)
     match_currencyf = {'time': {'$gte': min_date}, 'source': {'$ne': 'h_int_stat'}}
@@ -92,6 +93,9 @@ def bonds_json_lite2():
     all_dates.update([doc['time'] for doc in rub.find(match_currencyf, {'_id': False, 'time': True})])
     all_dates.update([doc['time'] for doc in bonds_payments.find({'time': {'$gte': min_date}},
                                                                  {'_id': False, 'time': True})])
+    # add dates of ovdp
+    all_dates.update([doc['time_auction'] for doc in ovdp.find({'source': 'mf', 'time_auction': {'$ne': None}},
+                                                       {'_id': False, 'time_auction': True})])
     # lookup = [{'$lookup': {'from': 'bonds_payments', 'localField': 'time', 'foreignField': 'time', 'as': 'payments'}}]
     # --------- colect all bonds --------
     group_bonds = {'$group': {'_id': {'time' : '$time', 'currency': '$currency', 'pay_type': '$pay_type'},
@@ -137,6 +141,8 @@ def bonds_json_lite2():
         data_out[currency] = []
         for date in sorted(all_dates):
             doc1 = data[currency].get(date, {})
+            # add field for virtual line
+            doc1['dummy'] = doc1.get('sell', 25)
             doc1.update(bonds.get(date, {}))
             doc1['time'] = date.strftime('%Y-%m-%d_%H')
             data_out[currency].append(doc1)
@@ -158,7 +164,7 @@ def stock_events():
         doc['date'] = doc.pop('time_auction').strftime('%Y-%m-%d_%H')
         doc['text'] = 'A'
         doc['description'] = doc.pop('headline')
-        doc['graph'] = 'sell'
+        doc['graph'] = 'dummy'
         doc['showOnAxis'] = True
         doc['type'] = 'pin'
         data.append(doc)

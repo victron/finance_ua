@@ -117,6 +117,9 @@ var chartConfig = {
         },{
             fromField: "EUR_return",
             toField: "EUR_return"
+        },{
+            fromField: "dummy",
+            toField: "dummy"
         }],
 			dataProvider: usd,
             categoryField: "time",
@@ -271,6 +274,23 @@ var chartConfig = {
                 connect: false,
                 hidden: true
 
+			}, {
+{# virtual line (transparent) needed to put on it ovdp announce wich in future #}
+                id: "dummy",
+				valueField: "dummy",
+                title: "announce",
+				type: "line",
+				showBalloon: false,
+				fillAlphas: 0,
+                lineColor: 	"#000000",
+                legendColor: "gray",
+                lineAlpha: 0,
+                useDataSetColors: false,
+                periodValue: "Average",
+                precision: 2,
+                connect: false,
+                hidden: false
+
 			}],
 
 			stockLegend: {
@@ -320,6 +340,7 @@ var chartConfig = {
                 precision: 2
 
             },{
+                id: "UAH_coupon",
                 valueField: "UAH_coupon",
                 title: "UAH_coupon",
                 type: "column",
