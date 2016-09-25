@@ -1,6 +1,12 @@
+{#auto refresh page via html tag#}
 {% extends "base.html" %}
 {% block header %}
-    <meta http-equiv="refresh" content="300">
+{#    <meta http-equiv="refresh" content="300">#}
+{% endblock %}
+{# auto submit form#}
+{#http://stackoverflow.com/questions/12376173/auto-submit-form-using-javascript#}
+{% block form_auto_submit %}
+    onload="setTimeout(function() { document.filter.submit() }, 300000)"
 {% endblock %}
 {% block content %}
 <form action=""  method="post">
@@ -17,7 +23,8 @@
         {% endfor %}
     </ul>
 {% endif %}
-<form action="" method="post" name="filter">
+{# action="#tops" to jump on #tops after submit form #}
+<form action="#tops" method="post" name="filter">
     {{form_filter.hidden_tag()}}
     <p>
         filter:<br>
@@ -42,10 +49,14 @@
             {{i.form.sort_direction}}<br>
         {% endfor %}
         Number in top: {{ form_filter.top_limit(maxlength=2, size=3) }} Hours in top: {{ form_filter.top_hours(maxlength=2, size=3) }}
+        <a href="http://minfin.com.ua/currency/auction/usd/sell/kiev/">minfin</a>
         <br><input type="submit" value="Filter">
     </p>
 </form>
------------------ top ---------------
+    <h4 id="tops">
+        --- top {{form_filter.currencies.data}} {{form_filter.operations.data}} ---
+<a href="#tops">¶</a>
+    </h4>
 {% for res_t in result_top %}
     <div><p>
     {{res_t.source}}

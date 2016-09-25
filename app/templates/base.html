@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../static/favicon.png">
     {% block header %}{% endblock %}
     {% if title %}
     <title>{{title}} - microblog</title>
@@ -11,12 +12,13 @@
         <script src="../static/amcharts/amstock.js" type="text/javascript"></script>
         <!--<script src="../static/amcharts/plugins/dataloader/dataloader.min.js" type="text/javascript"></script>-->
         <link rel="stylesheet" href="../static/amcharts/style.css" type="text/css">
+        <link rel="stylesheet" href="../static/style.css" type="text/css">
         {% endif %}
     {% else %}
     <title>microblog</title>
     {% endif %}
 </head>
-<body>
+<body {% block form_auto_submit %}{% endblock %}>
     <div>Microblog:
         <a href="/index">Home</a>
         <a href="/lists">Lists</a>  <a href="/news">News</a>

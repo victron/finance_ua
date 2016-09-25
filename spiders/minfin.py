@@ -48,16 +48,26 @@ def announcement_ovdp() -> list:
         dic = {'time_auction': news.td.get_text(),
                'time': current_date,
                'href_announce': news.td.next_sibling.a['href'],
-               'href_results': news.td.next_sibling.next_sibling.a['href'],
                'source': 'mf',
                'headline': 'OVDP ' + news.td.get_text()}
+        try:
+            dic['href_results'] = news.td.next_sibling.next_sibling.a['href']
+        except TypeError:
+            dic['href_results'] = None
         dic['time_auction'] = datetime.strptime(dic['time_auction'], '%d.%m.%Y').replace(hour=17, tzinfo=local_tz)
 
         if not dic['href_announce'].startswith('http://'):
             dic['href_announce'] = 'http://www.minfin.gov.ua' + dic['href_announce']
-        if not dic['href_results'].startswith('http://'):
-            dic['href_results'] = 'http://www.minfin.gov.ua' + dic['href_results']
-        dic['href'] = dic['headline']
+        if dic['href_results'] is not None:
+            if not dic['href_results'].startswith('http://'):
+                dic['href_results'] = 'http://www.minfin.gov.ua' + dic['href_results']
+        dic['href'] = url
+        # if auction day == current day, add field 'flag'
+        if dic['time_auction'].day == current_date.day:
+            dic['flag'] = 'same_date'
+            dic['headline'] = dic['headline'] + dic['flag']
+        else:
+            dic['flag'] = 'normal'
         data.append(dic)
     return data
 
