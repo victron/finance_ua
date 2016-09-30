@@ -8,3 +8,12 @@ a.headerlink:hover {
     background-color: #c60f0f;
     color: white;
 }
+.contact-hiden {
+    display: inline-block;
+    vertical-align: top;
+    color: #4e93c0;
+    border-bottom: 1px dotted;
+    text-decoration: none;
+    cursor: pointer;
+}
+

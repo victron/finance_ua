@@ -16,6 +16,7 @@ from spiders.common_spider import current_datetime_tz, date_handler
 from spiders.simple_encrypt_import import secret
 from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
 from tools.mytools import timer
+import pickle
 
 # user settings
 currency = filters.currency.lower()
@@ -32,9 +33,14 @@ user_agent = parameters.user_agent
 headers = {'user-agent': user_agent}
 proxies = parameters.proxies
 
+# global vars to save vars
+bid_to_payload = secret.bid_to_payload
+cook = {}
+
+
 
 @timer()
-def get_triple_data(currency: str, operation: str) -> dict:
+def get_triple_data(currency: str, operation: str) -> tuple:
 
     # minfin_urls = {'usd_sell' : 'http://minfin.com.ua/currency/auction/usd/sell/kiev/?presort=&sort=time&order=desc',
     #                'usd_buy' : 'http://minfin.com.ua/currency/auction/usd/buy/kiev/?presort=&sort=time&order=desc',
@@ -59,6 +65,9 @@ def get_triple_data(currency: str, operation: str) -> dict:
 
     ###
     soup = BeautifulSoup(responce_get.text, "html.parser")
+    # global cook
+    # cook['cookies'] = responce_get.cookies
+    # cook['url'] = url
     data = {}
     # regex = re.compile(r'[\t\n\r\x0b\x0c]')
     for i in soup.body.find_all('div', attrs={'data-bid' : True, 'class':  ['js-au-deal', 'au-deal']}):
@@ -81,7 +90,11 @@ def get_triple_data(currency: str, operation: str) -> dict:
         except KeyError:
             pass
     # print('----------------- fetch -------------------------')
-    return data, responce_get
+    # transfer session parameters
+    session_parm = {}
+    session_parm['cookies'] = pickle.dumps(responce_get.cookies)
+    session_parm['url'] = url
+    return data, session_parm
 
 @timer()
 def data_api_minfin(fn):
@@ -92,6 +105,7 @@ def data_api_minfin(fn):
         dic['currency'] = dic['currency'].upper()
         dic['location'] = location_orig
         dic['source'] = 'm'
+        dic['session'] = False
         time = dic['time'].split(':')
         dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
         dic['rate'] = float(dic['rate'].replace(',', '.'))
@@ -100,15 +114,27 @@ def data_api_minfin(fn):
         return dic
 
     data = {}
+    sessions = []
     for cur in ['rub', 'eur', 'usd']:
         for oper in ['sell', 'buy']:
-            data.update(fn(cur, oper)[0])
-
+            fn_result = fn(cur, oper)
+            data.update(fn_result[0])
+            sessions.append({'currency': cur.upper(), 'source': 'm', 'operation': oper,
+                             'url': fn_result[1]['url'], 'cookies': fn_result[1]['cookies'],
+                             'session': True})
     current_date = current_datetime_tz()
-    return [convertor_minfin(value, current_date, index) for index, value in enumerate(data.values())]
+    return [convertor_minfin(value, current_date, index) for index, value in enumerate(data.values())] + sessions
 
 
-def get_contacts(bid: str, cookies: str, data_func, proxy_is_used: bool = False) -> requests:
+def get_contacts(bid: str, data_func, session_parm: dict, content_json: bool = False) -> requests:
+    """
+
+    :param bid:
+    :param data_func:
+    :param session_parm: get session parameters, such as 'Referer', 'cookies'
+    :param content_json: return in json format
+    :return: response or serialized json
+    """
     # --------- curl method -----------------
     # url_get_contacts = 'http://minfin.com.ua/modules/connector/connector.php?action=auction-get-contacts&bid=' \
     #                    + str(int(bid) + 1) + '&r=true'
@@ -123,14 +149,23 @@ def get_contacts(bid: str, cookies: str, data_func, proxy_is_used: bool = False)
 # ---------------------------------------------
 
     # ---------- requests ---------------------
+    # at that moment successful responce on
+    # http -f POST "http://minfin.com.ua/modules/connector/connector.php?action=auction-get-contacts&bid=25195556&
+    # r=true" bid=25195555 action=auction-get-contacts r=true 'Cookie: minfincomua_region=1' 'Referer: http://minfin.com.ua/currency
+    # /auction/usd/sell/kiev/?presort=&sort=time&order=desc'
+    # global cook
     form_urlencoded = 'http://minfin.com.ua/modules/connector/connector.php'
     payload, data = data_func(bid)
-    # headers = {'user-agent': 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)'}
-    if proxy_is_used ==False:
-        return requests.post(form_urlencoded, params=payload, headers=headers, data=data, cookies=cookies)
+    headers = {'user-agent': 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)'}
+    headers.update({'Referer': session_parm['url']})
+
+    # headers.update({'Cookie': 'minfincomua_region=1'})
+    if content_json ==False:
+        return requests.post(form_urlencoded, params=payload, headers=headers, data=data,
+                             cookies=pickle.loads(session_parm['cookies']))
     else:
-        return requests.post(form_urlencoded, params=payload, headers=headers, data=data, cookies=cookies,
-                             proxies=proxies)
+        return requests.post(form_urlencoded, params=payload, headers=headers, data=data,
+                             cookies=pickle.loads(session_parm['cookies'])).content
     # return r.json()['data']
 
 
@@ -150,7 +185,7 @@ def table_api_minfin(fn_data, fn_contacts):
         return [key for key, val in data.items() if val['comment'].find(keyword) != -1 and val['operation'] == operation ]
 
 
-    data, responce_get = fn_data(currency, operation)
+    data, session_parm = fn_data(currency, operation)
     bid_to_payload = secret.bid_to_payload
     # filter by keywords
     filter_or = filters.filter_or.lower()
@@ -160,9 +195,9 @@ def table_api_minfin(fn_data, fn_contacts):
         filtered_set = filtered_set.union(set(filter_data_json(data, filter_)))
 
     for bid in filtered_set:
-        r = fn_contacts(bid, responce_get.cookies, bid_to_payload, proxy_is_used)
+        r = fn_contacts(bid, bid_to_payload, session_parm, proxy_is_used)
         data[bid]['phone'] = data[bid]['phone'].replace('xxx-x', r.json()['data'] )
-        responce_get.cookies['minfin_sessions'] = r.cookies['minfin_sessions']
+        pickle.loads(session_parm['cookies'])['minfin_sessions'] = r.cookies['minfin_sessions']
         sleep(0.5)
     return [(data[Id]['time'], data[Id]['currency'], data[Id]['operation'], data[Id]['rate'], data[Id]['amount'],
                location, data[Id]['comment'], data[Id]['phone'], 'm') for Id in filtered_set]

@@ -8,7 +8,7 @@ from app import app, web_logging
 # no environment config, default used
 # /home/vic/flask/lib/python3.5/site-packages/flask/exthook.py:71: ExtDeprecationWarning: Importing flask.ext.wtf is deprecated, use flask_wtf instead
 from flask.ext.login import login_user, logout_user, login_required
-from flask import render_template, flash, redirect, url_for, abort, jsonify, request
+from flask import render_template, flash, redirect, url_for, abort, jsonify, request, make_response
 from mongo_collector.mongo_start import aware_times
 from mongo_collector.mongo_start import data_active, bonds
 from mongo_collector.mongo_start import news as news_db
@@ -20,6 +20,8 @@ from mongo_collector.parallel import update_lists
 from mongo_collector.parallel import update_news
 from datetime import datetime, timedelta
 from spiders.common_spider import local_tz
+from spiders.parse_minfin import get_contacts, bid_to_payload
+import json
 # web_logging.getLogger(__name__)
 
 
@@ -142,6 +144,28 @@ def news():
                            title='News',
                            result=result,
                            form_update=form_update)
+
+@app.route('/api/mincontacts', methods=['POST'])
+@login_required
+def mincontacts():
+    if request.method == 'POST':
+        req_json = request.get_json()
+        bid = req_json['bid']
+        web_logging.debug('req_json= {}'.format(req_json))
+        match = {'currency': req_json['currency'], 'operation': req_json['operation'], 'session': True}
+        projection = {'_id': False, 'url': True, 'cookies': True}
+        session = data_active.find_one(match, projection)
+        doc_json = get_contacts(req_json['bid'], bid_to_payload, session, content_json=True)
+        web_logging.debug('doc_json= {}'.format(doc_json))
+        resp = make_response(doc_json)
+        resp.headers['Content-Type'] = 'application/json'
+        # try:
+        phone = req_json['number'].replace('xxx-x', json.loads(doc_json.decode('utf-8'))['data'])
+        print('phone=', phone)
+        data_active.update_one({'bid': req_json['bid'], 'source': 'm'}, {'$set': {'phone': phone}})
+        # except:
+        #     doc_json = {'code': 1, 'message': 'NOK'}
+        return resp
 
 @app.route('/charts')
 @login_required

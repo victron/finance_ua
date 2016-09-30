@@ -173,5 +173,4 @@ def stock_events():
     return file
 
 if __name__ == '__main__':
-    bonds_json_lite2()
-    # print(stock_events())
+    pass
