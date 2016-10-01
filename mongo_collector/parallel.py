@@ -64,27 +64,35 @@ class writer_lists(writer_news):
         super().update(collection, update_time)
         for document in self.docs:
             document['time_update'] = update_time
+            # TODO: replace somehow
+            # 'source' need in self.result_delete, in another case process could delete data
+            # witch anothe process will add later
+            source = document['source']
+
             if document.get('session', False) is False:
-                key = {'bid': document['bid'], 'time': document['time'],'source': document['source']}
+                key = {'bid': document['bid'], 'source': document['source']}
+                try:
+                    # result_active = self.data_active.find_one(key)
+                    result_active = self.data_active.update_one(key, {'$set': {'time_update': update_time}})
+                    logger.info('result_active ={} key= {}'.format(result_active, key))
+                    if result_active.matched_count == 0:
+                        self.data_active.insert_one(document)
+                        logger.info('inserted doc ={}'.format(document))
+                    else:
+                        # self.data_active.update_one(key, {'$set': {'time_update': update_time}})
+                        logger.info('updated doc with key = {}'.format(key))
+                        # result_active = self.data_active.replace_one(key, document, upsert=True)  # upsert used to insert a new document if a matching document does not exist.
+                except:
+                    print(document)
+                    print(self.docs)
+                    raise
             else:
                 # insert document with cookies, (new cookies need to insert any way)
-                # key = {'currency': document['currency'], 'operation': document['operation']}
-                self.data_active.insert_one(document)
-            try:
-                result_active = self.data_active.update_one(key, {'$set': {'time_update': update_time}})
-                if result_active.matched_count == 0:
-                    result_active = self.data_active.insert_one(document)
-                    logger.info('inserted doc ={}'.format(document))
-                else:
-                    logger.debug('updated doc with key = {}'.format(key))
+                key = {'currency': document['currency'], 'operation': document['operation']}
+                self.data_active.replace_one(key, document, upsert=True)
 
-                # result_active = self.data_active.replace_one(key, document, upsert=True)  # upsert used to insert a new document if a matching document does not exist.
-            except:
-                print(document)
-                print(self.docs)
-                raise
         self.result_delete = self.data_active.delete_many({'$or': [{'time_update': {'$lt': update_time}},
-                                                                   {'time_update': None}]})
+                                                                   {'time_update': None}], 'source': source})
         self.result_delete = self.result_delete.deleted_count
         self.update_result = (self.update_result[0], self.result_delete)
         return self.update_result

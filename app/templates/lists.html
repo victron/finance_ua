@@ -62,18 +62,24 @@
     </h4>
 {% for res_t in result_top %}
     <div><p>
-    {{res_t.source}}
-    <b>{{res_t.time}}</b> {{res_t.amount}} <b>{{res_t.rate}}</b>  {{res_t.phone}} {{res_t.comment}}</p></div>
+        {{res_t.source}}
+        {% if  res_t.phone.find('xxx-x') != -1 %}
+            <b>{{res_t.time.strftime('%H:%M')}}</b> {{res_t.amount}} <b>{{res_t.rate}}</b>
+            <a class="contact-hiden" data-bid-id="{{ res_t.bid }}"> {{ res_t.phone }} </a> {{res_t.comment}}
+        {% else %}
+            <b>{{res_t.time.strftime('%H:%M')}}</b> {{res_t.amount}} <b>{{res_t.rate}}</b>  {{res_t.phone}} {{res_t.comment}}
+    {% endif %}
+    </p></div>
 {% endfor %}
 =====================================
 {% for res in result %}
 <div><p>
     {{res.source}}
     <!--{{res.location}} <b>{{res.operation}} {{res.currency}} -->
-    {% if  res.source == 'm' %}
-        <b>{{res.time}}</b> {{res.amount}} <b>{{res.rate}}</b>  <a class="contact-hiden" data-bid-id="{{ res.bid }}"> {{ res.phone }} </a> {{res.comment}}
+    {% if  res.phone.find('xxx-x') != -1 %}
+        <b>{{res.time.strftime('%H:%M')}}</b> {{res.amount}} <b>{{res.rate}}</b>  <a class="contact-hiden" data-bid-id="{{ res.bid }}"> {{ res.phone }} </a> {{res.comment}}
     {% else %}
-        <b>{{res.time}}</b> {{res.amount}} <b>{{res.rate}}</b>  {{res.phone}} {{res.comment}}
+        <b>{{res.time.strftime('%H:%M')}}</b> {{res.amount}} <b>{{res.rate}}</b>  {{res.phone}} {{res.comment}}
     {% endif %}
     </p></div>
 {% endfor %}
