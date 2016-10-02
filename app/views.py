@@ -21,6 +21,7 @@ from mongo_collector.parallel import update_news
 from datetime import datetime, timedelta
 from spiders.common_spider import local_tz
 from spiders.parse_minfin import get_contacts, bid_to_payload
+from .views_func import lists_fun
 import json
 # web_logging.getLogger(__name__)
 
@@ -53,82 +54,16 @@ def index():
 @app.route('/lists', methods= ['GET', 'POST'])
 @login_required
 def lists():
-    # modify a form dynamically in your view. This is possible by creating internal subclasses
-    # http://wtforms.simplecodes.com/docs/1.0.1/specific_problems.html#dynamic-form-composition
-    class Filter(FilterBase):
-        pass
-    setattr(Filter, 'sort_order', FieldList(FormField(SortForm), min_entries=3, validators=[Optional()]))
-    # ------------------------------
-    form_update = Update_db()
-    form_filter = Filter()
-    filter_recieved = {'location': form_filter.locations.data, 'operation': form_filter.operations.data,
-                        'currency': form_filter.currencies.data, 'source': form_filter.sources.data,
-                        '$text': {'$search': form_filter.text.data}}
-    direction_dict = {'ASCENDING': pymongo.ASCENDING, 'DESCENDING': pymongo.DESCENDING}
-    # --- filter for top orders ---
-    current_time = datetime.now(tz=local_tz)
-    try:
-        time_delta = timedelta(hours=form_filter.top_hours.data)
-    except TypeError:
-        time_delta = timedelta(hours=1)
-    top_start_time = current_time - time_delta
-    top_filter = {**filter_recieved, 'time': {'$gte': top_start_time}}
-    top_limit = form_filter.top_limit.data
-    if form_filter.operations.data == 'buy':
-        top_sort = [('rate', pymongo.DESCENDING)]
-    else:
-        top_sort = [('rate', pymongo.ASCENDING)]
+    kwargs = {'hidden': {'$or': [{'hidden': {'$exists': False}}, {'hidden': False}]},
+              'title': 'Lists'}
+    return lists_fun(**kwargs)
 
+@app.route('/lists_hidden', methods= ['GET', 'POST'])
+@login_required
+def lists_hidden():
+    kwargs = {'hidden': {'hidden': True}, 'title': 'Hidden Lists'}
+    return lists_fun(**kwargs)
 
-    sort_list = [(group_order.form.sort_field.data, direction_dict[group_order.form.sort_direction.data])
-                 for group_order in form_filter.sort_order if group_order.form.sort_field.data != 'None']
-    print(sort_list)
-    # sort_list = [('time', pymongo.DESCENDING)]
-    def mongo_request(original: dict) -> dict:
-
-        mongo_dict = dict(original)
-        for key, val in original.items():
-            if (val == 'None' or val == 'all') and key != '$text':
-                del mongo_dict[key]
-            elif key == '$text' and (val == {'$search': ''} or val == {'$search': None}):
-                del mongo_dict[key]
-        return mongo_dict
-
-    if form_update.db.data:
-        web_logging.debug('update db pushed')
-        active_deleted = update_lists()
-        flash('recived db= {}, deleted docs={}'.format(str(form_update.db.data), active_deleted))
-        flash('top_filter: {}, top_sort: {}, top_limit: {}'.format(top_filter, top_sort, top_limit))
-        result = data_active.find(mongo_request(filter_recieved))
-        result_top = data_active.find(mongo_request(top_filter), sort=top_sort, limit=top_limit)
-        # replace validate_on_submit to is_submitted in reason sort_order in class Filter
-        # TODO: form validation !!!, currently buldin form validators=[Optional()]
-    elif form_filter.validate_on_submit():
-        web_logging.debug('filter pushed')
-        flash('filter: City={city}, currency={currency},  Operation={operation}, source={source},<br>'
-              'text={text}'.format(text=filter_recieved['$text'], city=filter_recieved['location'],
-                                   operation=filter_recieved['operation'], currency=filter_recieved['currency'],
-                                   source=filter_recieved['source']))
-        flash('Sort: {sort_list}'.format(sort_list=sort_list))
-        flash('top_filter: {}, top_sort: {}, top_limit: {}'.format(top_filter, top_sort, top_limit))
-        result = data_active.find(mongo_request(filter_recieved), sort=sort_list)
-        result_top = data_active.find(mongo_request(top_filter), sort=top_sort, limit=top_limit)
-    elif request.method == 'POST' and not form_filter.validate():
-        result = []
-        result_top = []
-        # result = data_active.find(mongo_request(filter_recieved), sort=([('time', pymongo.DESCENDING)]))
-        # result_top = data_active.find(mongo_request(top_filter), sort=top_sort, limit=top_limit)
-    else:
-        # default (initial) page
-        result = data_active.find(mongo_request(filter_recieved), sort=([('time', pymongo.DESCENDING)]))
-        result_top = data_active.find(mongo_request(top_filter), sort=top_sort, limit=top_limit)
-
-    return render_template('lists.html',
-                           title='Lists',
-                           form_update=form_update,
-                           form_filter=form_filter,
-                           result=result,
-                           result_top=result_top)
 
 
 @app.route('/news', methods=['GET', 'POST'])
@@ -145,6 +80,8 @@ def news():
                            result=result,
                            form_update=form_update)
 
+# ------- api POSTs methods ---------
+
 @app.route('/api/mincontacts', methods=['POST'])
 @login_required
 def mincontacts():
@@ -157,6 +94,7 @@ def mincontacts():
         session = data_active.find_one(match, projection)
         doc_json = get_contacts(req_json['bid'], bid_to_payload, session, content_json=True)
         web_logging.debug('doc_json= {}'.format(doc_json))
+        # 'doc_json' already in json, comes from native website
         resp = make_response(doc_json)
         resp.headers['Content-Type'] = 'application/json'
         # try:
@@ -166,6 +104,25 @@ def mincontacts():
         # except:
         #     doc_json = {'code': 1, 'message': 'NOK'}
         return resp
+
+@app.route('/api/hide', methods=['POST'])
+@login_required
+def hide_in_list():
+    req_json = request.get_json()
+    hide = req_json.pop('hide')
+    if hide:
+        result = data_active.update_one(req_json,
+                                        {'$set': {'hidden': True}})
+    else:
+        result = data_active.update_one(req_json,
+                                        {'$set': {'hidden': False}})
+    if result.modified_count == 1:
+        responce = {'code': 0, 'message': 'OK'}
+    else:
+        responce = {'code': 1, 'message': 'NOK'}
+    resp = make_response(json.dumps(responce))
+    resp.headers['Content-Type'] = 'application/json'
+    return resp
 
 @app.route('/charts')
 @login_required

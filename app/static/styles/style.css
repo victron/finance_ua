@@ -16,4 +16,23 @@ a.headerlink:hover {
     text-decoration: none;
     cursor: pointer;
 }
-
+.hide-button, .unhide-button {
+    font-size: 9px;
+    padding: 1px 1px;
+    border: none;
+    border-radius: 50%;
+    margin: 4px 2px;
+    color: red;
+    /*background-color: red;*/
+    cursor: pointer;
+}
+.unhide-button {
+    font-size: 9px;
+    padding: 1px 1px;
+    border: none;
+    border-radius: 50%;
+    margin: 4px 2px;
+    color: green;
+    /*background-color: green;*/
+    cursor: pointer;
+}

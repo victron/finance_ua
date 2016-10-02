@@ -60,27 +60,48 @@
         --- top {{form_filter.currencies.data}} {{form_filter.operations.data}} ---
 <a href="#tops">¶</a>
     </h4>
-{% for res_t in result_top %}
-    <div><p>
-        {{res_t.source}}
-        {% if  res_t.phone.find('xxx-x') != -1 %}
-            <b>{{res_t.time.strftime('%H:%M')}}</b> {{res_t.amount}} <b>{{res_t.rate}}</b>
-            <a class="contact-hiden" data-bid-id="{{ res_t.bid }}"> {{ res_t.phone }} </a> {{res_t.comment}}
-        {% else %}
-            <b>{{res_t.time.strftime('%H:%M')}}</b> {{res_t.amount}} <b>{{res_t.rate}}</b>  {{res_t.phone}} {{res_t.comment}}
+    {% if title == 'Hidden Lists' %}
+        !!!!!!!!!!!! Hidden Lists !!!!!!!!!!!! <br>
     {% endif %}
-    </p></div>
+{% for res_t in result_top %}
+    <div data-bid-id="{{ res_t.bid }}" source="{{ res_t.source }}">
+    <p>
+        {{res_t.source}}
+        <b>{{res_t.time.strftime('%H:%M')}}</b> {{res_t.amount}} <b>{{res_t.rate}}</b>
+            {% if  res_t.phone.find('xxx-x') != -1 %}
+                <a class="contact-hiden"> {{ res_t.phone }} </a>
+            {% else %}
+                {{res_t.phone}}
+            {% endif %}
+        {# change button hide or unhide  #}
+        {% if title == 'Lists' %}
+            <button type="button" class="hide-button">hide</button>
+        {% elif title == 'Hidden Lists' %}
+            <button type="button" class="unhide-button">unhide</button>
+        {% endif %}
+        {{res_t.comment}}
+    </p>
+    </div>
 {% endfor %}
 =====================================
 {% for res in result %}
-<div><p>
-    {{res.source}}
-    <!--{{res.location}} <b>{{res.operation}} {{res.currency}} -->
-    {% if  res.phone.find('xxx-x') != -1 %}
-        <b>{{res.time.strftime('%H:%M')}}</b> {{res.amount}} <b>{{res.rate}}</b>  <a class="contact-hiden" data-bid-id="{{ res.bid }}"> {{ res.phone }} </a> {{res.comment}}
-    {% else %}
-        <b>{{res.time.strftime('%H:%M')}}</b> {{res.amount}} <b>{{res.rate}}</b>  {{res.phone}} {{res.comment}}
-    {% endif %}
+<div data-bid-id="{{ res.bid }}" source="{{ res.source }}">
+    <p>
+        {{res.source}}
+        <b>{{res.time.strftime('%H:%M')}}</b> {{res.amount}} <b>{{res.rate}}</b>
+        <!--{{res.location}} <b>{{res.operation}} {{res.currency}} -->
+        {% if  res.phone.find('xxx-x') != -1 %}
+            <a class="contact-hiden" data-bid-id="{{ res.bid }}"> {{ res.phone }} </a>
+        {% else %}
+            {{res.phone}}
+        {% endif %}
+        {# change button hide or unhide  #}
+        {% if title == 'Lists' %}
+            <button type="button" class="hide-button">hide</button>
+        {% elif title == 'Hidden Lists' %}
+            <button type="button" class="unhide-button">unhide</button>
+        {% endif %}
+        {{res.comment}}
     </p></div>
 {% endfor %}
 {% endblock %}
