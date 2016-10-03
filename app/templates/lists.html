@@ -67,18 +67,18 @@
     <div data-bid-id="{{ res_t.bid }}" source="{{ res_t.source }}">
     <p>
         {{res_t.source}}
-        <b>{{res_t.time.strftime('%H:%M')}}</b> {{res_t.amount}} <b>{{res_t.rate}}</b>
-            {% if  res_t.phone.find('xxx-x') != -1 %}
-                <a class="contact-hiden"> {{ res_t.phone }} </a>
-            {% else %}
-                {{res_t.phone}}
-            {% endif %}
         {# change button hide or unhide  #}
         {% if title == 'Lists' %}
             <button type="button" class="hide-button">hide</button>
         {% elif title == 'Hidden Lists' %}
             <button type="button" class="unhide-button">unhide</button>
         {% endif %}
+        <b>{{res_t.time.strftime('%H:%M')}}</b> {{res_t.amount}} <b>{{res_t.rate}}</b>
+            {% if  res_t.phone.find('xxx-x') != -1 %}
+                <a class="contact-hiden"> {{ res_t.phone }} </a>
+            {% else %}
+                {{res_t.phone}}
+            {% endif %}
         {{res_t.comment}}
     </p>
     </div>
@@ -88,18 +88,18 @@
 <div data-bid-id="{{ res.bid }}" source="{{ res.source }}">
     <p>
         {{res.source}}
+        {# change button hide or unhide  #}
+        {% if title == 'Lists' %}
+            <button type="button" class="hide-button">hide</button>
+        {% elif title == 'Hidden Lists' %}
+            <button type="button" class="unhide-button">unhide</button>
+        {% endif %}
         <b>{{res.time.strftime('%H:%M')}}</b> {{res.amount}} <b>{{res.rate}}</b>
         <!--{{res.location}} <b>{{res.operation}} {{res.currency}} -->
         {% if  res.phone.find('xxx-x') != -1 %}
             <a class="contact-hiden" data-bid-id="{{ res.bid }}"> {{ res.phone }} </a>
         {% else %}
             {{res.phone}}
-        {% endif %}
-        {# change button hide or unhide  #}
-        {% if title == 'Lists' %}
-            <button type="button" class="hide-button">hide</button>
-        {% elif title == 'Hidden Lists' %}
-            <button type="button" class="unhide-button">unhide</button>
         {% endif %}
         {{res.comment}}
     </p></div>

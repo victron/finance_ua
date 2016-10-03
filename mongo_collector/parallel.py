@@ -72,16 +72,17 @@ class writer_lists(writer_news):
             if document.get('session', False) is False:
                 key = {'bid': document['bid'], 'source': document['source']}
                 try:
-                    # result_active = self.data_active.find_one(key)
-                    result_active = self.data_active.update_one(key, {'$set': {'time_update': update_time}})
-                    logger.info('result_active ={} key= {}'.format(result_active, key))
-                    if result_active.matched_count == 0:
+                    original_doc = self.data_active.find_one_and_update(key, {'$set': {'time_update': update_time}})
+                    if original_doc is None:
                         self.data_active.insert_one(document)
-                        logger.info('inserted doc ={}'.format(document))
+                        logger.debug('inserted doc ={}'.format(document))
+                    elif original_doc['time'] != document['time']:
+                        result_active = self.data_active.update_one(key, {'$set': {'time': document['time'],
+                                                                                   'hidden': False},
+                                                                          '$inc': {'time_up_count': 1}})
+                        logger.debug('updated doc and time_up_count with key = {}'.format(key))
                     else:
-                        # self.data_active.update_one(key, {'$set': {'time_update': update_time}})
-                        logger.info('updated doc with key = {}'.format(key))
-                        # result_active = self.data_active.replace_one(key, document, upsert=True)  # upsert used to insert a new document if a matching document does not exist.
+                        logger.debug('updated doc with key= {}'.format(key))
                 except:
                     print(document)
                     print(self.docs)

@@ -22,7 +22,7 @@ a.headerlink:hover {
     border: none;
     border-radius: 50%;
     margin: 4px 2px;
-    color: red;
+    color: #ffb3cb;
     /*background-color: red;*/
     cursor: pointer;
 }
