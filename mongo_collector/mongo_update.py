@@ -8,6 +8,7 @@ from spiders.filters import location, currency, operation, filter_or
 from tools.mytools import timer
 # import multiprocessing.dummy as multiprocessing
 import multiprocessing
+from collections import namedtuple
 
 from functools import reduce
 import logging
@@ -37,7 +38,9 @@ def mongo_insert_history(docs: list, collection):
         except DuplicateKeyError as e:
             dublicate_count += 1
             logger.debug('duplicate found={}'.format(str(e)))
-    return inserted_count, dublicate_count
+    result = namedtuple('result',['inserted_count', 'dublicate_count'])
+    return result(inserted_count, dublicate_count)
+
 
 @timer(logging=logger)
 def mongo_add_fields(docs: list, collection=None):
@@ -83,17 +86,13 @@ def mongo_add_fields(docs: list, collection=None):
     return inserted_count, modified_count, duplicate_count
 
 
-
-
-
-
 def get_selection() -> (set, set, set, set):
-    result = data_active.find({}, {'location': 1, 'operation': 1, 'currency': 1, 'source': 1, '_id': 0})
+    selections_result = data_active.find({}, {'location': 1, 'operation': 1, 'currency': 1, 'source': 1, '_id': 0})
     locations = set()
     operations = set()
     currencies = set()
     sources = set()
-    for i in result:
+    for i in selections_result:
         locations.add(i.get('location', 'None'))
         operations.add(i.get('operation', 'None'))
         currencies.add(i.get('currency', 'None'))

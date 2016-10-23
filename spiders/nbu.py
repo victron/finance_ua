@@ -119,8 +119,8 @@ class NbuJson():
                     .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
             except:
                 pass
-        obj['_id'] = obj['stockcode']
-        del obj['stockcode']
+        obj['stockcode'] = obj['stockcode'].strip()
+        # del obj['stockcode']
         return obj
 
     def rates_current(self) -> json:

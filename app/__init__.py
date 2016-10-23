@@ -19,7 +19,7 @@ if not os.path.isfile(logging_config):
     logging_config = os.path.join('config', 'logging.yml')
 
 # TODO: window compatibility
-logging.config.dictConfig(yaml.load(open(logging_config, 'r')))
+# logging.config.dictConfig(yaml.load(open(logging_config, 'r')))
 
 web_logging = logging.getLogger('curs')
 # mongo_logging = logging.getLogger('curs.mongo')

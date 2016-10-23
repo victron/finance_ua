@@ -178,7 +178,7 @@ def history_json(currency):
         mongo_request = {"$or": [{"source": "d_int_stat"}, {"source": "d_ext_stat"}]}
         projection = {'_id': False, 'time': True, 'sell': True, 'buy': True, 'nbu_rate': True,
                       'nbu_auction.amount_requested': True, 'nbu_auction.amount_accepted_all': True,
-                      'nbu_auction.operation': True}
+                      'nbu_auction.operation': True, 'source': True}
         cursor = aware_times(currency).find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
         data = {currency: [reformat_for_js(doc) for doc in cursor]} # dict for transfere parameter currency in json
         file = jsonify(data)

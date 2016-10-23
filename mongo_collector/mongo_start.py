@@ -24,6 +24,8 @@ data_active = aware_times('data_active') # pymongo 3.2.2
 news = aware_times('news')
 bonds = aware_times('bonds')
 ukrstat = aware_times('ukrstat')
+bonds_auction = aware_times('bonds_auction')
+bonds_payments = aware_times('bonds_payments')
 
 records.create_index([('bid', pymongo.ASCENDING),
                       ('time', pymongo.ASCENDING),
@@ -38,6 +40,12 @@ data_active.create_index([('comment', pymongo.TEXT)], default_language='russian'
 news.create_index([
                   #  ('time', pymongo.ASCENDING),
                    ('href', pymongo.ASCENDING)], name='news_time', unique=True)
+bonds_auction.create_index([('auctiondate', pymongo.ASCENDING),
+                            ('auctionnum', pymongo.ASCENDING)], unique=True, name='bonds_auction')
+bonds_payments.create_index([('bond', pymongo.ASCENDING),
+                             ('time', pymongo.ASCENDING),
+                             ('pay_type', pymongo.ASCENDING)], unique=True, name='payments')
+
 history.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
 for currency in ['USD', 'EUR', 'RUB']:
     DB = DATABASE[currency]

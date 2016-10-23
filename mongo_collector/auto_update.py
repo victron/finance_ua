@@ -11,7 +11,8 @@ import yaml
 from mongo_collector.parallel import update_lists, update_news
 from mongo_collector.mongo_periodic import ukrstat_shadow
 from mongo_collector.mongo_collect_history import hourly_history
-from mongo_collector.mongo_collect_history import agg_daily_stat, update_bonds, manual_bonds_insert
+from mongo_collector.mongo_collect_history import agg_daily_stat, update_bonds
+from mongo_collector.bonds import manual_bonds_insert, update_bonds
 
 import logging.config
 logging_config = os.path.join(sys.prefix, '.curs', 'logging.yml')

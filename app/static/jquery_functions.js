@@ -24,7 +24,7 @@ $(document).ready(function(){
         success: function(response, statusTxt, xhr) {
                     if (response['code'] == 0){
                        // alert("Error: " + xhr.status + ": " + xhr.statusText + "jj" + response['number']);
-                        t.text(number.replace("xxx-x", response['data']));
+                        t.text(number.replace("xxx-x", "-" + response['data']));
                         t.addClass("contact-shown");
                         t.removeClass("contact-hiden");
                         // t.remove();

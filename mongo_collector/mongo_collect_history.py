@@ -1,22 +1,15 @@
+import logging
 import statistics
 from datetime import datetime, timedelta
 
-from bson.dbref import DBRef
 from pymongo.errors import DuplicateKeyError
 
-from mongo_collector.external_loans import external_loans_USD
+from mongo_collector.bonds import update_bonds
 from mongo_collector.mongo_start import history, data_active, aware_times
 from spiders.common_spider import local_tz
 from spiders.nbu import auction_get_dates, NbuJson, auction_results
 from spiders.parse_minfin import minfin_history
 from spiders.ukrstat import import_stat
-from pymongo.errors import DuplicateKeyError
-from spiders.ukrstat import ukrstat as ukrstat_
-from mongo_collector.mongo_update import mongo_add_fields
-from mongo_collector.mongo_start import ukrstat as ukrstat_db
-from mongo_collector import DATABASE
-import logging
-from spiders.external_bonds import external_bonds
 
 logger = logging.getLogger('curs.mongo_collector.mongo_collect_history')
 
@@ -358,198 +351,6 @@ def ukrstat(start_date: datetime) -> tuple:
     return inserted_count, duplicate_count
 
 
-def bonds_summary(bond: dict):
-    """
-    based on auction data update number of active bonds
-    :param bond: auction result on bond
-    income fields:
-'stockrestrict' Обмеження на обсяг розміщення облігацій (шт.)
-'stockrestrictn'  У т.ч. за неконкурентними заявками (шт.)
-'amount'  Кількість проданих облігацій (шт.)
-'amountn' У т.ч. за неконкурентними заявками (шт.)
-'auctiondate' Дата розміщення облігацій
-'paydate' Дата оплати за придбані облігації
-'repaydate' Термін погашення облігацій
-'incomelevel' Граничний рівень дохідності облігацій (%)
-'avglevel'  Середньозважений рівень дохідності облігацій (%)
-'attraction'  Залучено коштів від розміщення облігацій (грн.)
-    :return:
-    """
-    def guess_nominal_cost(amount, attraction, bond_code, bond_date):
-        low_k = 0.4
-        hight_k = 2.0
-        nominal = 1000
-        try:
-            avarage_cost = attraction / amount
-        except ZeroDivisionError:
-            return nominal
-        if (avarage_cost * low_k < nominal) and (avarage_cost * hight_k > nominal):
-            return nominal
-        else:
-            logger.info('problem with nominal value {} on {}'.format(bond_code, bond_date))
-            return avarage_cost
-
-    collection = aware_times('bonds')
-    collection_payments = aware_times('bonds_payments')
-    document = dict(bond)
-    currency = document.pop('valcode').upper()
-    document['currency'] = currency
-    attraction = document['attraction']
-    auctiondate = document.pop('auctiondate')
-    auctionnum= document.pop('auctionnum')
-    paydate = document.pop('paydate')
-    document.pop('stockrestrict')
-    document.pop('stockrestrictn')
-    document['nominal'] = guess_nominal_cost(document['amount'], document['attraction'],
-                                             document['_id'], auctiondate)
-    bond_code = document.pop('_id').strip()
-    exist_document = collection.find_one({'_id': bond_code})
-    if exist_document:
-        # in case bond in db
-        if auctiondate not in exist_document['auction_dates']:
-            # set incomelevel as max from all auctions
-            # reason - there are no data about nominal incomelevel in json from NBU
-            if exist_document['incomelevel'] > document['incomelevel']:
-                document.pop('incomelevel')
-
-            document['amount'] += exist_document['amount']
-            document['amountn'] += exist_document['amountn']
-            document['attraction'] += exist_document['attraction']
-            collection.update_one({'_id': bond_code}, {'$set': document})
-            # workaround
-            collection.update_one({'_id': bond_code}, {'$push': {'auction_dates': auctiondate}})
-            collection.update_one({'_id': bond_code}, {'$push': {'auctionnums': auctionnum}})
-            collection.update_one({'_id': bond_code}, {'$push': {'paydates': paydate}})
-    else:
-        # workaround
-        # currently I don't know reason why it's not posible to inser or update document with array in field
-        collection.update_one({'_id': bond_code}, {'$set': document}, upsert=True)
-        collection.update_one({'_id': bond_code}, {'$push': {'auction_dates': auctiondate}})
-        collection.update_one({'_id': bond_code}, {'$push': {'auctionnums': auctionnum}})
-        collection.update_one({'_id': bond_code}, {'$push': {'paydates': paydate}})
-
-    exist_payment = collection_payments.find_one({'bond': bond_code, 'time': paydate, 'pay_type': 'income',
-                                                  'auctionnum': auctionnum})
-    # insert in bonds_payments atraction amount (with minus)
-    if exist_payment is None:
-        doc = {}
-        doc['bond'] = bond_code
-        doc['time'] = paydate
-        doc['pay_type'] = 'income'
-        doc['currency'] = currency
-        doc['auctionnum'] = auctionnum
-        doc['cash'] = attraction
-        result = collection_payments.insert_one(doc)
-
-
-def internal_payments(in_doc: dict):
-    """
-    "amount": 4247000
-    "nominal": 1000
-    "repaydate": "9/28/11 2:00:00 PM UTC"
-    "incomelevel": 17.0
-    "attraction": 3.81558757E9
-    "currency": "UAH"
-    "_id": "UA3B00022509"
-    "auction_dates" : [ { "$date" : "2008-09-29T14:00:00.000Z"} , { "$date" : "2008-10-06T14:00:00.000Z"} ,
-    :param document:
-    :return:
-    """
-    # currently ignore all bonds with feild coupon_type
-    if (in_doc['amount'] > 0) and (in_doc.get('coupon_type') is None):
-        def calc_coupon_dates(open_date: datetime, close_date: datetime, period=0.5) -> set():
-            """
-
-            :param open_date: datetime: should be min date in auction dates
-            :param close_date: datetime
-            :param period: curently only 0.5
-            :return: set of datetime oblects
-            """
-            pay_dates = set()
-            pay_dates.add(close_date)
-            if (close_date - open_date).days > 170:
-                while close_date > open_date:
-                    # calc month and year in half year
-                    if period == 0.5:
-                        pay_month = (close_date.month - 6) % 12
-                    elif period == 1:
-                        pay_month = (close_date.month - 12) % 12
-                    if pay_month == 0:
-                        pay_month = 1
-                    if pay_month >= close_date.month:
-                        pay_year = close_date.year - 1
-                    else:
-                        pay_year = close_date.year
-                    # --- To set exists date ----
-                    while True:
-                        try:
-                            pay_date = close_date.replace(month=pay_month, year=pay_year)
-                        except ValueError:
-                            close_date += timedelta(days=1)
-                            continue
-                        break
-                    # --------------------------
-                    if (pay_date - open_date).days > 150:
-                        pay_dates.add(pay_date)
-                        close_date = pay_date
-                    else:
-                        return pay_dates
-            else:
-                return pay_dates
-
-        collection = aware_times('bonds_payments')
-        bond_open = min(in_doc['auction_dates'])
-        bond_close = in_doc['repaydate']
-        exist_return = collection.find_one({'bond': in_doc['_id'], 'time': bond_close, 'pay_type': 'return'})
-        if exist_return is None:
-        # calc and put in db return value
-            doc = {}
-            doc['bond'] = in_doc['_id']
-            doc['time'] = bond_close
-            doc['pay_type'] = 'return'
-            doc['currency'] = in_doc['currency']
-            doc['cash'] = in_doc['amount'] * in_doc['nominal']
-            collection.insert_one(doc)
-        for date in calc_coupon_dates(bond_open, bond_close):
-        # calc and put in db coupon values, every half year
-            exist_coupon = collection.find_one({'bond': in_doc['_id'], 'time': date, 'pay_type': 'coupon'})
-            if exist_coupon is None:
-                doc = {}
-                doc['bond'] = in_doc['_id']
-                doc['time'] = date
-                doc['pay_type'] = 'coupon'
-                doc['currency'] = in_doc['currency']
-                try:
-                    doc['cash'] = in_doc['amount'] * in_doc['nominal'] / 100 * in_doc['incomelevel']/2
-                except ZeroDivisionError:
-                    doc['cash'] = 0
-                collection.insert_one(doc)
-
-
-
-def manual_bonds_insert(triger=False):
-    if triger:
-        for bond in external_bonds:
-            exist_document = aware_times('bonds').find_one({'_id': bond['_id']})
-            if exist_document is None:
-                resut = aware_times('bonds').insert_one(bond)
-
-def update_bonds(triger=False):
-    if triger:
-        for doc in NbuJson().ovdp_all():
-            bonds_summary(doc)
-        manual_bonds_insert(triger=True)
-        colection = aware_times('bonds')
-        for doc in colection.find({}):
-            internal_payments(doc)
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
     # # collect currencies rates from minfin.ua and nbu auction results
     # ext_history()
@@ -589,7 +390,9 @@ if __name__ == '__main__':
     # print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
     # # ================================================
     # agg_daily_stat()
-    update_bonds(True)
+    pass
+
+
 
 
 
