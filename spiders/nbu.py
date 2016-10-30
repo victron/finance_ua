@@ -166,6 +166,8 @@ class NbuJson():
         params = {'date': date.strftime('%Y%m%d'), 'valcode': currency, 'json': ''}
         return requests.get(self.url + 'ovdp', params=params).json()
 
+    
+
 
 if __name__ == '__main__':
     year = '2016'

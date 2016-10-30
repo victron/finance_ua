@@ -37,9 +37,13 @@ data_active.create_index([('bid', pymongo.ASCENDING),
 
 data_active.create_index([('time_update', pymongo.ASCENDING)], name='update_time_key')
 data_active.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')
+
+# -------- news ---------------
 news.create_index([
                   #  ('time', pymongo.ASCENDING),
                    ('href', pymongo.ASCENDING)], name='news_time', unique=True)
+news.create_index([('headline', pymongo.TEXT)], default_language='russian', name='headline')
+
 bonds_auction.create_index([('auctiondate', pymongo.ASCENDING),
                             ('auctionnum', pymongo.ASCENDING)], unique=True, name='bonds_auction')
 bonds_payments.create_index([('bond', pymongo.ASCENDING),

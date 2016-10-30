@@ -49,6 +49,7 @@ def announcement_ovdp() -> list:
                'time': current_date,
                'href_announce': news.td.next_sibling.a['href'],
                'source': 'mf',
+               'type': 'ovdp',
                'headline': 'OVDP ' + news.td.get_text()}
         try:
             dic['href_results'] = news.td.next_sibling.next_sibling.a['href']
@@ -63,18 +64,23 @@ def announcement_ovdp() -> list:
                 dic['href_results'] = 'http://www.minfin.gov.ua' + dic['href_results']
         dic['href'] = url
         # if auction day == current day, add field 'flag'
-        if dic['time_auction'].day == current_date.day:
+        if dic['time_auction'].date() == current_date.date():
             dic['flag'] = 'same_date'
-            dic['headline'] = dic['headline'] + dic['flag']
+            dic['headline'] = dic['headline'] + ' in a ' + dic['flag']
         else:
             dic['flag'] = 'normal'
+        # manipulate with fields
+        # at that moment there are no clear format
+        # 'href' at taht moment unique
+        dic['href_docs'] = dic['href']
+        dic['href'] = dic['href'] + '?ref=' + dic['href_announce']
         data.append(dic)
     return data
 
 
 if __name__ == '__main__':
-    print(json.dumps(minfin_headlines(), sort_keys=True, indent=4, separators=(',', ': '),
-                     ensure_ascii=False, default=date_handler))
+    # print(json.dumps(minfin_headlines(), sort_keys=True, indent=4, separators=(',', ': '),
+    #                  ensure_ascii=False, default=date_handler))
     print(json.dumps(announcement_ovdp(), sort_keys=True, indent=4, separators=(',', ': '),
                      ensure_ascii=False, default=date_handler))
 

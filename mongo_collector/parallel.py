@@ -134,7 +134,7 @@ def parent(funcs: list, collection) -> tuple:
     while readers:
         for r in wait(readers):
             try:
-                result_r  = r.recv()
+                result_r = r.recv()
             except EOFError:
                 readers.remove(r)
             else:
@@ -143,7 +143,6 @@ def parent(funcs: list, collection) -> tuple:
     for process in processes_news:
         process.join()
     return reduce(lambda x, y: (x[0] + y[0], x[1] + y[1]), result)
-
 
 
 def update_news():
@@ -169,3 +168,7 @@ def update_lists():
                      (berlox.data_api_berlox, berlox.fetch_data),]
     result = parent(spiders_lists, 'records')
     return result
+
+
+if __name__ == '__main__':
+    update_news()

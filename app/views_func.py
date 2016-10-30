@@ -7,6 +7,7 @@ from spiders.common_spider import local_tz
 
 import pymongo
 from wtforms.validators import Optional
+from collections import defaultdict
 
 from app import web_logging
 # TODO: replace flask.ext.login, flask.ext.wtf
@@ -17,8 +18,9 @@ from app import web_logging
 from flask import render_template, flash, redirect, url_for, abort, jsonify, request, make_response
 from mongo_collector.mongo_start import aware_times
 from mongo_collector.mongo_start import data_active, bonds
-from .forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
+from app.forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
 from mongo_collector.parallel import update_lists
+import logging
 
 
 
@@ -115,17 +117,19 @@ def bonds_json_lite2():
                                                        {'_id': False, 'time_auction': True})])
     # lookup = [{'$lookup': {'from': 'bonds_payments', 'localField': 'time', 'foreignField': 'time', 'as': 'payments'}}]
     # --------- colect all bonds --------
+    # filter out document with metadata in _id==update
+    match_bods = {'$match': {'_id': {'$ne': 'update'}}}
     group_bonds = {'$group': {'_id': {'time' : '$time', 'currency': '$currency', 'pay_type': '$pay_type'},
                               'cash': {'$sum': '$cash'}}}
     project_bonds = {'$project': {'_id': False, 'currency': '$_id.currency', 'pay_type': '$_id.pay_type',
                                   'time': '$_id.time', 'cash': '$cash'}}
-    command_cursor = bonds_payments.aggregate([group_bonds, project_bonds])
-    bonds = {}
+    command_cursor = bonds_payments.aggregate([match_bods, group_bonds, project_bonds])
+    bonds = defaultdict(dict)
     # put bonds in dict
     # { time: {currency<1>_pay_type<1>: cash<1>,
     #          currency<2>_pay_type<1>: cash<2>,}}
     for doc in command_cursor:
-        bonds[doc['time']] = {}
+        # bonds[doc['time']] = {}
         if doc['pay_type'] == 'income':
             multiply = -1000000
         else:
@@ -165,9 +169,13 @@ def bonds_json_lite2():
             data_out[currency].append(doc1)
             print(data_out[currency][-1:])
     del data
-    file = jsonify(data_out)
-    file.headers['Content-Disposition'] = 'attachment;filename=' + 'bonds_curr' + '.json'
-    return file
+    if __name__ == '__main__':
+        # show data in console directly
+        return data_out
+    else:
+        file = jsonify(data_out)
+        file.headers['Content-Disposition'] = 'attachment;filename=' + 'bonds_curr' + '.json'
+        return file
 
 
 def stock_events():
@@ -275,4 +283,7 @@ def lists_fun(**kwargs):
 
 
 if __name__ == '__main__':
-    pass
+    logging.basicConfig(level=logging.DEBUG)
+    from spiders.common_spider import date_handler
+    print(json.dumps(bonds_json_lite2(), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
+                     default=date_handler))
