@@ -24,7 +24,7 @@ time_periods = range(8, 20)
 
 @timer(logging=logger)
 def mongo_insert_history(docs: list, collection):
-    dublicate_count = 0
+    duplicate_count = 0
     inserted_count = 0
     for d in docs:
         # The document to insert. Must be a mutable mapping type.
@@ -36,10 +36,10 @@ def mongo_insert_history(docs: list, collection):
             inserted_count += 1
             logger.debug('history insert={}'.format(result.acknowledged))
         except DuplicateKeyError as e:
-            dublicate_count += 1
+            duplicate_count += 1
             logger.debug('duplicate found={}'.format(str(e)))
-    result = namedtuple('result',['inserted_count', 'dublicate_count'])
-    return result(inserted_count, dublicate_count)
+    result = namedtuple('result', ['inserted_count', 'duplicate_count'])
+    return result(inserted_count, duplicate_count)
 
 
 @timer(logging=logger)

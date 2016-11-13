@@ -13,6 +13,8 @@ from mongo_collector.mongo_periodic import ukrstat_shadow
 from mongo_collector.mongo_collect_history import hourly_history
 from mongo_collector.mongo_collect_history import agg_daily_stat, update_bonds
 from mongo_collector.bonds import manual_bonds_insert, update_bonds
+from mongo_collector.money_aggregators import aggregators
+from mongo_collector.swaps import collect_nbu_swaps
 
 import logging.config
 logging_config = os.path.join(sys.prefix, '.curs', 'logging.yml')
@@ -56,12 +58,16 @@ daily_stat = scheduler.add_job(agg_daily_stat, 'cron', name='daily_stat', hour=1
                                replace_existing=True, jobstore='longTerm')
 daily_bonds = scheduler.add_job(update_bonds, 'cron', name='daily_bonds', hour=11, minute=35, id='daily_bonds',
                                 replace_existing=True, jobstore='longTerm', args=[True])
+daily_swaps = scheduler.add_job(collect_nbu_swaps, 'cron', name='daily_swaps', hour=17, minute=45, id='daily_swaps',
+                                replace_existing=True, jobstore='longTerm', args=[True])
 
 # Todo: aspscheduler problem
 # problem with aspscheduler, try to move to another module
 auto_ukrstat_month = scheduler.add_job(ukrstat_shadow, 'cron', id='auto_ukrstat_update', replace_existing=True,
                                        name='auto_ukrstat_update', hour=16, minute=15, jobstore='longTerm')
-
+monthly_aggregators = scheduler.add_job(aggregators, 'cron', name='monthly_aggregators', hour=14, minute=45,
+                                        id='monthly_aggregators', replace_existing=True, jobstore='longTerm',
+                                        args=[True])
 def main():
     logger.debug('start auto update')
     # For BlockingScheduler, you will only want to call start() after you’re done with any initialization steps.

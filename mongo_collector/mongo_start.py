@@ -21,7 +21,7 @@ aware_times = lambda collection: DATABASE[collection].with_options(codec_options
                                                                                               tzinfo=local_tz))
 # data_active = db['data_active']
 data_active = aware_times('data_active') # pymongo 3.2.2
-news = aware_times('news')
+
 bonds = aware_times('bonds')
 ukrstat = aware_times('ukrstat')
 bonds_auction = aware_times('bonds_auction')
@@ -39,6 +39,7 @@ data_active.create_index([('time_update', pymongo.ASCENDING)], name='update_time
 data_active.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')
 
 # -------- news ---------------
+news = aware_times('news')
 news.create_index([
                   #  ('time', pymongo.ASCENDING),
                    ('href', pymongo.ASCENDING)], name='news_time', unique=True)
@@ -51,6 +52,16 @@ bonds_payments.create_index([('bond', pymongo.ASCENDING),
                              ('pay_type', pymongo.ASCENDING)], unique=True, name='payments')
 
 history.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
+# information about collections
+meta = aware_times('meta')
+swaps = aware_times('swaps')
+swaps.create_index([('date', pymongo.ASCENDING),
+                    ('period', pymongo.ASCENDING)], unique=True, name='swaps')
+aggregators = aware_times('aggregators')
+aggregators.create_index([('date', pymongo.ASCENDING),
+                          ('id_api', pymongo.ASCENDING),
+                          ('k076txt', pymongo.ASCENDING)], unique=True, name='aggregators')
+
 for currency in ['USD', 'EUR', 'RUB']:
     DB = DATABASE[currency]
     DB.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)

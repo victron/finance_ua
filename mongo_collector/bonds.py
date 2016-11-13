@@ -187,7 +187,7 @@ def bonds_income():
             docs_income.append(doc_income)
         insert_result = mongo_insert_history(docs_income, bonds_payments)
         logger.debug('inserted in collection_payments = {}'.format(insert_result.inserted_count))
-        logger.debug('duplicated in collection_payments = {}'.format(insert_result.dublicate_count))
+        logger.debug('duplicated in collection_payments = {}'.format(insert_result.duplicate_count))
         if insert_result.inserted_count > 0:
             current_time = datetime.now(tz=local_tz)
             bonds_payments.update_one({'_id': 'update'}, {'$set': {'income_update': current_time}}, upsert=True)
@@ -287,7 +287,7 @@ def internal_payments(in_doc: dict):
 def manual_bonds_insert():
     external_update = mongo_insert_history(external_bonds, bonds)
     logger.debug('external bonds inserted= {} duplicated= {}'.format(external_update.inserted_count,
-                                                                     external_update.dublicate_count))
+                                                                     external_update.duplicate_count))
     #  'insert_time' when new data was inserted
     if external_update.inserted_count > 0:
         current_time = datetime.now(tz=local_tz)

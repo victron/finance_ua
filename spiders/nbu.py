@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 
-from spiders.common_spider import local_tz
+from spiders.common_spider import local_tz, date_handler
 from spiders.parameters import proxy_is_used, headers, proxies
 
 
@@ -144,7 +144,6 @@ class NbuJson():
         document['source'] = 'nbu'
         return document
 
-
     def ovdp_all(self) -> json:
         # API сторінка результатів розміщення облігацій внутрішніх державних позик
         # Всі результати розміщення облігації:
@@ -166,7 +165,47 @@ class NbuJson():
         params = {'date': date.strftime('%Y%m%d'), 'valcode': currency, 'json': ''}
         return requests.get(self.url + 'ovdp', params=params).json()
 
-    
+    def swaps_per_date(self, date: datetime, period: str) -> json:
+        # Індекс міжбанківських ставок за період
+        # (можливі значення для періоду OVERNIGHT / 1WEEK / 2WEEKS / 1MONTH / 3MONTHS, регістр значення не має):
+        # https://bank.gov.ua/NBUStatService/v1/statdirectory/uiir?period=1WEEK&date=YYYYMMDD
+        # http https://bank.gov.ua/NBUStatService/v1/statdirectory/uiir period==2WEEK json== date==20161027
+        def _date_object(obj: dict) -> dict:
+            try:
+                obj['date'] = datetime.strptime(obj['operdate'], '%d.%m.%Y') \
+                    .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
+            except:
+                pass
+            del obj['operdate']
+            return obj
+        params = {'period': period, 'date': date.strftime('%Y%m%d'), 'json': ''}
+        return requests.get(self.url + 'uiir', params=params).json(object_hook=_date_object)
+
+    def agregators_per_month(self, date: datetime) -> json:
+        # Грошові агрегати та їх компоненти (залишки коштів на кінець періоду, млн. грн.):
+        # https://bank.gov.ua/NBUStatService/v1/statdirectory/monetary?date=YYYYMM
+        # http https://bank.gov.ua/NBUStatService/v1/statdirectory/monetary  date==201609 json==
+
+        # Складовими Г.а. є фінансові активи у формі готівкових коштів у національній валюті,
+        # переказних депозитів, інших депозитів, коштів за цінними паперами, крім акцій, що емітовані
+        # депозитними корпораціями та належать на правах власності іншим фінансовим корпораціям,
+        # нефінансовим корпораціям, домашнім господарствам та некомерційним організаціям, що
+        # обслуговують домашні господарства. Залежно від зниження ступеня ліквідності фінансові активи
+        # групують у різні грошові агрегати М0, М1, М2 та М3. Грошовий агрегат М0 включає готівкові
+        # кошти в обігу поза депозитними корпораціями. Грошовий агрегат М1 – грошовий агрегат М0 та
+        # переказні депозити в національній валюті. Грошовий агрегат М2 – грошовий агрегат М1 і
+        # переказні депозити в іноземній валюті та інші депозити. Грошовий агрегат М3 (грошова маса) –
+        # грошовий агрегат М2 та цінні папери, крім акцій.
+        def _date_object(obj: dict) -> dict:
+            try:
+                obj['date'] = datetime.strptime(obj['dt'], '%m.%Y') \
+                    .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
+            except:
+                pass
+            del obj['dt']
+            return obj
+        params = {'date': date.strftime('%Y%m'), 'json': ''}
+        return requests.get(self.url + 'monetary', params=params).json(object_hook=_date_object)
 
 
 if __name__ == '__main__':
@@ -179,6 +218,10 @@ if __name__ == '__main__':
     #                  separators=(',', ': '), ensure_ascii=False, default=date_handler))
     # print(json.dumps(NbuJson().rate_currency_date('USD', datetime.strptime('27.03.2016', '%d.%m.%Y')),
     #                  sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
-    print(NbuJson().rate_currency_date('EUR', datetime.strptime('26.08.2016', '%d.%m.%Y')))
+    # print(NbuJson().rate_currency_date('EUR', datetime.strptime('26.08.2016', '%d.%m.%Y')))
     # print(NbuJson().ovdp_all())
+    print(json.dumps(NbuJson().swaps_per_date(datetime(year=2016, month=11, day=10), '1week'), sort_keys=True,
+              indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
 
+    print(json.dumps(NbuJson().agregators_per_month(datetime(year=2016, month=9, day=10)), sort_keys=True,
+              indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
