@@ -21,6 +21,7 @@ def collect_nbu_aggregators():
         else:
             start_date = aggregators_state.update_time
         logger.debug('last update_time= {}'.format(aggregators_state.update_time))
+        year = start_date.year
         while start_date <= aggregators_state.current_time:
             docs = NbuJson().agregators_per_month(start_date)
             if len(docs) > 0:
@@ -29,11 +30,12 @@ def collect_nbu_aggregators():
             else:
                 result_insert = result_tuple(0, 0)
             month = (start_date.month + 1) % 12
-            year = start_date.year
             if month == 0:
                 month = 12
                 year += 1
-            start_date = start_date.replace(month=month, year=year)
+                start_date = start_date.replace(month=month, year=year - 1)
+            else:
+                start_date = start_date.replace(month=month, year=year)
             result = result_tuple(inserted_count=result.inserted_count + result_insert.inserted_count,
                                   duplicate_count=result.inserted_count + result_insert.duplicate_count)
     if result.inserted_count > 0:
