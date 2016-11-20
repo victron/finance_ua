@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, timedelta
-
+from time import sleep
 from mongo_collector.mongo_start import aggregators
 from mongo_collector.mongo_update import mongo_insert_history
 from mongo_collector.meta import collection_state, update_meta
@@ -17,13 +17,14 @@ def collect_nbu_aggregators():
     result = result_tuple(0, 0)
     if not aggregators_state.actual:
         if aggregators_state.create_time is None:
-            start_date = datetime(year=2003, month=1, day=1, tzinfo=local_tz)
+            start_date = datetime(year=2003, month=1, day=1)
         else:
             start_date = aggregators_state.update_time
         logger.debug('last update_time= {}'.format(aggregators_state.update_time))
         year = start_date.year
         while start_date <= aggregators_state.current_time:
             docs = NbuJson().agregators_per_month(start_date)
+            sleep(1)
             if len(docs) > 0:
                 logger.debug('inserting {}'.format(docs))
                 result_insert = mongo_insert_history(docs, aggregators)

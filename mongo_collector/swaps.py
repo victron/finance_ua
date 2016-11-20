@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime, timedelta
+from time import sleep
 
 from mongo_collector.mongo_start import swaps
 from mongo_collector.mongo_update import mongo_insert_history
@@ -25,6 +26,7 @@ def collect_nbu_swaps():
         while start_date <= swaps_state.current_time:
             for period in ['OVERNIGHT', '1WEEK', '2WEEKS', '1MONTH', '3MONTHS']:
                 docs = NbuJson().swaps_per_date(start_date, period)
+                sleep(1)
                 if len(docs) > 0:
                     # workaround for 'OVERNIGHT' compact one dict from two
                     # if period == 'OVERNIGHT':

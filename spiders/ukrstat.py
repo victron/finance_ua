@@ -48,7 +48,7 @@ def import_stat(date) -> dict:
     out_dict = {}
     out_dict['export'] = float(data_list[1].get_text().replace(',', '.'))
     out_dict['import'] = float(data_list[4].get_text().replace(',', '.'))
-    out_dict['_id'] = datetime.strptime(month_year, '%m%y').replace(day=1, hour=17, minute=0, tzinfo=local_tz)
+    out_dict['_id'] = datetime.strptime(month_year, '%m%y').replace(day=1)
     out_dict['source'] = 'ukrstat'
     return out_dict
 
@@ -87,7 +87,7 @@ class ukrstat():
                 month = 1
                 for cell in cells[1:]:
                     doc = {}
-                    doc['_id'] = datetime(year=year, month=month, day=1, hour=17, minute=0, tzinfo=local_tz)
+                    doc['_id'] = datetime(year=year, month=month, day=1)
                     month += 1
                     value = cell.get_text(strip=True)
                     patern = r'[0-9]'
@@ -137,7 +137,7 @@ class ukrstat_o():
         out_list = []
         for month in range(1, len(values) + 1):
             doc = {}
-            doc['_id'] = datetime(year=int(self.current_year), month=month, day=1, hour=17, minute=0, tzinfo=local_tz)
+            doc['_id'] = datetime(year=int(self.current_year), month=month, day=1)
             doc['index'] = float(values[month - 1].replace(',', '.'))
             doc['source'] = 'ukrstat_obl_k'
             out_list.append(doc)
@@ -176,8 +176,7 @@ class ukrstat_o():
         granularity_dict = {'січні–березні': 3, 'січні-червні': 6, 'січні-вересні': 9, 'січні-грудні': 12}
         for month in granularity_dict:
             if table_title.string.find(month) != -1:
-                doc['_id'] = datetime(year=datetime.now().year, month=granularity_dict[month], day=1, hour=17, minute=0,
-                                      tzinfo=local_tz)
+                doc['_id'] = datetime(year=datetime.now().year, month=granularity_dict[month], day=1)
                 break
         assert doc.get('_id') is not None, 'can\'t get correct period value'
         doc['granularity'] = 3

@@ -1,7 +1,7 @@
 from pymongo.errors import DuplicateKeyError
 
 
-from mongo_collector.mongo_start import data_active, records, news, aware_times
+from mongo_collector.mongo_start import data_active, records, news, DATABASE
 from spiders import berlox, finance_ua, parse_minfin, news_minfin, minfin
 from spiders.common_spider import current_datetime_tz, datetime
 from spiders.filters import location, currency, operation, filter_or
@@ -59,7 +59,7 @@ def mongo_add_fields(docs: list, collection=None):
         # should works if collection exists
         if collection is None:
             try:
-                collection = aware_times(d['source'])
+                collection = DATABASE[d['source']]
             except:
                 print('problem with mapping \'source\' in doc with colection')
                 raise

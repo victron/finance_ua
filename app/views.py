@@ -9,7 +9,7 @@ from app import app, web_logging
 # /home/vic/flask/lib/python3.5/site-packages/flask/exthook.py:71: ExtDeprecationWarning: Importing flask.ext.wtf is deprecated, use flask_wtf instead
 from flask.ext.login import login_user, logout_user, login_required
 from flask import render_template, flash, redirect, url_for, abort, jsonify, request, make_response
-from mongo_collector.mongo_start import aware_times
+from mongo_collector.mongo_start import DATABASE
 from mongo_collector.mongo_start import data_active, bonds
 from mongo_collector.mongo_start import news as news_db
 from spiders.common_spider import  main_currencies
@@ -179,7 +179,7 @@ def history_json(currency):
         projection = {'_id': False, 'time': True, 'sell': True, 'buy': True, 'nbu_rate': True,
                       'nbu_auction.amount_requested': True, 'nbu_auction.amount_accepted_all': True,
                       'nbu_auction.operation': True, 'source': True}
-        cursor = aware_times(currency).find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
+        cursor = DATABASE[currency].find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
         data = {currency: [reformat_for_js(doc) for doc in cursor]} # dict for transfere parameter currency in json
         file = jsonify(data)
         file.headers['Content-Disposition'] = 'attachment;filename=' + currency + '.json'
@@ -213,7 +213,7 @@ def ukrstat_json():
     data = {}
     mongo_request = {}
     projection = {'$time': '$id', 'import': True, 'export': True}
-    cursor = aware_times('ukrstat').find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
+    cursor = DATABASE['ukrstat'].find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
 
     # data.update({'ukrstat': cursor})
     data.update({'ukrstat': []})
@@ -282,7 +282,7 @@ def bonds_json2():
     pipeline = [elem for _currency in bond_currencies for elem in create_lookup(_currency)] \
                + [{'$sort': {'time': pymongo.ASCENDING}}] + [create_project(bond_currencies)]
     # print(pipeline)
-    command_cursor = aware_times(currency).aggregate(pipeline)
+    command_cursor = DATABASE[currency].aggregate(pipeline)
     # {k: v for k, v in doc.items() if v != 0} delete fields with 0 from result
     data = {currency:[reformat_for_js_bonds({k: v for k, v in doc.items() if v != 0}) for doc in command_cursor]}
 

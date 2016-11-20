@@ -17,7 +17,7 @@ def collection_state(collection: pymongo.collection, time_triger: timedelta) -> 
     :param time_triger:
     :return: namedtuple('result', ['actual', 'update_time', 'create_time', 'current_time']
     """
-    current_time = datetime.now(tz=local_tz)
+    current_time = datetime.now()
     collection_info = meta.find_one({'_id': collection.name})
     result = namedtuple('result', ['actual', 'update_time', 'create_time', 'current_time'])
     if collection_info is not None:
@@ -47,7 +47,7 @@ def update_meta(state: collection_state, collection: pymongo.collection):
     :param set_create_time: update  create_time or not
     :return:
     """
-    current_time = datetime.now(tz=local_tz)
+    current_time = datetime.now()
     if state.create_time is None:
         meta.update_one({'_id': collection.name}, {'$set': {'create_time': current_time}}, upsert=True)
     meta.update_one({'_id': collection.name}, {'$set': {'update_time': current_time}}, upsert=True)

@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 
-from mongo_collector.mongo_start import aware_times
+from mongo_collector.mongo_start import DATABASE
 from mongo_collector.mongo_start import bonds_auction, bonds_payments, bonds
 from spiders.external_bonds import external_bonds
 from mongo_collector.mongo_update import mongo_insert_history
@@ -13,7 +13,7 @@ from collections import namedtuple
 logger = logging.getLogger('curs.mongo_collector.bonds')
 
 def colection_meta(collection, time_delta: timedelta = timedelta(hours=3),
-                   default_date: datetime =datetime(year=2008, month=9, day=29,tzinfo=local_tz)) -> namedtuple:
+                   default_date: datetime =datetime(year=2008, month=9, day=29)) -> namedtuple:
     """
     in collection there is some meta info in document with _id == 'update'
     {'_id': 'update',
@@ -25,7 +25,7 @@ def colection_meta(collection, time_delta: timedelta = timedelta(hours=3),
     :param default_date:
     :return:
     """
-    current_time = datetime.now(tz=local_tz)
+    current_time = datetime.now()
     collection_info = collection.find_one({'_id': 'update'})
     result = namedtuple('result', ['actual', 'update_time', 'insert_time', 'current_time'])
     if collection_info is not None:
@@ -74,8 +74,8 @@ def bonds_summary(auction_result: dict):
             logger.info('problem with nominal value {} on {}'.format(bond_code, bond_date))
             return avarage_cost
 
-    current_time = datetime.now(tz=local_tz)
-    collection = aware_times('bonds')
+    current_time = datetime.now()
+    collection = DATABASE['bonds']
     document = dict(auction_result)
     currency = document.pop('valcode').upper()
     document['currency'] = currency
@@ -189,7 +189,7 @@ def bonds_income():
         logger.debug('inserted in collection_payments = {}'.format(insert_result.inserted_count))
         logger.debug('duplicated in collection_payments = {}'.format(insert_result.duplicate_count))
         if insert_result.inserted_count > 0:
-            current_time = datetime.now(tz=local_tz)
+            current_time = datetime.now()
             bonds_payments.update_one({'_id': 'update'}, {'$set': {'income_update': current_time}}, upsert=True)
         return insert_result
     else:
@@ -251,7 +251,7 @@ def internal_payments(in_doc: dict):
             else:
                 return pay_dates
 
-        collection = aware_times('bonds_payments')
+        collection = DATABASE['bonds_payments']
         try:
             bond_open = min(in_doc['auction_dates'])
         except TypeError:
@@ -290,7 +290,7 @@ def manual_bonds_insert():
                                                                      external_update.duplicate_count))
     #  'insert_time' when new data was inserted
     if external_update.inserted_count > 0:
-        current_time = datetime.now(tz=local_tz)
+        current_time = datetime.now()
         bonds.update_one({'_id': 'update'}, {'$set': {'insert_time': current_time}}, upsert=True)
     return external_update
 
@@ -300,7 +300,7 @@ def update_auctions(nbu_ovdp):
     auctions_update = mongo_insert_history(nbu_ovdp, bonds_auction)
     logger.debug('nbu_ovdp insertted {}'.format(auctions_update.inserted_count))
     # 'update_time' when db compared with NBU data and in actual state
-    current_time = datetime.now(tz=local_tz)
+    current_time = datetime.now()
     bonds_auction.update_one({'_id': 'update'}, {'$set': {'update_time': current_time}}, upsert=True)
     #  'insert_time' when new data was inserted
     if auctions_update.inserted_count > 0:
@@ -314,7 +314,7 @@ def generate_bonds(match_bonds):
         bonds_summary(doc)
         modified_bonds += 1
     if modified_bonds > 0:
-        current_time = datetime.now(tz=local_tz)
+        current_time = datetime.now()
         bonds.update_one({'_id': 'update'}, {'$set': {'update_time': current_time}}, upsert=True)
 
 

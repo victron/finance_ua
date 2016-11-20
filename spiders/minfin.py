@@ -55,7 +55,7 @@ def announcement_ovdp() -> list:
             dic['href_results'] = news.td.next_sibling.next_sibling.a['href']
         except TypeError:
             dic['href_results'] = None
-        dic['time_auction'] = datetime.strptime(dic['time_auction'], '%d.%m.%Y').replace(hour=17, tzinfo=local_tz)
+        dic['time_auction'] = datetime.strptime(dic['time_auction'], '%d.%m.%Y')
 
         if not dic['href_announce'].startswith('http://'):
             dic['href_announce'] = 'http://www.minfin.gov.ua' + dic['href_announce']

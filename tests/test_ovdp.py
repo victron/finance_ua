@@ -15,9 +15,9 @@ client = MongoClient()
 DATABASE = client[DB_NAME]
 aware_times = lambda collection: DATABASE[collection].with_options(codec_options=CodecOptions(tz_aware=True,
                                                                                               tzinfo=local_tz))
-bonds_auction = aware_times('bonds_auction')
-bonds_payments = aware_times('bonds_payments')
-bonds = aware_times('bonds')
+bonds_auction = DATABASE['bonds_auction']
+bonds_payments = DATABASE['bonds_payments']
+bonds = DATABASE['bonds']
 
 
 
@@ -56,6 +56,7 @@ class Ovdp(unittest.TestCase):
         generate_bonds(match_bonds)
         cursor_bonds = bonds.find({'_id': {'$ne': 'update'}})
         result_bonds = [doc for doc in cursor_bonds]
+        # print(result_bonds)
         assert result_bonds == bonds_etalon, 'wrong data in "bonds" collection'
 
         # generate payments information
@@ -63,7 +64,8 @@ class Ovdp(unittest.TestCase):
             internal_payments(doc)
         cursor_payments = bonds_payments.find({'_id': {'$ne': 'update'}}, {'_id': False})
         result_payments = [doc for doc in cursor_payments]
-        assert result_payments == payments_etalon, 'wrong date in "bonds_payments"'
+        print(result_payments)
+        assert result_payments == payments_etalon, 'wrong data in "bonds_payments"'
 
 if __name__ == '__main__':
     unittest.main()

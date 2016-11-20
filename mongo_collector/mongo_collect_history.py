@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from pymongo.errors import DuplicateKeyError
 
 from mongo_collector.bonds import update_bonds
-from mongo_collector.mongo_start import history, data_active, aware_times
+from mongo_collector.mongo_start import history, data_active, DATABASE
 from spiders.common_spider import local_tz
 from spiders.nbu import auction_get_dates, NbuJson, auction_results
 from spiders.parse_minfin import minfin_history
@@ -61,7 +61,7 @@ def insert_history(input_document: dict):
     if input_document == {} or input_document['currency'] not in ['USD', 'EUR', 'RUB']:
         return None
     document = dict(input_document)
-    db_update = aware_times(document['currency'])
+    db_update = DATABASE[document['currency']]
 
     # delete some fields from temp document before inserting it
     currency = document.pop('currency').upper()
@@ -85,7 +85,7 @@ def insert_history_currency(input_document: dict):
     if input_document == {} or input_document['currency'] not in ['USD', 'EUR', 'RUB']:
         return None
     document = dict(input_document)
-    db_update = aware_times(document['currency'])
+    db_update = DATABASE[document['currency']]
     currency = document.pop('currency').upper()
     time = document.pop('time')
     source = document.pop('source')
@@ -200,7 +200,7 @@ def ext_history(currency=None):
         auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
     for currency in currencies:
         for doc in minfin_history(currency, datetime.now()):
-            if aware_times(doc['currency']).find({'time': doc['time']}).count() == 0:
+            if DATABASE[doc['currency']].find({'time': doc['time']}).count() == 0:
             # db.somName.find({"country":{"$exists":True}}).count()
             #     insert_history(doc)
                 insert_history(NbuJson().rate_currency_date(doc['currency'], doc['time']))
@@ -252,7 +252,7 @@ def daily_stat(day: datetime, collection) -> dict:
         result_doc = [form_output_doc(doc) for doc in command_cursor][0]
     except IndexError:
         return {}
-    time = time[1].replace(hour=17, minute=0, second=0, microsecond=0)
+    time = time[1]
     document = dict(result_doc)
     del document['time']
     collection.update_one({'time': time}, {'$set': document}, upsert=True)
@@ -273,7 +273,7 @@ def agg_daily_stat():
                 rersult = insert_history(dict(doc, source='d_ext_stat'))
                 break
 
-    stop_day = datetime.now(tz=local_tz).replace(hour=17, minute=0, second=0, microsecond=0)
+    stop_day = datetime.now()
 
     # get NDU auction dates
     auction_dates = set()
@@ -281,7 +281,7 @@ def agg_daily_stat():
         auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
 
     for currency in ['USD', 'EUR', 'RUB']:
-        collection = aware_times(currency)
+        collection = DATABASE[currency]
         # save data localy to limit acces to external website
         if currency != 'RUB':
             # no ext data for RUB
@@ -311,7 +311,7 @@ def agg_daily_stat():
         while start_day <= stop_day:
             days.append(start_day)
             start_day += timedelta(days=1)
-        logger.info('daily stat currency=', currency, 'days=', days)
+        logger.info('daily stat currency= {} days= {}'.format(currency, days))
         for day in days:
             day_stat = daily_stat(day, collection)
 
@@ -336,7 +336,7 @@ def ukrstat(start_date: datetime) -> tuple:
     date = start_date
     while date < end_date.replace(month=(end_date.month - 1), day=1, hour=0, minute=0, second=0, microsecond=0):
         try:
-            insert_result = aware_times('ukrstat').insert_one(import_stat(date))
+            insert_result = DATABASE['ukrstat'].insert_one(import_stat(date))
             inserted_count += 1
         except DuplicateKeyError as e:
             print('duplicate found={}'.format(str(e)))

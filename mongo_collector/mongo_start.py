@@ -22,10 +22,10 @@ aware_times = lambda collection: DATABASE[collection].with_options(codec_options
 # data_active = db['data_active']
 data_active = aware_times('data_active') # pymongo 3.2.2
 
-bonds = aware_times('bonds')
-ukrstat = aware_times('ukrstat')
-bonds_auction = aware_times('bonds_auction')
-bonds_payments = aware_times('bonds_payments')
+bonds = DATABASE['bonds']
+ukrstat = DATABASE['ukrstat']
+bonds_auction = DATABASE['bonds_auction']
+bonds_payments = DATABASE['bonds_payments']
 
 records.create_index([('bid', pymongo.ASCENDING),
                       ('time', pymongo.ASCENDING),
@@ -39,7 +39,7 @@ data_active.create_index([('time_update', pymongo.ASCENDING)], name='update_time
 data_active.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')
 
 # -------- news ---------------
-news = aware_times('news')
+news = DATABASE['news']
 news.create_index([
                   #  ('time', pymongo.ASCENDING),
                    ('href', pymongo.ASCENDING)], name='news_time', unique=True)
@@ -54,10 +54,10 @@ bonds_payments.create_index([('bond', pymongo.ASCENDING),
 history.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
 # information about collections
 meta = aware_times('meta')
-swaps = aware_times('swaps')
+swaps = DATABASE['swaps']
 swaps.create_index([('date', pymongo.ASCENDING),
                     ('period', pymongo.ASCENDING)], unique=True, name='swaps')
-aggregators = aware_times('aggregators')
+aggregators = DATABASE['aggregators']
 aggregators.create_index([('date', pymongo.ASCENDING),
                           ('id_api', pymongo.ASCENDING),
                           ('k076txt', pymongo.ASCENDING)], unique=True, name='aggregators')

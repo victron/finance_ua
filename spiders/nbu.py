@@ -41,8 +41,7 @@ def auction_get_dates(year: datetime) -> set:
     # if year == soup.body.table.find(attrs={'name': 'year', 'onchange': 'this.form.submit();'}).find('option', attrs={'selected': ''})['value']:
     dates = set()
     for date in soup.body.table.find('select',attrs={'name': 'date'}).find_all('option'):
-        dates.add(datetime.strptime(date['value'], '%d.%m.%Y')
-                  .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz))
+        dates.add(datetime.strptime(date['value'], '%d.%m.%Y'))
     return dates
     # else:
     #     return None
@@ -61,8 +60,7 @@ def auction_results(date: datetime) -> dict:
     #     return None
     document = {}
     get_float = lambda tag: float(tag.find('td', attrs={'class': 'cell_c'}).get_text(strip=True))
-    document['time'] = datetime.strptime(date, '%d.%m.%Y')\
-        .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
+    document['time'] = datetime.strptime(date, '%d.%m.%Y')
     document['source'] = 'nbu_auction'
     for field in soup.body.table.find('table', attrs={'border': '0', 'width': '650px'}).find_all('tr'):
         if isinstance(field.td, type(None)):
@@ -115,8 +113,7 @@ class NbuJson():
         # for staticmethod self not needed
         for key in ('auctiondate', 'paydate', 'repaydate'):
             try:
-                obj[key] = datetime.strptime(obj[key], '%d.%m.%Y')\
-                    .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
+                obj[key] = datetime.strptime(obj[key], '%d.%m.%Y')
             except:
                 pass
         obj['stockcode'] = obj['stockcode'].strip()
@@ -138,8 +135,7 @@ class NbuJson():
         except IndexError:
             return {}
         document['currency'] = recieved_doc['cc']
-        document['time'] = datetime.strptime(recieved_doc['exchangedate'], '%d.%m.%Y')\
-            .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
+        document['time'] = datetime.strptime(recieved_doc['exchangedate'], '%d.%m.%Y')
         document['nbu_rate'] = recieved_doc['rate']
         document['source'] = 'nbu'
         return document
@@ -172,8 +168,7 @@ class NbuJson():
         # http https://bank.gov.ua/NBUStatService/v1/statdirectory/uiir period==2WEEK json== date==20161027
         def _date_object(obj: dict) -> dict:
             try:
-                obj['date'] = datetime.strptime(obj['operdate'], '%d.%m.%Y') \
-                    .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
+                obj['date'] = datetime.strptime(obj['operdate'], '%d.%m.%Y')
             except:
                 pass
             del obj['operdate']
@@ -198,8 +193,7 @@ class NbuJson():
         # грошовий агрегат М2 та цінні папери, крім акцій.
         def _date_object(obj: dict) -> dict:
             try:
-                obj['date'] = datetime.strptime(obj['dt'], '%m.%Y') \
-                    .replace(hour=17, minute=0, microsecond=0, tzinfo=local_tz)
+                obj['date'] = datetime.strptime(obj['dt'], '%m.%Y')
             except:
                 pass
             del obj['dt']

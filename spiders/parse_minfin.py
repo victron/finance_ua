@@ -217,8 +217,7 @@ def minfin_history(currency: str, today: datetime) -> list:
         if val == []: # protect from empty data for date
             continue
         document = {}
-        document['time'] = datetime.strptime(key, '%Y-%m-%d %H:%M:%S')\
-            .replace(hour=17, minute=0, microsecond=0, tzinfo=current_datetime_tz().tzinfo)
+        document['time'] = datetime.strptime(key, '%Y-%m-%d %H:%M:%S')
         document['currency'] = currency
         document['source'] = 'm'
         document['buy'] = float(val['b'])
