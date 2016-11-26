@@ -7,7 +7,9 @@ events {
 }
 
 http {
-
+    # tell nginx what types of file map to headers
+    # firefox from version 50 stop replacing "text/plain" on css
+    include /etc/nginx/mime.types;
     sendfile on;
 
     gzip              on;
