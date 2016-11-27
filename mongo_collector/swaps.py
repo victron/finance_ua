@@ -17,9 +17,9 @@ def collect_nbu_swaps():
     result = result_tuple(0, 0)
     if not swaps_state.actual:
         if swaps_state.create_time is None:
-            start_date = datetime(year=2015, month=12, day=28, tzinfo=local_tz)
+            start_date = datetime(year=2015, month=12, day=28)
         else:
-            start_date = swaps_state.update_time
+            start_date = swaps_state.update_time.replace(tzinfo=None)
 
         output_docs = []
         logger.info('last update_time= {}'.format(swaps_state.update_time))

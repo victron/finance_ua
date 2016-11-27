@@ -58,7 +58,7 @@ daily_stat = scheduler.add_job(agg_daily_stat, 'cron', name='daily_stat', hour=1
                                replace_existing=True, jobstore='longTerm')
 daily_bonds = scheduler.add_job(update_bonds, 'cron', name='daily_bonds', hour=18, minute=50, id='daily_bonds',
                                 replace_existing=True, jobstore='longTerm', args=[True])
-daily_swaps = scheduler.add_job(collect_nbu_swaps, 'cron', name='daily_swaps', hour=17, minute=45, id='daily_swaps',
+daily_swaps = scheduler.add_job(collect_nbu_swaps, 'cron', name='daily_swaps', hour=18, minute=5, id='daily_swaps',
                                 replace_existing=True, jobstore='longTerm')
 
 # Todo: aspscheduler problem

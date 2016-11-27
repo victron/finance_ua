@@ -21,7 +21,7 @@ def collection_state(collection: pymongo.collection, time_triger: timedelta) -> 
     collection_info = meta.find_one({'_id': collection.name})
     result = namedtuple('result', ['actual', 'update_time', 'create_time', 'current_time'])
     if collection_info is not None:
-        update_time = collection_info.get('update_time', current_time)
+        update_time = collection_info.get('update_time', current_time).replace(tzinfo=None)
         time_diff = current_time - update_time
         if time_diff >= time_triger:
             logger.info('collection: {} last update at = {} may updated'.format(collection.name, update_time))
