@@ -245,7 +245,7 @@ def daily_stat(day: datetime, collection) -> dict:
         document['sell'] = round(document['sell'], round_dig)
         document['buy'] = round(document['buy'], round_dig)
         document['source'] = source
-        document['time'] = time[1]
+        document['time'] = time[1].replace(hour=0, minute=0)
         return document
     # actually one document
     try:
@@ -275,7 +275,7 @@ def agg_daily_stat():
 
     stop_day = datetime.now()
 
-    # get NDU auction dates
+    # get NBU auction dates
     auction_dates = set()
     for year in ['2014', '2015', '2016']:
         auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
@@ -287,7 +287,7 @@ def agg_daily_stat():
             # no ext data for RUB
             minfin_data = minfin_history(currency, stop_day)
 
-        filter = {'$or': [{'source' :'d_ext_stat'}, {'source': 'd_int_stat'}]}
+        filter = {'$or': [{'source':'d_ext_stat'}, {'source': 'd_int_stat'}]}
         projection = {'_id': False, 'time': True}
         pipeline = [{'$match': {'$or': [{'source' :'d_ext_stat'}, {'source': 'd_int_stat'}]}},
                     {'$group': {'_id': None, 'max_time': {'$max': '$time'}}},

@@ -44,11 +44,9 @@ setup(
                       'beautifulsoup4',
                       'apscheduler',
 
-                      'uwsgi'
-
-
-
-    ],
+                      'uwsgi',
+                      'pandas'
+                      ],
     # install in bin script to start flask web server
     entry_points={
         'console_scripts': [

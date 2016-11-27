@@ -54,7 +54,7 @@ auto_news_update = scheduler.add_job(update_news, 'interval', name='auto_news_up
                                      next_run_time=datetime.now(kiev_tz) + timedelta(minutes=1, seconds=30))
 hour_stat = scheduler.add_job(hourly_history, 'cron', name='hour_stat', minute=55, id='hour_stat',
                               replace_existing=True, jobstore='longTerm')
-daily_stat = scheduler.add_job(agg_daily_stat, 'cron', name='daily_stat', hour=14, minute=58, id='daily_stat',
+daily_stat = scheduler.add_job(agg_daily_stat, 'cron', name='daily_stat', hour=18, minute=58, id='daily_stat',
                                replace_existing=True, jobstore='longTerm')
 daily_bonds = scheduler.add_job(update_bonds, 'cron', name='daily_bonds', hour=18, minute=50, id='daily_bonds',
                                 replace_existing=True, jobstore='longTerm', args=[True])
@@ -65,7 +65,7 @@ daily_swaps = scheduler.add_job(collect_nbu_swaps, 'cron', name='daily_swaps', h
 # problem with aspscheduler, try to move to another module
 auto_ukrstat_month = scheduler.add_job(ukrstat_shadow, 'cron', id='auto_ukrstat_update', replace_existing=True,
                                        name='auto_ukrstat_update', hour=16, minute=15, jobstore='longTerm')
-monthly_aggregators = scheduler.add_job(collect_nbu_aggregators, 'cron', name='monthly_aggregators', hour=14, minute=45,
+monthly_aggregators = scheduler.add_job(collect_nbu_aggregators, 'cron', name='monthly_aggregators', hour=13, minute=45,
                                         id='monthly_aggregators', replace_existing=True, jobstore='longTerm')
 def main():
     logger.debug('start auto update')
