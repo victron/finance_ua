@@ -252,9 +252,8 @@ def daily_stat(day: datetime, collection) -> dict:
         result_doc = [form_output_doc(doc) for doc in command_cursor][0]
     except IndexError:
         return {}
-    time = time[1]
     document = dict(result_doc)
-    del document['time']
+    time =  document.pop('time')
     collection.update_one({'time': time}, {'$set': document}, upsert=True)
     return result_doc
 
@@ -273,7 +272,7 @@ def agg_daily_stat():
                 rersult = insert_history(dict(doc, source='d_ext_stat'))
                 break
 
-    stop_day = datetime.now()
+    stop_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
     # get NBU auction dates
     auction_dates = set()
@@ -308,6 +307,7 @@ def agg_daily_stat():
             continue
 
         days = []
+        start_day = start_day.replace(hour=0, minute=0, second=0, microsecond=0)
         while start_day <= stop_day:
             days.append(start_day)
             start_day += timedelta(days=1)

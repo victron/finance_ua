@@ -6,7 +6,7 @@ from mongo_collector.mongo_collect_history import insert_history
 import logging
 from collections import namedtuple
 
-#!!!!!!!!!! on FreBSD, I still don't know how to instal pandas for py35
+#!!!!!!!!!! on FreBSD need to reinstall gcc
 import pandas as pd
 
 

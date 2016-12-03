@@ -62,9 +62,9 @@ class Ovdp(unittest.TestCase):
         # generate payments information
         for doc in bonds.find({'_id': {'$ne': 'update'}}):
             internal_payments(doc)
-        cursor_payments = bonds_payments.find({'_id': {'$ne': 'update'}}, {'_id': False})
+        cursor_payments = bonds_payments.find({'_id': {'$ne': 'update'}}, {'_id': False},
+                                              sort=[('time', pymongo.ASCENDING)])
         result_payments = [doc for doc in cursor_payments]
-        print(result_payments)
         assert result_payments == payments_etalon, 'wrong data in "bonds_payments"'
 
 if __name__ == '__main__':
