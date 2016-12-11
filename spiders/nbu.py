@@ -32,11 +32,14 @@ from spiders.parameters import proxy_is_used, headers, proxies
 
 def auction_get_dates(year: datetime) -> set:
     year = year.strftime('%Y')
-    url = 'http://www.bank.gov.ua/control/uk/auction/details?date=25.03.2016&year=' + year
+    url = 'http://www.bank.gov.ua/control/uk/auction/details'
+    payload = {'year': year,
+               # 'date': '25.03.2016'
+               }
     if not proxy_is_used:
-        responce_get = requests.get(url, headers=headers)
+        responce_get = requests.get(url, headers=headers, params=payload)
     else:
-        responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
+        responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies, params=payload)
     soup = BeautifulSoup(responce_get.text, "html.parser")
     # if year == soup.body.table.find(attrs={'name': 'year', 'onchange': 'this.form.submit();'}).find('option', attrs={'selected': ''})['value']:
     dates = set()
