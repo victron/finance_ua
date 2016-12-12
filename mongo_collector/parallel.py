@@ -36,7 +36,8 @@ class writer_news():
         :return:
         """
         collection = self.DATABASE[collection]
-        self.update_result = mongo_insert_history(self.fetch(), collection)
+        named_tuple = mongo_insert_history(self.fetch(), collection)
+        self.update_result = (named_tuple.inserted_count, named_tuple.duplicate_count)
 
     def send(self, connector):
         connector.send(self.update_result)

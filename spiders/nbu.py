@@ -32,7 +32,7 @@ from spiders.parameters import proxy_is_used, headers, proxies
 
 def auction_get_dates(year: datetime) -> set:
     year = year.strftime('%Y')
-    url = 'http://www.bank.gov.ua/control/uk/auction/details'
+    url = 'https://www.bank.gov.ua/control/uk/auction/details'
     payload = {'year': year,
                # 'date': '25.03.2016'
                }
@@ -217,8 +217,10 @@ if __name__ == '__main__':
     #                  sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
     # print(NbuJson().rate_currency_date('EUR', datetime.strptime('26.08.2016', '%d.%m.%Y')))
     # print(NbuJson().ovdp_all())
-    print(json.dumps(NbuJson().swaps_per_date(datetime(year=2016, month=11, day=10), '1week'), sort_keys=True,
-              indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
 
-    print(json.dumps(NbuJson().agregators_per_month(datetime(year=2016, month=9, day=10)), sort_keys=True,
-              indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
+    # print(json.dumps(NbuJson().swaps_per_date(datetime(year=2016, month=11, day=10), '1week'), sort_keys=True,
+    #           indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
+    #
+    # print(json.dumps(NbuJson().agregators_per_month(datetime(year=2016, month=9, day=10)), sort_keys=True,
+    #           indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
+    print(auction_get_dates(datetime(year=2015, month=12, day=1)))
