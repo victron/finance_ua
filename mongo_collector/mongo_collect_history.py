@@ -272,12 +272,10 @@ def agg_daily_stat():
                 rersult = insert_history(dict(doc, source='d_ext_stat'))
                 break
 
-    stop_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-
-    # get NBU auction dates
-    auction_dates = set()
-    for year in ['2014', '2015', '2016']:
-        auction_dates.update(auction_get_dates(datetime.strptime(year, '%Y')))
+    if datetime.now().hour > 18:
+        stop_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    else:
+        stop_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
 
     for currency in ['USD', 'EUR', 'RUB']:
         collection = DATABASE[currency]
@@ -306,13 +304,14 @@ def agg_daily_stat():
                 ext_history(currency)
             continue
 
-        days = []
+        # days = []
         start_day = start_day.replace(hour=0, minute=0, second=0, microsecond=0)
-        while start_day <= stop_day:
-            days.append(start_day)
-            start_day += timedelta(days=1)
-        logger.info('daily stat currency= {} days= {}'.format(currency, days))
-        for day in days:
+        day = start_day
+        while day <= stop_day:
+            # days.append(start_day)
+
+            logger.info('daily stat currency= {} day= {}'.format(currency, day))
+        # for day in days:
             day_stat = daily_stat(day, collection)
 
             # if hourly stat less then 5
@@ -325,9 +324,9 @@ def agg_daily_stat():
             # insert NBU rate
             insert_history_currency(NbuJson().rate_currency_date(currency, day))
             # insert auction_results
-            if day in auction_dates:
+            if day in auction_get_dates(day):
                 insert_history(auction_results(day))
-
+            day += timedelta(days=1)
 
 def ukrstat(start_date: datetime) -> tuple:
     duplicate_count = 0
