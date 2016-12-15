@@ -38,6 +38,7 @@ server {
     listen 80;
     listen [::]:80 default_server;
     server_name {{ fqdn }};
+# don't need to remove redirect for letsencrypt, need port forwarding 80 on router
     return 301 https://{{ fqdn }}$request_uri;
 }
     server {

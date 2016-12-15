@@ -1,5 +1,6 @@
 ---
-fqdn: innad.tk
+#fqdn: innad.tk
+fqdn: innessuella.tk
 # ansible_fqdn from ansible setup
 lets_email: viktor.tsymbalyuk@gmail.com
 venv_dir: flask
