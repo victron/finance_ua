@@ -53,11 +53,14 @@ def auction_get_dates(year: datetime) -> set:
 def auction_results(date: datetime) -> dict:
     date = date.strftime('%d.%m.%Y')
     year = date.split('.')[2]
-    url = 'http://www.bank.gov.ua/control/uk/auction/details?date=' + date + '&year=' + year
-    if not proxy_is_used:
-        responce_get = requests.get(url, headers=headers)
-    else:
-        responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
+    # url = 'https://www.bank.gov.ua/control/uk/auction/details?date=' + date + '&year=' + year
+    url = 'https://www.bank.gov.ua/control/uk/auction/details'
+    payload = {'date': date, 'year': year}
+    # if not proxy_is_used:
+    #     responce_get = requests.get(url, headers=headers)
+    # else:
+    #     responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
+    responce_get = requests.get(url, headers=headers, params=payload)
     soup = BeautifulSoup(responce_get.text, "html.parser")
     # if date != soup.body.table.find('option', attrs={'selected': ''})['value']:
     #     return None
@@ -108,7 +111,7 @@ class NbuJson():
     http://www.bank.gov.ua/control/uk/publish/article?art_id=25327817&cat_id=25365601
     """
     def __init__(self):
-        self.url = 'http://bank.gov.ua/NBUStatService/v1/statdirectory/'
+        self.url = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/'
         self.params = {'json': ''}
 
     @staticmethod

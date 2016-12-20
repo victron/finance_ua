@@ -272,7 +272,7 @@ def agg_daily_stat():
                 rersult = insert_history(dict(doc, source='d_ext_stat'))
                 break
 
-    if datetime.now().hour > 18:
+    if datetime.now().hour >= 18:
         stop_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     else:
         stop_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
