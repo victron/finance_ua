@@ -7,6 +7,9 @@
 [inna]
 192.168.1.125
 
+[inna-fa]
+inna-fa
+
 [inna-remote]
 # ip address of gw on vagrant machine
 10.0.2.2
