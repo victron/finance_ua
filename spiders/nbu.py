@@ -7,7 +7,9 @@ from bs4.element import Comment
 
 from spiders.common_spider import local_tz, date_handler
 from spiders.parameters import proxy_is_used, headers, proxies
+import logging
 
+logger = logging.getLogger('spiders.nbu')
 
 # from check_proxy import proxy_requests
 
@@ -136,9 +138,14 @@ class NbuJson():
     def rate_currency_date(self, currency: str, date: datetime) -> dict:
         params = {'valcode': currency, 'date': date.strftime('%Y%m%d'), 'json': ''}
         document = {}
+        recieved_doc = requests.get(self.url + 'exchange', params=params)
+        if recieved_doc.status_code != 200:
+            logger.error('NBU site stattus_code= {}'.format(recieved_doc.status_code))
+            return {}
         try:
-            recieved_doc = requests.get(self.url + 'exchange', params=params).json()[0]
+            recieved_doc = recieved_doc.json()[0]
         except IndexError:
+            logger.error('JSON parsing error in NBU docs')
             return {}
         document['currency'] = recieved_doc['cc']
         document['time'] = datetime.strptime(recieved_doc['exchangedate'], '%d.%m.%Y')
@@ -218,7 +225,7 @@ if __name__ == '__main__':
     #                  separators=(',', ': '), ensure_ascii=False, default=date_handler))
     # print(json.dumps(NbuJson().rate_currency_date('USD', datetime.strptime('27.03.2016', '%d.%m.%Y')),
     #                  sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
-    # print(NbuJson().rate_currency_date('EUR', datetime.strptime('26.08.2016', '%d.%m.%Y')))
+    print(NbuJson().rate_currency_date('USD', datetime.strptime('21.12.2016', '%d.%m.%Y')))
     # print(NbuJson().ovdp_all())
 
     # print(json.dumps(NbuJson().swaps_per_date(datetime(year=2016, month=11, day=10), '1week'), sort_keys=True,
@@ -226,4 +233,4 @@ if __name__ == '__main__':
     #
     # print(json.dumps(NbuJson().agregators_per_month(datetime(year=2016, month=9, day=10)), sort_keys=True,
     #           indent=4, separators=(',', ': '), ensure_ascii=False, default=date_handler))
-    print(auction_get_dates(datetime(year=2015, month=12, day=1)))
+    # print(auction_get_dates(datetime(year=2015, month=12, day=1)))
