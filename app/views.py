@@ -213,7 +213,7 @@ def ukrstat_json():
     data = {}
     mongo_request = {}
     projection = {'$time': '$id', 'import': True, 'export': True}
-    cursor = DATABASE['ukrstat'].find(mongo_request, projection, sort=([('time', pymongo.ASCENDING)]))
+    cursor = DATABASE['ukrstat'].find(mongo_request, projection, sort=([('_id', pymongo.ASCENDING)]))
 
     # data.update({'ukrstat': cursor})
     data.update({'ukrstat': []})
