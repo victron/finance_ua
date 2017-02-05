@@ -237,6 +237,7 @@ def daily_stat(day: datetime, collection) -> dict:
                 {'$project': {'_id': False, 'buy': '$buy', 'sell': '$sell', 'sell_rates': '$sell_rates',
                               'buy_rates': '$buy_rates'}}]
     command_cursor = collection.aggregate(pipeline)
+
     def form_output_doc(document):
         if collection.name == 'RUB':
             round_dig = 4
@@ -253,7 +254,7 @@ def daily_stat(day: datetime, collection) -> dict:
     except IndexError:
         return {}
     document = dict(result_doc)
-    time =  document.pop('time')
+    time = document.pop('time')
     collection.update_one({'time': time}, {'$set': document}, upsert=True)
     return result_doc
 

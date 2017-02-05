@@ -13,7 +13,6 @@ import pandas as pd
 logger = logging.getLogger()
 
 
-
 def remove_time(collection: str, source: str):
     result_cursor = DATABASE[collection].find({'source': source})
     for doc in result_cursor:
@@ -168,6 +167,7 @@ if __name__ == '__main__':
     # # remove_time(collection, source)
     # correct_news()
 
-    # print(get_missing_stat('EUR'))
+    for currency in ['USD', 'EUR', 'RUB']:
+        print(get_missing_stat('EUR'))
 
     print(get_missing_nbu_auction())
