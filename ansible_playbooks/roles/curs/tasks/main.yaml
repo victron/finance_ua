@@ -30,6 +30,10 @@
 
 # ------------------ remove application if installed ----------
   # ------- stop services -----------
+- name: check  curs.service file exists
+  stat: path=/etc/systemd/system/curs.service follow=yes
+  register: curs_config
+
 - block:
   - name: stop curs.service
     service: name=curs  state=stopped
@@ -37,6 +41,7 @@
     service: name=cursauto  state=stopped
   become: yes
   become_method: sudo
+  when: curs_config.stat.exists == True
 
   # remove app from venv and home dir
 - block:
@@ -51,6 +56,7 @@
   become: yes
   become_user: "{{ app_user }}"
   become_method: sudo
+  when: curs_config.stat.exists == True
 
 # ---------- create package localy ----------------
 - name: generate wheel
