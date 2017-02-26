@@ -4,19 +4,25 @@
 # from sh import curl
 # import sh
 import json
+import pickle
 from datetime import datetime, timedelta
 from time import sleep
+import logging
+logger = logging.getLogger()
 
 import requests
 from bs4 import BeautifulSoup
+import sys
+# sys.path.append('./')
+# import spiders
 
-from spiders import filters, parameters
+from spiders import filters
+from spiders import parameters
 from spiders.check_proxy import proxy_is_used
-from spiders.common_spider import current_datetime_tz, date_handler
 from spiders.simple_encrypt_import import secret
+from spiders.common_spider import current_datetime_tz, date_handler
 from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
-from tools.mytools import timer
-import pickle
+import requests
 
 # user settings
 currency = filters.currency.lower()
@@ -38,8 +44,7 @@ bid_to_payload = secret.bid_to_payload
 cook = {}
 
 
-
-@timer()
+# @timer()
 def get_triple_data(currency: str, operation: str) -> tuple:
 
     # minfin_urls = {'usd_sell' : 'http://minfin.com.ua/currency/auction/usd/sell/kiev/?presort=&sort=time&order=desc',
@@ -69,8 +74,12 @@ def get_triple_data(currency: str, operation: str) -> tuple:
     # cook['cookies'] = responce_get.cookies
     # cook['url'] = url
     data = {}
+    logger.debug('soup = {}'.format(soup))
     # regex = re.compile(r'[\t\n\r\x0b\x0c]')
-    for i in soup.body.find_all('div', attrs={'data-bid' : True, 'class':  ['js-au-deal', 'au-deal']}):
+    for i in soup.find_all('div', attrs={'data-bid' : True,
+                                              'class':  ['js-au-deal', 'au-deal']
+                                              }):
+        logger.debug('get_triple_data> i= {}'.format(i))
         try:
             key = i['data-bid']
             data[key] = {}
@@ -88,7 +97,7 @@ def get_triple_data(currency: str, operation: str) -> tuple:
             data[key]['phone'] = i.find('span', class_ = "au-dealer-phone").get_text(strip=True)
             data[key]['id'] = i.find('span', class_ = "au-dealer-phone").a['data-bid-id']
         except KeyError:
-            pass
+            logger.error('missing key data-bid i= {}'.format(i))
     # print('----------------- fetch -------------------------')
     # transfer session parameters
     session_parm = {}
@@ -96,7 +105,7 @@ def get_triple_data(currency: str, operation: str) -> tuple:
     session_parm['url'] = url
     return data, session_parm
 
-@timer()
+# @timer()
 def data_api_minfin(fn):
     def convertor_minfin(dic: dict, current_date: datetime, id: int) -> dict:
         dic['bid'] = dic['id']
@@ -196,6 +205,7 @@ def table_api_minfin(fn_data, fn_contacts):
 
     for bid in filtered_set:
         r = fn_contacts(bid, bid_to_payload, session_parm, proxy_is_used)
+        logger.debug('table_api_minfin>> r= {}'.format(r))
         data[bid]['phone'] = data[bid]['phone'].replace('xxx-x', r.json()['data'] )
         pickle.loads(session_parm['cookies'])['minfin_sessions'] = r.cookies['minfin_sessions']
         sleep(0.5)
@@ -225,16 +235,17 @@ def minfin_history(currency: str, today: datetime) -> list:
         data.append(document)
     return data
 
-
-
 if __name__ == '__main__':
-    table = reform_table_fix_columns_sizes(table_api_minfin(get_triple_data, get_contacts), parameters.table_column_size)
-    print(json.dumps(data_api_minfin(get_triple_data), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False,
-                     default=date_handler))
-    print (u'----- results for {currency} {contract} ------'.format(contract=location, currency=currency))
-    print (u'=== filter: location= {location}, filter= {filtered}'.format(location=location,
+    logging.basicConfig(level=logging.DEBUG)
+    # logging.basicConfig(level=logging.INFO)
+    table = reform_table_fix_columns_sizes(table_api_minfin(get_triple_data, get_contacts),
+                                           parameters.table_column_size)
+    print(json.dumps(data_api_minfin(get_triple_data('USD', 'sell')), sort_keys=True, indent=4, separators=(',', ': '),
+                     ensure_ascii=False, default=date_handler))
+    print(u'----- results for {currency} {contract} ------'.format(contract=location, currency=currency))
+    print(u'=== filter: location= {location}, filter= {filtered}'.format(location=location,
                                                                           filtered=u' '.join(filter_or)))
     print_table_as_is(table)
-    # print(json.dumps(minfin_history('USD', datetime.now()), sort_keys=True, indent=4, separators=(',', ': '),
-    #                  ensure_ascii=False, default=date_handler))
-
+    # # print(json.dumps(minfin_history('USD', datetime.now()), sort_keys=True, indent=4, separators=(',', ': '),
+    # #                  ensure_ascii=False, default=date_handler))
+    #

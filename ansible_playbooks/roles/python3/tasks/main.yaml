@@ -2,9 +2,9 @@
 - block:
   - name: install python's repos
     apt_repository: repo='ppa:fkrull/deadsnakes'
-  - name: install python3.5
-    apt: name=python3.5  state=present
-  - name: install python3.5-dev
-    apt: name=python3.5-dev   state=present
+  - name: install python3.6
+    apt: name=python3.6  state=present
+  - name: install python3.6-dev
+    apt: name=python3.6-dev   state=present
   become: yes
   become_method: sudo

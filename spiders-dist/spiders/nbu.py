@@ -1,13 +1,12 @@
 import json
+import logging
 from datetime import datetime
 
 import requests
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 
-from spiders.common_spider import local_tz, date_handler
 from spiders.parameters import proxy_is_used, headers, proxies
-import logging
 
 logger = logging.getLogger('spiders.nbu')
 

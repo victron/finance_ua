@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 # http://python-packaging-user-guide.readthedocs.io/en/latest/distributing/?highlight=package_data#package-data
 # http://pythonhosted.org/setuptools/setuptools.html#including-data-files
 
@@ -7,7 +7,7 @@ setup(
     name='curs',
 
     # Version number (initial):
-    version='16.05.01.dev3',
+    version='17.03.02.dev1',
 
     # Application author details:
     author='Viktor Tsymbalyuk',

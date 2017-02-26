@@ -11,6 +11,9 @@
     - role: nginx
       tags:
         - nginx
+    - role: spiders
+      tags:
+        - spiders
     - role: curs
       tags:
         - curs

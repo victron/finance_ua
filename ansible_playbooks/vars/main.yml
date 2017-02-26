@@ -8,7 +8,8 @@ remote_user: vic
 app_user: curs
 #home_dir: "{{ ansible_user_dir }}"
 home_dir: /opt/{{ app_user }}
-app_file: curs-16.5.1.dev3-py3-none-any.whl
+app_curs: curs-16.5.1.dev3-py3-none-any.whl
+app_spiders: spiders-17.3.2.dev1-py3-none-any.whl
 conf_dir: /etc/curs
 # nginx
 static_path: /var/www/curs/static

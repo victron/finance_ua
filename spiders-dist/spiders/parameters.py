@@ -1,3 +1,17 @@
+from pymongo import MongoClient
+import sys
+
+if 'unittest' in list(sys.modules.keys()):
+    DB_NAME = 'TESTS'
+else:
+    DB_NAME = 'fin_ua'
+
+client = MongoClient(connect=False, serverSelectionTimeoutMS=10000)
+DATABASE = client[DB_NAME]
+
+simple_rest_secret = 'temp_secret'
+
+
 proxy = '135.245.192.7:8000'
 proxies = {'http': proxy }
 

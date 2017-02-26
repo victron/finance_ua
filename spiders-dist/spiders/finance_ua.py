@@ -5,12 +5,15 @@ import json
 from ast import literal_eval
 from datetime import datetime
 
+from spiders import check_proxy
+from spiders import filters
+from spiders import parameters
 import requests
 
-from spiders import check_proxy, filters, parameters
 from spiders.common_spider import current_datetime_tz, date_handler
 from spiders.tables import print_table_as_is, reform_table_fix_columns_sizes
-from tools.mytools import timer
+
+# from tools.mytools import timer
 
 # constants and vars
 # USD, EUR, PLN, GBP, RUB
@@ -90,7 +93,7 @@ def print_result(id_list):
 #   raw_data = input_data.read()
 #
 # ------ fetch via requests ---------
-@timer()
+# @timer()
 def fetch_data():
     if check_proxy.proxy_is_used == False:
         responce_get = requests.get(url, headers=headers)
@@ -120,7 +123,7 @@ def convertor_finance_ua(id: int, current_date: datetime, data) -> dict:
 
 
 # @fetch_data
-@timer('[EXE_TIME] >>>>')
+# @timer('[EXE_TIME] >>>>')
 def data_api_finance_ua(fn):
     data = fn()
     if len(data) == 0:

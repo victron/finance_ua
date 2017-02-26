@@ -2,7 +2,7 @@
 127.0.0.1
 
 [vagrant]
-127.0.0.1
+#127.0.0.1
 
 [inna]
 192.168.1.125
@@ -19,7 +19,7 @@ ansible_connection = local
 
 [vagrant:vars]
 ansible_connection = paramiko
-ansible_port = 2222
+ansible_port = 2223
 ansible_python_interpreter=/usr/bin/python
 #remote_user = vagrant
 

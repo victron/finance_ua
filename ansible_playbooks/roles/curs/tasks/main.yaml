@@ -15,14 +15,14 @@
     become_method: sudo
 
   - block:
-    - name: Initiate virtualenv for python3.5
+    - name: Initiate virtualenv for python3.6
       command: python3.5 -m venv --without-pip {{ home_dir }}/{{ venv_dir }}
     - name: download get-pip.py
       get_url: url=https://bootstrap.pypa.io/get-pip.py
         dest={{ home_dir }}/get-pip.py
         force=no
     - name: install pip3.5
-      command: "{{ home_dir }}/{{ venv_dir }}/bin/python3.5 {{ home_dir }}/get-pip.py"
+      command: "{{ home_dir }}/{{ venv_dir }}/bin/python3.6 {{ home_dir }}/get-pip.py"
     become: yes
     become_user: "{{ app_user }}"
     become_method: sudo
@@ -60,19 +60,21 @@
 
 # ---------- create package localy ----------------
 - name: generate wheel
-  command: python3.5 setup.py bdist_wheel
+  # command: python3.6 setup.py bdist_wheel
+  local_action: command python3.6 setup.py bdist_wheel {{ inventory_hostname }}
   args:
     chdir: ../
-  delegate_to: 127.0.0.1
+  # delegate_to: 127.0.0.1
   # local_action: command /usr/bin/take_out_of_pool {{ inventory_hostname }}
 # =======================================================
 
 - block:
   - name: copy application package on remote
-    copy: src=../dist/{{ app_file }} dest={{ home_dir }}/
+    copy: src=../dist/{{ app_curs }} dest={{ home_dir }}/
+
   # installing application
   - name: install application
-    pip: name='file://{{ home_dir }}/{{ app_file }}'
+    pip: name='file://{{ home_dir }}/{{ app_curs }}'
          virtualenv={{ home_dir }}/{{ venv_dir}}
          virtualenv_python=python3.5
   - name: generate logging.yaml
@@ -87,7 +89,7 @@
 # configure app
 - block:
   - name: copy static files
-    shell: cp -R {{ home_dir }}/{{ venv_dir }}/lib/python3.5/site-packages/app/static/* {{ static_path }}
+    shell: cp -R {{ home_dir }}/{{ venv_dir }}/lib/python3.6/site-packages/app/static/* {{ static_path }}
     notify:
       - start nginx
 

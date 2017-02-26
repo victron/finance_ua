@@ -71,6 +71,7 @@ def lists_hidden():
 def news():
     form_update = Update_db()
     if form_update.db.data:
+
         inserted_count, duplicate_count = update_news()
         flash('inserted: {}, duplicated: {}'.format(inserted_count, duplicate_count))
     mongo_request = {}

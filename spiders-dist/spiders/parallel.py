@@ -1,11 +1,17 @@
-from spiders import news_minfin, minfin, parse_minfin, finance_ua, berlox
-from spiders.common_spider import current_datetime_tz
-import multiprocessing
-from multiprocessing.connection import wait
-from functools import reduce
-from tools.mytools import timer
-from mongo_collector.mongo_update import mongo_insert_history
 import logging
+import multiprocessing
+from functools import reduce
+from multiprocessing.connection import wait
+
+from spiders import berlox
+from spiders import finance_ua
+from spiders import minfin
+from spiders import news_minfin
+from spiders.parameters import DB_NAME
+
+from spiders.mongo_update import mongo_insert_history
+from spiders import parse_minfin
+from spiders.common_spider import current_datetime_tz
 
 logger = logging.getLogger('curs.mongo_collector.parallel')
 
@@ -101,7 +107,7 @@ class writer_lists(writer_news):
 
 
 def workerANDconnector(funs, **kargs):
-    from mongo_collector import DB_NAME
+    # from mongo_collector import DB_NAME
     if kargs['collection'] == 'records':
         writer = writer_lists(DB_NAME, *funs)
     elif kargs['collection'] == 'news':
@@ -113,7 +119,7 @@ def workerANDconnector(funs, **kargs):
 
 
 
-@timer(logging=logger)
+# @timer(logging=logger)
 def parent(funcs: list, collection) -> tuple:
     """create workers and colect result via pipes
     :return list of results from chields
@@ -162,11 +168,11 @@ def update_news():
 def update_lists():
     """
 
-    :return: tuple inserted_count, deleted_count
+    :return: tuple inserted_count, ddeleted_count
     """
     spiders_lists = [(parse_minfin.data_api_minfin, parse_minfin.get_triple_data),
                      (finance_ua.data_api_finance_ua, finance_ua.fetch_data),
-                     (berlox.data_api_berlox, berlox.fetch_data),]
+                     (berlox.data_api_berlox, berlox.fetch_data), ]
     result = parent(spiders_lists, 'records')
     return result
 
