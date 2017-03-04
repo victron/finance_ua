@@ -70,7 +70,7 @@ def get_triple_data(currency: str, operation: str) -> tuple:
     # cook['url'] = url
     data = {}
     # regex = re.compile(r'[\t\n\r\x0b\x0c]')
-    for i in soup.body.find_all('div', attrs={'data-bid' : True, 'class':  ['js-au-deal', 'au-deal']}):
+    for i in soup.find_all('div', attrs={'data-bid' : True, 'class':  ['js-au-deal', 'au-deal']}):
         try:
             key = i['data-bid']
             data[key] = {}
