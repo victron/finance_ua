@@ -1,0 +1,6 @@
+recursive-include curs/templates *
+recursive-include curs/static *
+recursive-include config *
+include spiders/simple_encrypt_import/secret_data.pye
+
+

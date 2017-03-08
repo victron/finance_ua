@@ -5,6 +5,14 @@
   become: yes
   become_method: sudo
 
+- name: systemd {{ service }} start
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ service }}"
+  become: yes
+  become_method: sudo
 #- name: start nginx
 #  service: name=nginx state=restarted enabled=yes
 #  become: yes
@@ -16,8 +24,3 @@
 #  become: yes
 #  become_method: sudo
 
-# --------- Reload systemd, scanning for new or changed units ---
-- name:  reload systemd
-  command: systemctl daemon-reload
-  become: yes
-  become_method: sudo

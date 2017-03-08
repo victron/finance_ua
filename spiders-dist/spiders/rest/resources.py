@@ -152,10 +152,12 @@ content-type: application/json; charset=UTF-8
             if update == 'news':
                 logger.info('updating news')
                 responce['inserted_count'], responce['duplicate_count'] = update_news()
+                responce['update'] = 'news'
 
             if update == 'lists':
                 logger.info('updating lists')
                 responce['inserted_count'], responce['deleted_count'] = update_lists()
+                responce['update'] = 'lists'
 
             responce.update(responce_ok)
             logger.debug('responce = {}'.format(responce))

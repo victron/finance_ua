@@ -1,0 +1,15 @@
+---
+venv_dir: curs
+service: curs
+src_dir: curs-src
+required:
+  after:
+    - syslog.target
+    - network.target
+    - mongodb.service
+  requires:
+    - mongodb.service
+    - nginx.service
+  # /var/run need spesial write permitions
+  pidfile: /tmp/{{ service }}.pid
+  cmd: "{{ home_dir }}/{{ venv_dir }}/bin/uwsgi --ini {{ home_dir }}/{{ venv_dir }}/.{{ service }}/uwsgi.ini --venv {{ home_dir }}/{{ venv_dir }} --daemonize {{ home_dir }}/{{ venv_dir }}/{{ service }}_uwsgi.log"

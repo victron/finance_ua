@@ -1,0 +1,33 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=Service collects data for curs app
+{% for service in item['after'] %}
+After={{ service }}
+{% endfor %}
+#After=network.target
+#After=mongodb.service
+{% for service in item['requires'] %}
+Requires={{ service }}
+{% endfor %}
+
+[Service]
+Type=simple
+# path venv
+WorkingDirectory={{ home_dir }}/{{ venv_dir }}
+
+User={{ app_user }}
+Group={{ app_user }}
+
+#Environment=RACK_ENV=production
+
+OOMScoreAdjust=-100
+
+
+ExecStart={{ item['cmd'] }}
+#ExecStop=
+#ExecReload=
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target
+

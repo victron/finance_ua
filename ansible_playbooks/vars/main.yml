@@ -8,9 +8,13 @@ remote_user: vic
 app_user: curs
 #home_dir: "{{ ansible_user_dir }}"
 home_dir: /opt/{{ app_user }}
-app_curs: curs-16.5.1.dev3-py3-none-any.whl
+pkg_curs: curs-17.3.8.dev1-py3-none-any.whl
 app_spiders: spiders-17.3.2.dev1-py3-none-any.whl
+pkg_curs_auto: curs_auto-17.3.7.dev1-py3-none-any.whl
 conf_dir: /etc/curs
+# TODO: replace in plays hardcoded python3.6 on python_ver
+python_ver: python3.6
+
 # nginx
 static_path: /var/www/curs/static
 ssl_certificate: /etc/nginx/ssl/nginx.crt

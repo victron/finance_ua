@@ -1,0 +1,15 @@
+---
+venv_dir: curs_auto
+service: curs_auto
+src_dir: curs_auto-src
+required:
+  after:
+    - syslog.target
+    - network.target
+    - mongodb.service
+  requires:
+    - mongodb.service
+#    - nginx.service
+  # /var/run need spesial write permitions
+  pidfile: /tmp/{{ service }}.pid
+  cmd: "{{ home_dir }}/{{ venv_dir }}/bin/curs_auto"

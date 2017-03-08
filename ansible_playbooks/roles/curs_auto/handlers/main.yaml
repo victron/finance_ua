@@ -1,15 +1,4 @@
 ---
-- name: start uwsgi
-  service: name=curs  state=restarted
-           enabled=yes
-  become: yes
-  become_method: sudo
-
-- name: start nginx
-  service: name=nginx state=restarted enabled=yes
-  become: yes
-  become_method: sudo
-
 - name: start {{ service }}
   service: name={{ service }}  state=restarted
            enabled=yes
@@ -24,3 +13,9 @@
     name: "{{ service }}"
   become: yes
   become_method: sudo
+# --------- Reload systemd, scanning for new or changed units ---
+# looks it not need starting ansible 2.2.1
+#- name:  reload systemd
+#  command: systemctl daemon-reload
+#  become: yes
+#  become_method: sudo
