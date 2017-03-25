@@ -1,4 +1,11 @@
 # FIN UA
+### Some screens
+##### lists of orders
+![lists of orders](images/lists.png)
+##### some charts
+![some statistics](images/charts.png)
+
+
 ### installation
 1. `python3.5 setup.py sdist` **to prepare dist package from sources**
 2. install on machine

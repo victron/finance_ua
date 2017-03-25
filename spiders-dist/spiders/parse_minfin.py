@@ -8,6 +8,7 @@ import pickle
 from datetime import datetime, timedelta
 from time import sleep
 import logging
+from collections import namedtuple
 logger = logging.getLogger()
 
 import requests
@@ -45,31 +46,45 @@ cook = {}
 
 
 # @timer()
-def get_triple_data(currency: str, operation: str) -> tuple:
+def get_triple_data(currency: str, operation: str, test_data: dict = None) -> tuple:
+    """
 
-    # minfin_urls = {'usd_sell' : 'http://minfin.com.ua/currency/auction/usd/sell/kiev/?presort=&sort=time&order=desc',
-    #                'usd_buy' : 'http://minfin.com.ua/currency/auction/usd/buy/kiev/?presort=&sort=time&order=desc',
-    #                'eur_sell' : 'http://minfin.com.ua/currency/auction/eur/sell/kiev/?presort=&sort=time&order=desc',
-    #                'eur_buy' : 'http://minfin.com.ua/currency/auction/eur/buy/kiev/?presort=&sort=time&order=desc'}
+        # minfin_urls = {'usd_sell' : 'http://minfin.com.ua/currency/auction/usd/sell/kiev/?presort=&sort=time&order=desc',
+        #                'usd_buy' : 'http://minfin.com.ua/currency/auction/usd/buy/kiev/?presort=&sort=time&order=desc',
+        #                'eur_sell' : 'http://minfin.com.ua/currency/auction/eur/sell/kiev/?presort=&sort=time&order=desc',
+        #                'eur_buy' : 'http://minfin.com.ua/currency/auction/eur/buy/kiev/?presort=&sort=time&order=desc'}
+
+        # ------------- curl alternative ---------------
+        # raw_data_file = 'minfin.html'
+        # cookies_file = 'minfin_cooks.txt'
+        # try:
+        #     curl(url, '-o', raw_data_file, '--user-agent', user_agent, '-m', '3')
+        # except :
+        #     curl(url, '-o', raw_data_file, '--user-agent', user_agent, '-x', proxy)
+        # ----------------------------------------------
+
+
+    """
 
     url = 'http://minfin.com.ua/currency/auction/' + currency + '/' + operation + '/' + location + \
           '/?presort=&sort=time&order=desc'
 
-    # ------------- curl alternative ---------------
-    # raw_data_file = 'minfin.html'
-    # cookies_file = 'minfin_cooks.txt'
-    # try:
-    #     curl(url, '-o', raw_data_file, '--user-agent', user_agent, '-m', '3')
-    # except :
-    #     curl(url, '-o', raw_data_file, '--user-agent', user_agent, '-x', proxy)
-    # ----------------------------------------------
-    if proxy_is_used == False:
-        responce_get = requests.get(url, headers=headers)
-    else:
-        responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
+    ####### TEST injection ###############
 
-    ###
-    soup = BeautifulSoup(responce_get.text, "html.parser")
+    if test_data is not None:
+        logger.debug('TEST is active')
+        filemap = namedtuple('filemap', 'operation currency source')
+        filemap_key = filemap(currency=currency, operation=operation, source='m')
+        filename = test_data[filemap_key]
+        with open(filename.page, 'rb') as f:
+            logger.debug('reading file... {}'.format(filename.page))
+            page = f.read().decode()
+    else:
+        logger.debug('TEST is inactive')
+        responce_get = requests.get(url, headers=headers)
+        page = responce_get.text
+
+    soup = BeautifulSoup(page, "html.parser")
     # global cook
     # cook['cookies'] = responce_get.cookies
     # cook['url'] = url
@@ -101,7 +116,13 @@ def get_triple_data(currency: str, operation: str) -> tuple:
     # print('----------------- fetch -------------------------')
     # transfer session parameters
     session_parm = {}
-    session_parm['cookies'] = pickle.dumps(responce_get.cookies)
+    if test_data is not None:
+        with open(filename.cookie, 'rb') as f:
+            logger.debug('reading file... {}'.format(filename.cookie))
+            test_page_cookies = pickle.load(f)
+        session_parm['cookies'] = pickle.dumps(test_page_cookies)
+    else:
+        session_parm['cookies'] = pickle.dumps(responce_get.cookies)
     session_parm['url'] = url
     return data, session_parm
 
@@ -124,14 +145,14 @@ def data_api_minfin(fn):
 
     data = {}
     sessions = []
-    for cur in ['rub', 'eur', 'usd']:
+    for cur in ['RUB', 'EUR', 'USD']:
         for oper in ['sell', 'buy']:
             fn_result = fn(cur, oper)
             data.update(fn_result[0])
             sessions.append({'currency': cur.upper(), 'source': 'm', 'operation': oper,
                              'url': fn_result[1]['url'], 'cookies': fn_result[1]['cookies'],
                              'session': True})
-    current_date = current_datetime_tz()
+    current_date = datetime.utcnow()
     return [convertor_minfin(value, current_date, index) for index, value in enumerate(data.values())] + sessions
 
 

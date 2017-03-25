@@ -6,8 +6,12 @@
     - vars/main.yml
   roles:
 # or put in meta into dependencies:
-    - mongodb
-    - python3
+    - role: mongodb
+      tags:
+        - mongo
+    - role: python3
+      tags:
+        - python3
     - role: nginx
       tags:
         - nginx

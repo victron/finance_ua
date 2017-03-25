@@ -3,14 +3,14 @@ import pytz
 from datetime import datetime, timezone, timedelta
 
 
-
+kyiv_tz = pytz.timezone('Europe/Kiev')
 
 def current_datetime_tz() -> datetime:
     """
     :return: curent time with local time zone
     """
     kiev_tz = pytz.timezone('Europe/Kiev')
-    return datetime.now(timezone.utc).astimezone(kiev_tz)
+    return kiev_tz.localize(datetime.now())
     # below variant get timezone from diff between utc and local time
     # return datetime.now(timezone(timedelta(hours=(datetime.now().hour - datetime.utcnow().hour))))
 

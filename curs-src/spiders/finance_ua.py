@@ -98,7 +98,7 @@ def fetch_data():
     if check_proxy.proxy_is_used == False:
         responce_get = requests.get(url, headers=headers)
     else:
-        responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
+        responce_get = requests.get(url, headers=headers, timeout=3, proxies=proxies)
     if responce_get.status_code != requests.codes.ok:
         return []
     start_dict = responce_get.text.find('({')

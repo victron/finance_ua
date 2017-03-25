@@ -2,11 +2,12 @@ from pymongo import MongoClient
 import sys
 
 if 'unittest' in list(sys.modules.keys()):
-    DB_NAME = 'TESTS'
+    DB_NAME = 'TEST'
 else:
     DB_NAME = 'fin_ua'
 
 client = MongoClient(connect=False, serverSelectionTimeoutMS=10000)
+# client = MongoClient(serverSelectionTimeoutMS=10000)
 DATABASE = client[DB_NAME]
 
 simple_rest_secret = 'temp_secret'

@@ -1,0 +1,4239 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+      
+    <script type="text/javascript">(function(){function c(){var b={};for(var a=0;a< arguments.length;a+= 2){b[arguments[a]]= arguments[a+ 1]};return b}function b(){function h(){var c=l[a[1]](a[0]);var b=0;for(var d=0;d< c[a[2]];d++){if(c[d][a[3]]&& c[d][a[3]]!= a[4]){c[d][a[3]]= a[4];b++}};return b}function n(){var c=l[a[5]];for(var d=0;d< c[a[2]];d++){c[d][a[6]]= true};if(!b){return};h();D[a[7]]()}function y(f,d,h){function c(){return g}var g=f[d][a[8]]();if(!b){b()};h[a[9]]= f[d][a[10]](f);f[d]= h;f[d][a[8]]= c}function E(d){if(!a){b(a[102]);b= false;return};var c=D[a[12]][a[11]]()- d[a[13]];if(b=== null){b= false;return}else {if(c< v){n()}}}function w(d,b,f){D[a[19]][a[18]](d,b,c(a[14],false,a[15],false,a[16],false,a[17],f))}function r(c){c= z(c);var d=l[a[21]](a[20]);d[a[22]]= false;if(!b){b= a[4]};d[a[23]]= c;l[a[25]][a[24]](d);l[a[25]][a[26]](d)}function z(b){var c=a[27]+ D[a[30]][a[29]]()[a[8]]()[a[28]](2,4);D[c]= x;b= a[31]+ b+ a[32]+ c+ a[33];return b}function A(g,f){function c(){f(h)}function d(){E(h)}var h= new D[a[34]]();h[a[36]](a[35],g,true);h[a[37]]= a[38];h[a[13]]= D[a[12]][a[11]]();h[a[40]](a[39],c);h[a[40]](a[41],d);if(!b){b();b= true;return};h[a[42]](null)}function m(f){var m=f[a[45]]( new D[a[44]](a[43]));if(m){var n=m[1];var s=n[a[47]](a[46]);if(!a){b();return};var o=a[4],p=a[4],v=0,c=[];while(s[v]!= a[48]){p+= s[v];if(++v== s[a[2]]){return}};for(var g=v+ 1;g< s[a[2]];g++){var u=s[g],h=g- v- 1;if(b=== false){b(a[56],0,false,null);return};var t=p[a[28]](h* 2,2);if(!a){b()};var l=D[a[49]](t,16),j=l;var r=a[4];for(var i=0;i< u[a[2]];i+= 2){var q=D[a[49]](u[a[28]](i,2),16);var d=q^ l;if(!b){b= a[17];return};l= d^ j;d= d[a[8]](16);if(d[a[2]]< 2){d= a[50]+ d};r+= d};c[a[51]](r)};f= f[a[53]](n,c[a[52]](a[46]))};return f}function q(g){function c(g){function f(c){var g=c[a[64]];var h=null;try{h= g[a[65]][a[54]]}catch(e){};if(b== null){b();b= false};if(h){if(!b){return};q(h);d[a[66]](a[39],f)}}var c=arguments[a[60]][a[9]];var d=c[a[61]](this,arguments);if(d[a[62]]== a[63]){d[a[40]](a[39],f)};return d}function d(){var b=arguments[a[60]][a[9]];var c=this[a[67]];if(!a){return}else {b[a[61]](this,arguments)};if(c== a[68]){o(this)}}function f(){if(!a){return};var b=arguments[a[60]][a[9]];b[a[61]](this,arguments);o(this)}y(g,a[21],c);if(!b){b= true;return};var h=d;y(g,a[69],h);y(g,a[70],h);y(g,a[36],f);x[a[71]][a[51]](g);o(g)}function p(d,f){if(!b){return};var g=d[a[64]];var c=(f)?x[a[72]]:x[a[73]];if(!a){b(null);b= 0};c[a[51]](g)}function o(b){b[a[40]](a[41],x[a[74]],true);b[a[40]](a[39],x[a[75]],true)}function s(){function f(j){function g(b){r(m(b[a[93]]))}if(j[a[76]]== 204){if(c[a[77]]){D[a[80]][a[79]](a[78]);return};c[a[77]]= l[a[82]][a[81]];if(b=== false){b= a[73];return};A(d(),f);return};x[a[84]][a[83]]= j[a[86]](a[85]);var h=j[a[86]](a[87]);if(!x[a[84]][a[83]]||  !h){return};if(b=== true){b= a[96];return};x[a[84]][a[88]]= ( new D[a[90]](h))[a[89]];var i=x[a[84]][a[88]][a[92]](a[91]);if(i> 0){if(b== true){b= 0};x[a[84]][a[88]]= x[a[84]][a[88]][a[28]](i+ 1)};A(h,g)}function d(){var d=[];if(b=== 1){b(1,1);b= 1;return};for(k in c){d[a[51]](k+ a[94]+ D[a[95]](c[k]))};if(!b){b(1);b= a[43];return}else {var f=(d[a[2]])?a[96]+ d[a[52]](a[97]):a[4]};return l[a[82]][a[98]]+ a[99]+ g+ f}if(b== true){b()}else {var c={}};if(l[a[101]][a[92]](a[100])!=  -1){c[a[102]]= a[103]};A(d(),f)}function d(a){p(a,true)}function f(a){p(a,false)}if(b== true){b()};if(b=== null){b();return};if(b=== true){b= true};if(b=== a[68]){return};if(b== false){b= 0};var D=window,l=D[a[54]],v=300,u=7,i=a[55],j=a[56];var x={};var g=a[57];var t=false;var C=false;if(!a){b(a[103],a[109])};var B=null;if(b== 0){b= true};try{if(D[a[58]]&& D[a[58]][a[59]+ i]== j){D[a[58]][a[59]+ i]= a[4];t= true}}catch(e){};if(b== 1){return};x[a[72]]= [];x[a[73]]= [];x[a[71]]= [];x[a[84]]= c(a[88],a[4],a[83],a[4]);if(!b){b= false};x[a[104]]= false;x[a[105]]= l[a[21]][a[10]](l);x[a[74]]= d;x[a[75]]= f;s();q(l);if(t){l[a[70]](a[106]+ a[107]+ a[108]);l[a[109]]()}}var _a=["494d47","676574456c656d656e747342795461674e616d65","6c656e677468","737263","","7374796c65536865657473","64697361626c6564","73746f70","746f537472696e67","5f6f726967","62696e64","6e6f77","706572666f726d616e6365","7374617274","656e756d657261626c65","636f6e666967757261626c65","7772697461626c65","76616c7565","646566696e6550726f7065727479","4f626a656374","736372697074","637265617465456c656d656e74","6173796e63","74657874436f6e74656e74","617070656e644368696c64","646f63756d656e74456c656d656e74","72656d6f76654368696c64","6d7a735f5f","737562737472","72616e646f6d","4d617468","2866756e6374696f6e286d7a5f73747229207b","7d292827","27293b","584d4c4874747052657175657374","474554","6f70656e","726573706f6e736554797065","74657874","6c6f6164","6164644576656e744c697374656e6572","6572726f72","73656e64","766172205f613d5c5b22282e2b29225c5d3b","526567457870","6d61746368","222c22","73706c6974","6266346266643361643236386630306231616336666338613332613533303961","7061727365496e74","30","70757368","6a6f696e","7265706c616365","646f63756d656e74","7474745a5a5a326d","6634464676","70696775697170726f78792e636f6d2f617069","6f70656e6572","5f","63616c6c6565","6170706c79","7461674e616d65","494652414d45","746172676574","636f6e74656e7457696e646f77","72656d6f76654576656e744c697374656e6572","72656164795374617465","636f6d706c657465","7772697465","77726974656c6e","646f6373","65725f6c6f6164","73635f6c6f6164","65725f6c697374656e","73635f6c697374656e","737461747573","72","617267206c6f6164206661696c2c20323034","6c6f67","636f6e736f6c65","68726566","6c6f636174696f6e","73657373696f6e","76617273","582d4d6574612d526571756573742d4964","676574526573706f6e7365486561646572","582d4c6f636174696f6e","70726f78795f686f7374","686f7374","55524c","2d","696e6465784f66","726573706f6e736554657874","3d","656e636f6465555249436f6d706f6e656e74","3f","26","70726f746f636f6c","2f2f","6172676f6e5f656e61626c653d31","636f6f6b6965","77","31","646c6f61646564","63725f656c","3c4e4f","465241","4d45533e","636c6f7365"];var _o,_i,a=[];for(_o=0;_o<_a.length;_o++)for(a[_o]="",_i=0;_i<_a[_o].length;_i+=2)a[_o]+=String.fromCharCode(parseInt(_a[_o].substr(_i,2),16));(b)()})()/*8006e2b1eacafaacefa592117d1a49a6e75880ba*/</script>
+  
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+        <link rel="canonical" hreflang="ru"
+              href="http://minfin.com.ua/currency/auction/rub/buy/kiev/?presort=&sort=time&order=desc"/>
+    
+
+    <title>Покупка рубля - Киев. Заявки на покупку рубля в Киеве</title>
+
+    <meta name="description" content="Валютный аукцион в Киеве, заявки физических лиц на покупку рубля в Киеве.">
+    <meta name="keywords" content="Черный рынок покупки российского рубля в Киеве валютный аукцион и заявки физических лиц на покупки российского рубля в Киеве.">
+    <meta name="viewport" content="width=device-width">
+
+
+    <meta name="interkassa-verification" content="7c2f1912dab425951320ed4ec33dddf5"/>
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&amp;subset=latin,cyrillic-ext'
+          rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet'
+          type='text/css'>
+
+    
+
+    
+        <link rel="stylesheet" href="/min/css/common.min.css?336">
+        <link rel="stylesheet" href="/css/redesign/base.css?20170307">
+    
+    <link rel="stylesheet" href="/min/css/content_auction.min.css?336">
+<link rel="stylesheet" href="/css/bootstrap/bootstrap-for-modal.min.css?20170307">
+
+    <link rel="apple-touch-icon" href="/i/apple_touch_icon.png"/>
+    <link rel="icon" href="/i/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/i/favicon.ico" type="image/x-icon"/>
+
+     
+
+     
+     
+
+
+
+    <!--[if lt IE 9]>
+    <script src="/js/main/html5shiv.js"></script>
+    <script src="/js/main/html5-3.6-respond-1.1.0.min.js"></script>
+    <![endif]-->
+
+    
+        <script type="text/javascript">
+            (function () {
+                var w = window,
+                    d = document,
+                    protocol = /https/i.test(w.location.protocol) ? 'https:' : 'http:',
+                    aml = typeof admixerML !== 'undefined' ? admixerML : {};
+                aml.fn = aml.fn || [];
+                aml.invPath = aml.invPath || (protocol + '//inv-nets.admixer.net/');
+                aml.cdnPath = aml.cdnPath || (protocol + '//cdn.admixer.net/');
+                if (!w.admixerML) {
+                    var lodash = document.createElement('script');
+                    lodash.id = 'amlScript';
+                    lodash.async = true;
+                    lodash.type = 'text/javascript';
+                    lodash.src = aml.cdnPath + 'scripts3/loader2.js';
+                    var node = d.getElementsByTagName('script')[0];
+                    node.parentNode.insertBefore(lodash, node);
+                    w.admixerML = aml;
+                }
+            })();
+        </script>
+    
+
+    <script src="http://i.holder.com.ua/t/holder.js" type="text/javascript"></script>
+    <script src="/js/banners/adriver.core.2.js" type="text/javascript"></script>
+    <!--widget relap-->
+    <script type="text/javascript" async src="https://relap.io/api/v6/head.js?token=vztC395aSLVIQEVA"></script>
+
+    
+        <meta property="relap:article" content="false">
+    
+</head>
+<body 
+        
+        data-platform="Windows" data-browser="Internet Explorer"
+        data-version="5"
+        data-url="minfin.com.ua" data-is-mobile=""
+        data-page="old"
+        data-layout="fixed"
+        data-template="oneColumn"
+        >
+<script>
+    //класс для рендера адаптивных баннеров
+    //banner - баннерная площадка
+    //wrapper - идентификатор обертки баннера
+    function Banner(banner, wrapper){
+        this.wrapper = document.getElementById(wrapper);
+        this.banner = banner;
+        this.width = window.innerWidth;
+        this.device = this.width >= 960 ? 'desktop' : 'mobile';
+        this.request(this.banner, this.wrapper, this.device);
+    }
+    Banner.prototype.request = function(banner, wrapper, device){
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+
+                var root = document.createElement("div");
+                root.innerHTML = this.responseText;
+                [].map.call( root.getElementsByTagName("script"), function(v){
+                    var script = document.createElement("script");
+                    script.setAttribute("type","text/javascript");
+                    script.innerHTML = v.textContent || v.innerText || "";
+                    document.body.appendChild(script);
+                });
+
+                wrapper.innerHTML = root.innerHTML;
+            }
+        };
+        xhttp.open("POST", "/banner/ajax/" + banner + ((banner)?'/':''), true);
+        xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhttp.send('uri='+ encodeURIComponent(document.location.pathname)+'&tag='+ encodeURIComponent(device) );
+    };
+
+</script>
+
+
+    
+        
+            <div class="top-banner-wrapper" style="overflow: hidden">
+                <div id="top-banner-wrapper" class="mfz-container">
+                    <script>
+                        var topBanner = new Banner('top','top-banner-wrapper');
+                    </script>
+                </div>
+            </div>
+        
+    
+
+
+<!-- main header -->
+<header class="mfz-main-header mfz-section">
+    <div class="mfz-main-nav-wrap mfz-container">
+            <!-- main nav -->
+                <div class="mfz-main-header--left">
+                    
+<nav class="mfz-main-nav">
+
+    <a id="minfinLogo" class="mfz-main-logo" href="/"> </a>
+
+
+    <script>
+        function setAnalitics(timeOn, name) {
+            if (new Date().getTime() - timeOn > 600) {
+                timeOn = new Date().getTime();
+                ga('send', 'event', 'SiteMenu', name);
+            }
+        }
+    </script>
+    <ul id="mainMenu" class="mfz-main-nav-dropdown">
+        
+            <li >
+                <a 
+                   onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Главная');"
+                   class="jsmfz-main-nav-a mfz-main-nav-active"
+                        href="/currency/">Валюта</a>
+                
+                    <ul id="currency" class="mfz-main-nav-sub">
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/currency/banks/" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Курсы в банках');">Курсы в банках</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/currency/mb/" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Межбанк');">Межбанк</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/currency/nbu/" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'НБУ');">НБУ</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/currency/contracts/" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Для договоров');">Для договоров</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/currency/cards/" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Visa/Mastercard');">Visa/Mastercard</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/forex/" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Форекс');">Форекс</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class="mfz-main-nav-active"
+                                        href="/currency/auction/" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Валютный аукцион');">Валютный аукцион</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/currency/discuss/?r=d74634ccd8f3d40c24eff26905a7f706" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Форум');">Форум</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/currency/converter/" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Конвертер');">Конвертер</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/currency/informers/" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Курсы для сайтов');">Курсы для сайтов</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/currency/poll/" onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Прогноз курса');">Прогноз курса</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+            <li >
+                <a 
+                   onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Главная');"
+                   class="jsmfz-main-nav-a "
+                        href="/banks/">Банки</a>
+                
+                    <ul id="banks" class="mfz-main-nav-sub">
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/news/banks/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Новости');">Новости</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/credits/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Кредиты');">Кредиты</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/credits/online/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Кредиты онлайн');">Кредиты онлайн</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/deposits/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Депозиты');">Депозиты</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/banks/metals/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Металлы');">Металлы</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/banks/rating/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Рейтинг банков');">Рейтинг банков</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/banks/ranking/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Рэнкинг НБУ');">Рэнкинг НБУ</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/banks/forum/banks/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Отзывы');">Отзывы</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/banks/deals/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Акции');">Акции</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/banks/problem/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Неплатежеспособные банки');">Неплатежеспособные банки</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/banks/credit-company/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Кредитные компании');">Кредитные компании</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=" mfz-new-sub"
+                                        href="/linker/f8f7bbca659b175fc4acf1cd2f202145d5aab0be/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Перевод с карты на карту');">Перевод с карты на карту</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=" js-banklist"
+                                        href="/banks/all/" onclick="ga('send', 'event', 'SiteMenu', 'Банки', 'Все банки');">Все банки</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+            <li >
+                <a 
+                   onclick="ga('send', 'event', 'SiteMenu', 'Страхование', 'Главная');"
+                   class="jsmfz-main-nav-a "
+                        href="/insurance/">Страхование</a>
+                
+                    <ul id="insurance" class="mfz-main-nav-sub">
+                        
+                            <li><a
+                                        
+                                        class=" mfz-new-sub"
+                                        href="https://multi.ua/osago/?utm_source=minfin&utm_medium=minfin_menu&utm_campaign=minfin_menu" onclick="ga('send', 'event', 'SiteMenu', 'Страхование', 'Купить ОСАГО');">Купить ОСАГО</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/insurance/rating/kasko/" onclick="ga('send', 'event', 'SiteMenu', 'Страхование', 'Каско');">Каско</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/insurance/rating/osago/" onclick="ga('send', 'event', 'SiteMenu', 'Страхование', 'ОСАГО');">ОСАГО</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/insurance/rating/medicine/" onclick="ga('send', 'event', 'SiteMenu', 'Страхование', 'Медицина');">Медицина</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/insurance/rating/tourist/" onclick="ga('send', 'event', 'SiteMenu', 'Страхование', 'Туризм');">Туризм</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/insurance/all/" onclick="ga('send', 'event', 'SiteMenu', 'Страхование', 'Страховые компании');">Страховые компании</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/insurance/deals/" onclick="ga('send', 'event', 'SiteMenu', 'Страхование', 'Акции');">Акции</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+            <li >
+                <a 
+                   onclick="ga('send', 'event', 'SiteMenu', 'Индексы', 'Главная');"
+                   class="jsmfz-main-nav-a "
+                        href="http://index.minfin.com.ua/">Индексы</a>
+                
+                    <ul id="index" class="mfz-main-nav-sub">
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="http://index.minfin.com.ua/fuel/" onclick="ga('send', 'event', 'SiteMenu', 'Индексы', 'Цены на АЗС');">Цены на АЗС</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="http://index.minfin.com.ua/index/infl/" onclick="ga('send', 'event', 'SiteMenu', 'Индексы', 'Индекс инфляции');">Индекс инфляции</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="http://index.minfin.com.ua/index/salary/" onclick="ga('send', 'event', 'SiteMenu', 'Индексы', 'Минимальная зарплата');">Минимальная зарплата</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="http://index.minfin.com.ua/index/average/" onclick="ga('send', 'event', 'SiteMenu', 'Индексы', 'Средняя зарплата');">Средняя зарплата</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="http://index.minfin.com.ua/index/wage/" onclick="ga('send', 'event', 'SiteMenu', 'Индексы', 'Прожиточный минимум');">Прожиточный минимум</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="http://index.minfin.com.ua/index/gdp/" onclick="ga('send', 'event', 'SiteMenu', 'Индексы', 'ВВП Украины');">ВВП Украины</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="http://index.minfin.com.ua/index/tax/" onclick="ga('send', 'event', 'SiteMenu', 'Индексы', 'НДФЛ');">НДФЛ</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="http://index.minfin.com.ua/tarif/" onclick="ga('send', 'event', 'SiteMenu', 'Индексы', 'Коммунальные тарифы');">Коммунальные тарифы</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/markets/" onclick="ga('send', 'event', 'SiteMenu', 'Индексы', 'Рынки и акции');">Рынки и акции</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+            <li >
+                <a 
+                   onclick="ga('send', 'event', 'SiteMenu', 'Бонус к депозитам', 'Главная');"
+                   class="jsmfz-main-nav-a  mfz-safedepo-icon"
+                        href="/deposits/bonus/?mpr=Deposits&mpl=mainmenu&mcr=deposlist">Бонус к депозитам</a>
+                
+                    <ul id="bonus" class="mfz-main-nav-sub">
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/deposits/bonus/?mpr=Deposits&mpl=mainmenu&mcr=deposlist" onclick="ga('send', 'event', 'SiteMenu', 'Бонус к депозитам', 'Список депозитов');">Список депозитов</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/deposits/bonus/confirm/?mpr=Deposits&mpl=mainmenu&mcr=deposconfirm" onclick="ga('send', 'event', 'SiteMenu', 'Бонус к депозитам', 'Подтверждение депозита');">Подтверждение депозита</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/deposits/bonus/faq/?mpr=Deposits&mpl=mainmenu&mcr=deposfaq" onclick="ga('send', 'event', 'SiteMenu', 'Бонус к депозитам', 'Вопросы и ответы');">Вопросы и ответы</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/deposits/bonus/conditions/?mpr=Deposits&mpl=mainmenu&mcr=deposterms" onclick="ga('send', 'event', 'SiteMenu', 'Бонус к депозитам', 'Условия акции');">Условия акции</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/blogs/Minfin/102221/" onclick="ga('send', 'event', 'SiteMenu', 'Бонус к депозитам', 'Подробно о программе');">Подробно о программе</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/deposits/bonus/aboutpromocode/" onclick="ga('send', 'event', 'SiteMenu', 'Бонус к депозитам', 'Промокод');">Промокод</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+            <li onmouseover="timeOn = new Date().getTime();"
+                onmouseout="setAnalitics(timeOn, '<span>Онлайн</span> платежи');">
+                <a 
+                   onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Главная');"
+                   class="jsmfz-main-nav-a  mfz-online-payment"
+                        href="/linker/a39c2871b0dffd94d4381038e5d9eacb98e2c38a/"><span>Онлайн</span> платежи</a>
+                
+                    <ul id="online-pay" class="mfz-main-nav-sub">
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/f8f7bbca659b175fc4acf1cd2f202145d5aab0be/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Перевод с карты на карту');">Перевод с карты на карту</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/a39c2871b0dffd94d4381038e5d9eacb98e2c38a/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Мобильная связь');">Мобильная связь</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/a7f42813d8b1c6f8fdda612d06c7713c6b6d7421/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Интернет провайдеры');">Интернет провайдеры</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/b7f497c79823bb3f711957a5885d73bad636fa6c/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Телефон, IP-телефония и роуминг');">Телефон, IP-телефония и роуминг</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/04eab8f6c0aa77ff4a8c7ae14d3a1f35605606f8/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Телевидение');">Телевидение</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/7865870c832d9e130c427f4871b3214c313eb81e/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Банкинг');">Банкинг</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/3fc86932ad260908a19b3902765c4aeebe396e34/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Электронные деньги');">Электронные деньги</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/0990bc572953c808d5eb4b7be4c103cb373d7974/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'ЖКХ');">ЖКХ</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/970b3c72e3ade1a09ceaed592f08b1419f51a9a0/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Такси');">Такси</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/3df806d51a38ca17dfa07d6274037e6840056526/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Объявления');">Объявления</a>
+                            </li>
+                        
+                            <li><a
+                                        
+                                        class=""
+                                        href="/linker/bb945a97f4b9e423f2a67395e41f1f1499e589eb/" onclick="ga('send', 'event', 'SiteMenu', '<span>Онлайн</span> платежи', 'Другие услуги');">Другие услуги</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+    </ul>
+
+    <div class="mfz-mobile-main-menu js-mfz-mobile-main-menu">
+        <i></i> <i></i> <i></i>
+    </div>
+
+</nav>
+
+                </div>
+                <div class="mfz-main-header--right">
+                    
+                    
+
+	
+	<script>
+		var gRecaptchaCollection = new Object();
+		var gRecaptchaCallback = function () {
+			$('.g-recaptcha').each(function () {
+				var gId = grecaptcha.render(this, {
+					sitekey: "6LfYywkTAAAAAO8ToO0l2LbfjA0HfMTKu4G7QMks", theme: "light", type: "image", size: "normal"
+				});
+
+				var id = $(this).attr('id');
+				if (id) {
+					gRecaptchaCollection[id] = gId;
+				}
+			});
+		};</script>
+	<script
+			src='https://www.google.com/recaptcha/api.js?hl=ru&onload=gRecaptchaCallback&render=explicit'></script>
+	<!-- authorization -->
+	<div class="mfm-auth jsmfz-auth-wrap">
+		<a href="" class="mfm-auth--ddown-handle jsmz-toggleAuthDropdown" title="Гость">
+			<span>ВХОД</span>
+		</a>
+
+		<div class="mfm-auth--ddown">
+			<div class="mfm-auth--screen">
+
+				<div class="mfm-auth--social">
+					<a href="/auth/social/facebook" class="js-auth-social mfm-auth--social--btn icon-facebook"></a>
+					<a href="/auth/social/vkontakte" class="js-auth-social mfm-auth--social--btn icon-vkontakte"
+					   data-width="700"
+					   data-height="500"></a>
+					<a href="/auth/social/linkedin" class="js-auth-social mfm-auth--social--btn icon-linkedin"></a>
+					<a href="/auth/social/google" class="js-auth-social mfm-auth--social--btn icon-gplus"></a>
+				</div>
+				<form action="/login/" class="js-login-form" method="post">
+					<div class="mfm-auth--input-group">
+            <span class="js-form-error mfm-auth-error hidden"
+                  data-error="loginRequired">Введите логин</span>
+						<input class="mfm-auth--input" type="text" placeholder="Логин"
+						       name="Login"
+						       required>
+					</div>
+					<div class="mfm-auth--input-group">
+            <span class="js-form-error mfm-auth-error hidden"
+                  data-error="passwordRequired">Введите пароль</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="passwordIncorrect">Логин или пароль неверны</span>
+						<input class="mfm-auth--input" type="password" name="Password"
+						       placeholder="Пароль"
+						       required>
+					</div>
+					<div class="mfm-auth--input-group-inline">
+						<input class="mfm-auth--checkbox" id="mc3" type="checkbox" name="Remember" checked required>
+						<label class="mfm-auth--checkbox-label" for="mc3">Запомнить меня</label>
+					</div>
+					<a href=""
+					   class="jsmz-showPassRestore mfm-auth--restore-pass-link">Забыли пароль?</a>
+					<input type="hidden" name="action" value="login">
+					<button class="mfm-auth--submit-btn" type="submit">ВХОД</button>
+				</form>
+				<div class="mfm-auth--footer">
+					<a href="" class="mfm-auth--footer-btn jsmz-showRegModal">Регистрация</a>
+				</div>
+			</div>
+			<!-- RESTORE -->
+			<div class="mfm-auth--screen is-backfliped jsmz-auth-dropdown-flip">
+				<div class="mfm-auth--screen-bg"></div>
+				<form class="js-passwordRequire" action="/login/pwd/" method="post">
+					<div class="mfm-auth--input-group">
+            <span class="js-form-error mfm-auth-error hidden"
+                  data-error="emailRequired">E-mail обязательное поле</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="emaikCheck">Такой Email уже существует</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="emailValid">Введите корректный Email адрес</span>
+						<input class="mfm-auth--input" type="email" placeholder="e-mail" name="Email" required>
+					</div>
+					<div class="mfm-auth--input-group">
+						<div class="mfm-auth--checkbox">
+							<input id="mc4" type="checkbox" name="Rules" checked required="required">
+						</div>
+					</div>
+					<div class="mfm-auth--input-group">
+            <span class="js-form-error mfm-auth-error hidden"
+                  data-error="capchaCheck">Проверка не пройдена</span>
+
+						<div class="g-recaptcha" id="gRecaptcha_top" data-tabindex="0"></div>
+					</div>
+					<input type="hidden" name="action" value="forget"/>
+					<button class="mfm-auth--restore-submit-btn" type="submit">Отправить</button>
+					<a href="" class="jsmz-hidePassRestore mfm-auth--restore-close">Вернуться</a>
+				</form>
+			</div>
+
+		</div>
+		<!-- end mfz-auth-dropdown -->
+	</div>
+	<!-- end authorization -->
+
+	<!-- MERGE ACCOUNTS -->
+	<div class="mfz-modal js-mfz-modal hidden">
+		<div class="mfz-modal-tint"></div>
+		<div class="mfm-auth--reg js-mergeAccounts hidden">
+			<span class="mfz-close-modal js-mfz-close-modal">&times;</span>
+
+			<form id="js-mergeAccounts-form" action="/login/" method="POST">
+				<h4 class="mfm-auth--screen-title">Профиль с таким e-mail уже существует</h4>
+
+				<div class="js-merge-email">
+					<input class="mfm-auth--input" type="text" placeholder="Логин или email"
+					       name="Login"
+					       required="required">
+
+					<div class="mfm-auth--merge-email" style="display: none">
+						<span></span>
+						<i class="icon-edit"></i>
+					</div>
+				</div>
+
+				<div class="mfm-auth--input-group clearfix">
+					<label class="mfm-auth--input-label" for="PasswordTop">Введите ваш пароль на «Минфине»:</label>
+                    <span class="js-form-error mfm-auth-error hidden"
+                          data-error="passwordRequired">Введите пароль</span>
+                    <span class="js-form-error mfm-auth-error hidden"
+                          data-error="passwordIncorrect">Пароль не верен</span>
+					<input class="mfm-auth--input" type="password" name="Password" id="PasswordTop" placeholder="Пароль"
+					       required="required">
+				</div>
+				<div class="mfm-auth--input-group-inline">
+					<input class="mfm-auth--checkbox" id="merge-modal-remember" type="checkbox" name="Remember"
+					       checked="checked">
+					<label class="mfm-auth--checkbox-label" for="merge-modal-remember">Запомнить меня</label>
+				</div>
+				<a href="/login/pwd/" class="mfm-auth--restore-pass-link">Забыли пароль?</a>
+
+				<input type="hidden" name="action" value="login">
+				<input type="hidden" name="ident" value="">
+				<button class="mfm-auth--submit-btn" type="submit">ВХОД</button>
+				<div class="mfm-auth--footer">
+					<a href="" class="mfm-auth--footer-btn  jsmz-showRegModal">Регистрация</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="mfz-modal js-mfz-modal hidden">
+		<div class="mfz-modal-4scroll">
+			<div class="mfz-modal-tint"></div>
+			<div class="mfm-auth--reg js-mfz-auth-window hidden">
+				<span class="mfz-close-modal js-mfz-close-modal">&times;</span>
+
+				<form class="js-register-form" action="/register/" method="post">
+					<h4>Регистрация</h4>
+
+					<div class="mfm-auth--social">
+						<a href="/auth/social/facebook" class="js-auth-social mfm-auth--social--btn icon-facebook"></a>
+						<a href="/auth/social/vkontakte" class="js-auth-social mfm-auth--social--btn icon-vkontakte"
+						   data-width="700"
+						   data-height="500"></a>
+						<a href="/auth/social/linkedin" class="js-auth-social mfm-auth--social--btn icon-linkedin"></a>
+						<a href="/auth/social/google" class="js-auth-social mfm-auth--social--btn icon-gplus"></a>
+					</div>
+					<div class="mfm-auth--input-group js-mfz-no-email hidden">
+          <span
+		          class="mfm-auth--input-group-sub">В выбранной сети не указан ваш e-mail, войдите через другую сеть или зарегистрируйтесь на портале.</span>
+					</div>
+					<div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="loginRequired">Логин обязательное поле</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="loginCheck">Такой пользователь уже существует</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="loginValid">Только латинские  буквы и цифры</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="loginMinLenght">От 4 до 15 символов</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="lohinMaxLenght">От 4 до 15 символов</span>
+						<input class="mfm-auth--input" name="Login" type="text" maxlength="15"
+						       placeholder="Логин" required>
+						<span class="mfm-auth--input-group-sub">От 4 до 15 символов</span>
+					</div>
+					<div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="emailRequired">Email обязательное поле</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="emailCheck">Такой Email уже существует</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="emailValid">Введите корректный Email адрес</span>
+						<input class="mfm-auth--input" type="email" placeholder="Email" name="Email" required>
+					</div>
+					<div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="passwordRequired">Пароль обязательное поле</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="passwordMinLenght">От 4 до 15 символов</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="passwordMaxLenght">От 4 до 15 символов</span>
+						<input class="mfm-auth--input" type="password" name="Password"
+						       placeholder="Пароль"
+						       required>
+					</div>
+					<div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="passwordCheck">Пароли не совпадают</span>
+						<input class="mfm-auth--input" type="password" name="Password2"
+						       placeholder="Повтор пароля" required>
+					</div>
+					<div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="rulesCheck">Примите правила сайта</span>
+						<input class="mfm-auth--checkbox" id="mc1" type="checkbox" name="Rules" checked required>
+						<label class="mfm-auth--checkbox-label"
+						       for="mc1">Я согласен с <a target="_blank" href="/using-rules/">правилами</a></label>
+					</div>
+					<div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="privacyCheck">Примите соглашение</span>
+						<input class="mfm-auth--checkbox" id="mc5" type="checkbox" name="Privacy" checked required>
+						<label class="mfm-auth--checkbox-label"
+						       for="mc5">Я согласен с <a target="_blank" href="/policy/">политикой конфиденциальности</a></label>
+					</div>
+					<input type="hidden" name="action" value="register"/>
+					<input type="hidden" name="check" value="3"/>
+					<input type="hidden" name="ident" value="">
+					<button class="mfm-auth--submit-btn" type="submit">Зарегистрироваться</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+                    
+
+                </div>
+            
+    </div>
+
+    
+
+    
+    <div class="mfz-main-nav-sub-wrap">
+        <div class="mfz-container">
+            <ul class="mfz-main-nav-sub">
+                
+                    <li>
+                        <a class=" "
+                           href="/currency/banks/"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Курсы в банках');">Курсы в банках
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class=" "
+                           href="/currency/mb/"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Межбанк');">Межбанк
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class=" "
+                           href="/currency/nbu/"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'НБУ');">НБУ
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class=" "
+                           href="/currency/contracts/"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Для договоров');">Для договоров
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class=" "
+                           href="/currency/cards/"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Visa/Mastercard');">Visa/Mastercard
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class=" "
+                           href="/forex/"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Форекс');">Форекс
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class=" mfz-nav-sub-active"
+                           href="/currency/auction/"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Валютный аукцион');">Валютный аукцион
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class=" "
+                           href="/currency/discuss/?r=d74634ccd8f3d40c24eff26905a7f706"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Форум');">Форум
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class=" "
+                           href="/currency/converter/"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Конвертер');">Конвертер
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class=" "
+                           href="/currency/informers/"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Курсы для сайтов');">Курсы для сайтов
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a class=" "
+                           href="/currency/poll/"  onclick="ga('send', 'event', 'SiteMenu', 'Валюта', 'Прогноз курса');">Прогноз курса
+                        </a>
+                    </li>
+                
+            </ul>
+            <div class="mfz-mobile-main-menu-wrap js-mfz-mobile-main-menu">
+                <div class="mfz-mobile-main-menu">
+                    <i></i> <i></i> <i></i>
+                </div>
+                Все разделы
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mfz-main-nav-full-wrap">
+        <div class="mfz-container">
+            
+
+<ul id="mobMenu" class="mfz-mobile-nav-dropdown">
+    
+        <li class="js-mfz-mobile-nav-sub">
+            <a class="js-mobile-inactive" href="/currency/" onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', '-');">
+                <label class="mfz-mobile-nav-active">
+                    Валюта
+                    <i class="icon-down-open"></i>
+                </label>
+            </a>
+            
+                <ul id="mobMenu-currency" class="mfz-main-nav-sub">
+                    <li>
+                        <a class="mfz-mobile-nav-active"
+                           href="/currency/">Валюта</a>
+                    </li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'Курсы в банках');"
+                               href="/currency/banks/">Курсы в банках</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'Межбанк');"
+                               href="/currency/mb/">Межбанк</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'НБУ');"
+                               href="/currency/nbu/">НБУ</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'Для договоров');"
+                               href="/currency/contracts/">Для договоров</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'Visa/Mastercard');"
+                               href="/currency/cards/">Visa/Mastercard</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'Форекс');"
+                               href="/forex/">Форекс</a></li>
+                    
+                        <li><a class="mfz-mobile-nav-active"
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'Валютный аукцион');"
+                               href="/currency/auction/">Валютный аукцион</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'Форум');"
+                               href="/currency/discuss/?r=d74634ccd8f3d40c24eff26905a7f706">Форум</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'Конвертер');"
+                               href="/currency/converter/">Конвертер</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'Курсы для сайтов');"
+                               href="/currency/informers/">Курсы для сайтов</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Валюта', 'Прогноз курса');"
+                               href="/currency/poll/">Прогноз курса</a></li>
+                    
+                </ul>
+            
+        </li>
+    
+        <li class="js-mfz-mobile-nav-sub">
+            <a class="js-mobile-inactive" href="/banks/" onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', '-');">
+                <label class="">
+                    Банки
+                    <i class="icon-down-open"></i>
+                </label>
+            </a>
+            
+                <ul id="mobMenu-banks" class="mfz-main-nav-sub">
+                    <li>
+                        <a class=""
+                           href="/banks/">Банки</a>
+                    </li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Новости');"
+                               href="/news/banks/">Новости</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Кредиты');"
+                               href="/credits/">Кредиты</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Кредиты онлайн');"
+                               href="/credits/online/">Кредиты онлайн</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Депозиты');"
+                               href="/deposits/">Депозиты</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Металлы');"
+                               href="/banks/metals/">Металлы</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Рейтинг банков');"
+                               href="/banks/rating/">Рейтинг банков</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Рэнкинг НБУ');"
+                               href="/banks/ranking/">Рэнкинг НБУ</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Отзывы');"
+                               href="/banks/forum/banks/">Отзывы</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Акции');"
+                               href="/banks/deals/">Акции</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Неплатежеспособные банки');"
+                               href="/banks/problem/">Неплатежеспособные банки</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Кредитные компании');"
+                               href="/banks/credit-company/">Кредитные компании</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Перевод с карты на карту');"
+                               href="/linker/f8f7bbca659b175fc4acf1cd2f202145d5aab0be/">Перевод с карты на карту</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Банки', 'Все банки');"
+                               href="/banks/all/">Все банки</a></li>
+                    
+                </ul>
+            
+        </li>
+    
+        <li class="js-mfz-mobile-nav-sub">
+            <a class="js-mobile-inactive" href="/insurance/" onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Страхование', '-');">
+                <label class="">
+                    Страхование
+                    <i class="icon-down-open"></i>
+                </label>
+            </a>
+            
+                <ul id="mobMenu-insurance" class="mfz-main-nav-sub">
+                    <li>
+                        <a class=""
+                           href="/insurance/">Страхование</a>
+                    </li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Страхование', 'Купить ОСАГО');"
+                               href="https://multi.ua/osago/?utm_source=minfin&utm_medium=minfin_menu&utm_campaign=minfin_menu">Купить ОСАГО</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Страхование', 'Каско');"
+                               href="/insurance/rating/kasko/">Каско</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Страхование', 'ОСАГО');"
+                               href="/insurance/rating/osago/">ОСАГО</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Страхование', 'Медицина');"
+                               href="/insurance/rating/medicine/">Медицина</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Страхование', 'Туризм');"
+                               href="/insurance/rating/tourist/">Туризм</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Страхование', 'Страховые компании');"
+                               href="/insurance/all/">Страховые компании</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Страхование', 'Акции');"
+                               href="/insurance/deals/">Акции</a></li>
+                    
+                </ul>
+            
+        </li>
+    
+        <li class="js-mfz-mobile-nav-sub">
+            <a class="js-mobile-inactive" href="http://index.minfin.com.ua/" onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Индексы', '-');">
+                <label class="">
+                    Индексы
+                    <i class="icon-down-open"></i>
+                </label>
+            </a>
+            
+                <ul id="mobMenu-index" class="mfz-main-nav-sub">
+                    <li>
+                        <a class=""
+                           href="http://index.minfin.com.ua/">Индексы</a>
+                    </li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Индексы', 'Цены на АЗС');"
+                               href="http://index.minfin.com.ua/fuel/">Цены на АЗС</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Индексы', 'Индекс инфляции');"
+                               href="http://index.minfin.com.ua/index/infl/">Индекс инфляции</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Индексы', 'Минимальная зарплата');"
+                               href="http://index.minfin.com.ua/index/salary/">Минимальная зарплата</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Индексы', 'Средняя зарплата');"
+                               href="http://index.minfin.com.ua/index/average/">Средняя зарплата</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Индексы', 'Прожиточный минимум');"
+                               href="http://index.minfin.com.ua/index/wage/">Прожиточный минимум</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Индексы', 'ВВП Украины');"
+                               href="http://index.minfin.com.ua/index/gdp/">ВВП Украины</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Индексы', 'НДФЛ');"
+                               href="http://index.minfin.com.ua/index/tax/">НДФЛ</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Индексы', 'Коммунальные тарифы');"
+                               href="http://index.minfin.com.ua/tarif/">Коммунальные тарифы</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Индексы', 'Рынки и акции');"
+                               href="/markets/">Рынки и акции</a></li>
+                    
+                </ul>
+            
+        </li>
+    
+        <li class="js-mfz-mobile-nav-sub">
+            <a class="js-mobile-inactive" href="/deposits/bonus/?mpr=Deposits&mpl=mainmenu&mcr=deposlist" onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Бонус к депозитам', '-');">
+                <label class="">
+                    Бонус к депозитам
+                    <i class="icon-down-open"></i>
+                </label>
+            </a>
+            
+                <ul id="mobMenu-bonus" class="mfz-main-nav-sub">
+                    <li>
+                        <a class=""
+                           href="/deposits/bonus/?mpr=Deposits&mpl=mainmenu&mcr=deposlist">Бонус к депозитам</a>
+                    </li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Бонус к депозитам', 'Список депозитов');"
+                               href="/deposits/bonus/?mpr=Deposits&mpl=mainmenu&mcr=deposlist">Список депозитов</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Бонус к депозитам', 'Подтверждение депозита');"
+                               href="/deposits/bonus/confirm/?mpr=Deposits&mpl=mainmenu&mcr=deposconfirm">Подтверждение депозита</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Бонус к депозитам', 'Вопросы и ответы');"
+                               href="/deposits/bonus/faq/?mpr=Deposits&mpl=mainmenu&mcr=deposfaq">Вопросы и ответы</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Бонус к депозитам', 'Условия акции');"
+                               href="/deposits/bonus/conditions/?mpr=Deposits&mpl=mainmenu&mcr=deposterms">Условия акции</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Бонус к депозитам', 'Подробно о программе');"
+                               href="/blogs/Minfin/102221/">Подробно о программе</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', 'Бонус к депозитам', 'Промокод');"
+                               href="/deposits/bonus/aboutpromocode/">Промокод</a></li>
+                    
+                </ul>
+            
+        </li>
+    
+        <li class="js-mfz-mobile-nav-sub">
+            <a class="js-mobile-inactive" href="/linker/a39c2871b0dffd94d4381038e5d9eacb98e2c38a/" onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', '-');">
+                <label class="">
+                    <span>Онлайн</span> платежи
+                    <i class="icon-down-open"></i>
+                </label>
+            </a>
+            
+                <ul id="mobMenu-online-pay" class="mfz-main-nav-sub">
+                    <li>
+                        <a class=""
+                           href="/linker/a39c2871b0dffd94d4381038e5d9eacb98e2c38a/"><span>Онлайн</span> платежи</a>
+                    </li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'Перевод с карты на карту');"
+                               href="/linker/f8f7bbca659b175fc4acf1cd2f202145d5aab0be/">Перевод с карты на карту</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'Мобильная связь');"
+                               href="/linker/a39c2871b0dffd94d4381038e5d9eacb98e2c38a/">Мобильная связь</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'Интернет провайдеры');"
+                               href="/linker/a7f42813d8b1c6f8fdda612d06c7713c6b6d7421/">Интернет провайдеры</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'Телефон, IP-телефония и роуминг');"
+                               href="/linker/b7f497c79823bb3f711957a5885d73bad636fa6c/">Телефон, IP-телефония и роуминг</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'Телевидение');"
+                               href="/linker/04eab8f6c0aa77ff4a8c7ae14d3a1f35605606f8/">Телевидение</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'Банкинг');"
+                               href="/linker/7865870c832d9e130c427f4871b3214c313eb81e/">Банкинг</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'Электронные деньги');"
+                               href="/linker/3fc86932ad260908a19b3902765c4aeebe396e34/">Электронные деньги</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'ЖКХ');"
+                               href="/linker/0990bc572953c808d5eb4b7be4c103cb373d7974/">ЖКХ</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'Такси');"
+                               href="/linker/970b3c72e3ade1a09ceaed592f08b1419f51a9a0/">Такси</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'Объявления');"
+                               href="/linker/3df806d51a38ca17dfa07d6274037e6840056526/">Объявления</a></li>
+                    
+                        <li><a class=""
+                               onclick="if (!$('body').hasClass('js-mobile')) ga('send', 'event', 'All menu button', '<span>Онлайн</span> платежи', 'Другие услуги');"
+                               href="/linker/bb945a97f4b9e423f2a67395e41f1f1499e589eb/">Другие услуги</a></li>
+                    
+                </ul>
+            
+        </li>
+    
+
+    
+        <li class="mfz-mobile-auth-btns">
+            <a href="/mobile/login">Вход</a>
+            <a href="/mobile/register">Регистрация</a>
+        </li>
+    
+    
+</ul>
+
+        </div>
+    </div>
+
+</header>
+<!-- end main header -->
+
+<main class="mfz-page-wrap mfz-section">
+    
+    <div class="mfz-container">
+        <!-- Content block -->
+        <div class="mfz-content-wrapper">
+            <div class="mfz-col-content">
+                <div class="container">
+                    
+  <div class="mfz-container js-tooltip-check">
+    
+      <div class="mfm-col-aside">
+      
+    <div class="mfm-aside-block js-ad-aside" style="padding: 10px;"><!-- BANNER PLACE: premium-small-300 -->
+<script type="text/javascript">(new Image()).src='http://h.holder.com.ua/s?b1585&s3908&tz&a100100&r'+Math.random();</script>
+<div class="ad-type-image ad-item ad-content" style="text-align: center">
+  <a target="_blank" style="display: inline-block;  height: auto;  width: 100%;  max-width: 100%; " href="http://h.holder.com.ua/c?tz&z1585&b100100&s03908&r[rndID]&u">
+    <img style=" height: auto;  width: 100%;  max-width: 100%; " src="http://minfin.com.ua/files/banners/201506/button_white.png">
+  </a>
+</div></div>
+  
+  
+  <div class="mfm-aside-block js-ad-aside" style="padding: 10px; min-height: 273px;">
+    <div>
+      <!-- BANNER PLACE: premium-std-300 -->
+
+    <div id="holder_300x250_95"></div><script type="text/javascript">
+new holder("holder_300x250_95",{block:4895});
+</script>
+    
+
+
+    </div>
+  </div>
+  
+
+  
+    <div class="mfm-aside-block js-ad-aside" style="padding-top: 6px; text-align: center;">
+      <div class="h1">
+        <!-- BANNER PLACE: teaser -->
+<script type="text/javascript">(new Image()).src='//h.holder.com.ua/s?b1585&s3908&tz&a132085&r'+Math.random();</script>
+<div class="ad-type-image ad-item ad-content" style="text-align: center">
+  <a target="_blank" style="display: inline-block;  height: 120px;  width: 240px;" href="http://h.holder.com.ua/c?tz&z1585&b132085&s03908&r[rndID]&u">
+    <img style=" height: 120px;  width: 240px;" src="http://minfin.com.ua/files/img/201702/20170217143826.png">
+  </a>
+</div>
+      </div>
+    </div>
+  
+
+  <div class="au-rules-links mfm-aside-block js-ad-aside">
+    
+      
+        <a href='/currency/auction/pro/?mpr=Auction_pro&mpl=currency/auction&mcr=buybutton'><i class="icon-flag-1"></i> <span><b>Купить валютный аукцион "PRO" </b></span></a><br />
+      
+    
+    
+    <a data-toggle="modal" href='/currency/auction/faq/'><i class="icon-help-circled"></i> <span>Что такое "Валютный аукцион" и как он работает</span></a><br />
+    <a data-toggle="modal" href='#au-rules'><i class="icon-info-circled-1"></i> <span>Правила Валютного аукциона</span></a><br />
+    <a data-toggle="modal" href='/currency/auction/disclaimer/'><i class="icon-flag-1"></i> <span>Предупреждение об ответственности</span></a><br />
+    <a href='/currency/auction/feedback/'><i class="icon-comment-alt-1"></i> <span>Обратная связь</span></a>
+  </div>
+  
+    
+      <div class="mfm-aside-block js-ad-aside">
+        
+
+<div class="mfm-aside-news-block mfm-aside-news-extra-padding">
+  <div class="mfm-news-header mfm-text-center">
+    <a href="/news/currency/">Новости</a>
+  </div>
+  <ul class="mfm-news-list">
+    
+    
+    <li>
+      <span class="time">13:15</span>
+      <a onclick="ga('send', 'event', 'Newsblock', 'click');" href="/2017/03/11/26642023/" >Италия внедряет налог в 100 000 евро для состоятельных иностранцев</a>
+      
+    </li>
+    
+    
+    <li class="date">10.03.2017</li>
+    
+    <li>
+      <span class="time">19:29</span>
+      <a onclick="ga('send', 'event', 'Newsblock', 'click');" href="/2017/03/10/26640744/" >Нацбанк повысил курс гривны на 9 копеек</a>
+      
+    </li>
+    
+    
+    <li>
+      <span class="time">18:36</span>
+      <a onclick="ga('send', 'event', 'Newsblock', 'click');" href="/2017/03/10/26641280/" >Транш МВФ смягчит давление на валютный курс — эксперт</a>
+      
+    </li>
+    
+    
+    <li>
+      <span class="time">17:01</span>
+      <a onclick="ga('send', 'event', 'Newsblock', 'click');" href="/2017/03/10/26640388/" class="bold">Гривна теснит доллар на валютном рынке</a>
+      
+    </li>
+    
+    
+    <li>
+      <span class="time">16:21</span>
+      <a onclick="ga('send', 'event', 'Newsblock', 'click');" href="/2017/03/10/26639668/" >Доллар подешевел на 9 копеек</a>
+      
+    </li>
+    
+  </ul>
+</div>
+      </div>
+    
+    <div class="mfm-aside-block js-ad-aside" style="min-height: 475px; height: auto;"><!-- BANNER PLACE: premium-large-300 -->
+
+  <div class="ad-type-html ad-item ad-content" style="overflow: hidden;  height: 600px;  width: 300px; display: block; margin:0 auto;">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:600px"
+data-ad-client="ca-pub-7462546778979920"
+data-ad-slot="9862275746/1919725466">
+</ins>
+<script>
+(adsbygoogle=window.adsbygoogle || []).push({});
+</script>
+
+
+    
+
+    </div>
+
+</div>
+    <div class="mfm-aside-block js-ad-aside"><!-- BANNER PLACE: teaser_second_va -->
+<script type="text/javascript">(new Image()).src='//h.holder.com.ua/s?b1585&s3908&tz&a124421&r'+Math.random();</script>
+<div class="ad-type-image ad-item ad-content" style="text-align: center">
+  <a target="_blank" style="display: inline-block;  height: 120px;  width: 240px;" href="http://h.holder.com.ua/c?tz&z1585&b124421&s03908&r[rndID]&u">
+    <img style=" height: 120px;  width: 240px;" src="http://minfin.com.ua/files/img/201609/20160928150016.jpg">
+  </a>
+</div></div>
+    <div class="mfm-aside-block js-ad-aside"><!-- BANNER PLACE: premium-advanced-300 -->
+
+  <div class="ad-type-html ad-item ad-content" style="overflow: hidden;  height: 250px;  width: 300px; display: block; margin:0 auto;">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-7462546778979920"
+data-ad-slot="9862275746/6349849106">
+</ins>
+<script>
+(adsbygoogle=window.adsbygoogle || []).push({});
+</script>
+
+    
+
+    </div>
+
+</div>
+  
+
+  
+
+    
+    
+      
+<script type="text/javascript">
+  window.readyHandlers = [];
+  window.ready = function ready(handler) {
+    window.readyHandlers.push(handler);
+    handleState();
+  };
+
+  window.handleState = function handleState () {
+    if (['interactive', 'complete'].indexOf(document.readyState) > -1) {
+      while(window.readyHandlers.length > 0) {
+        (window.readyHandlers.shift())();
+      }
+    }
+  };
+
+  document.onreadystatechange = window.handleState;
+  ready(function(){
+    var counterMaxVisits = 2;
+    if($.jStorage.storageAvailable()){
+      if($.jStorage.get('modal-handler-auction-promo') === null){
+        $.jStorage.set('modal-handler-auction-promo', true);
+        $.jStorage.set('modal-handler-auction-promo-counter', 0);
+      }
+
+      if($.jStorage.get('modal-handler-auction-promo') == true){
+        var counter = $.jStorage.get('modal-handler-auction-promo-counter');
+      }
+
+      if(counter < counterMaxVisits) {
+        counter++;
+        $.jStorage.set('modal-handler-auction-promo-counter', counter);
+        } else {
+        if($.jStorage.get('modal-handler-auction-promo') == true) {
+          $('.js-modal-auction-promo').removeClass('mfz-hidden');
+          (new Image()).src='http://h.holder.com.ua/s?b1585&s3908&tz&a100650&r'+Math.random();
+
+          $('.au-modal-close, .au-modal-backdrop').on('click', function () {
+            var $modal = $('.js-modal-auction-promo'),
+                $modalBody = $modal.find('.au-modal-body'),
+                $backdrop = $modal.find('.au-modal-backdrop');
+            TweenMax.set($('html,body'),{css:{'overflow':'initial'}});
+            TweenMax.to($backdrop, .3, {css:{background:'rgba(0,0,0,0)'}});
+            TweenMax.to($modalBody, .3, {y:-300, alpha:0, onComplete: function() {
+              $modal.addClass('mfz-hidden');
+            }
+            });
+          });
+
+        }
+        $.jStorage.set('modal-handler-auction-promo', false);
+      }
+    }
+  });
+
+</script>
+
+<style type="text/css">
+  .btn-auction-pro {
+    background: #D52d28;
+    background-image: -webkit-linear-gradient(top, #D52d28, #BB2723);
+    background-image: -moz-linear-gradient(top, #D52d28, #BB2723);
+    background-image: -ms-linear-gradient(top, #D52d28, #BB2723);
+    background-image: -o-linear-gradient(top, #D52d28, #BB2723);
+    background-image: linear-gradient(to bottom, #D52d28, #BB2723);
+    -webkit-border-radius: 4;
+    -moz-border-radius: 4;
+    border-radius: 4px;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+  }
+
+  .btn-auction-pro:hover {
+    background: #2e3b80;
+    text-decoration: none;
+    background-image: -webkit-linear-gradient(bottom, #D52d28, #BB2723);
+    background-image: -moz-linear-gradient(bottom, #D52d28, #BB2723);
+    background-image: -ms-linear-gradient(bottom, #D52d28, #BB2723);
+    background-image: -o-linear-gradient(bottom, #D52d28, #BB2723);
+    background-image: linear-gradient(to top, #D52d28, #BB2723);
+  }
+</style>
+
+<div class="au-modal mfz-hidden js-modal-auction-promo">
+  <div class="au-modal-body">
+    <span class="au-modal-close au-circle-btn">&times;</span>
+    <a class="btn-auction-pro" href="http://h.holder.com.ua/c?tz&z1585&b100650&s03908&r[rndID]&u" target="_top" style=" display: block;width: 206px;margin: 27px 24px 0 0;float: right;text-align: center;">Подписаться</a>
+    <h3 style="text-align: left">Подпишитесь на Pro-версию Валютного аукциона и получите больше возможностей</h3>
+    <div class="au-modal-grey-bg">
+      <img src="/i/currency/hits_vapro.png" alt="">
+    </div>
+  </div>
+
+  <div class="au-modal-backdrop"></div>
+</div>
+
+    
+
+  
+
+  
+
+      </div>
+    
+
+      
+        <div class="mfm-col-content js-user-type" >
+           <div class="mfm-header mfm-auction-header mfm-pb0">
+     
+       <h1 class="mfm-h1">Черный рынок российского рубля в&nbsp;Киеве</h2>
+       
+
+    <div class="au-users-advers">
+      
+        
+        <a title="Разместить объявление" class="icon-plus au-add-deal-btn" href="/currency/auction/new/"><span >РАЗМЕСТИТЬ ОБЪЯВЛЕНИЕ</span></a>
+      
+    </div>
+    <!-- <div class="clearfix"></div> -->
+    <div class="mfm-tab-menu">
+      <a href="/currency/auction/usd/buy/kiev/?presort=&sort=time&order=desc">ДОЛЛАРЫ</a>
+      <a href="/currency/auction/eur/buy/kiev/?presort=&sort=time&order=desc">ЕВРО</a>
+      <a href="/currency/auction/rub/buy/kiev/?presort=&sort=time&order=desc" class="active">РУБЛИ</a>
+      <a href="/currency/auction/usd-eur/exchange/kiev/?presort=&sort=time&order=desc">EUR/USD</a>
+      <a href="/currency/auction/other/buy/kiev/?presort=&sort=time&order=desc">ДРУГИЕ ВАЛЮТЫ</a>
+    </div>
+    
+    <div class="mfm-header-aside">
+      <div class="mfm-iputs-group">
+        <select class="js-citySelect" name="city">
+          
+            <option value='/currency/auction/rub/buy/all/' >&#9675; Все города</option>
+          
+            <option data-count="53" value='/currency/auction/rub/buy/kiev/'  selected='selected' >Киев</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/berdjansk/' >Бердянск</option>
+          
+            <option data-count="6" value='/currency/auction/rub/buy/vinnitsa/' >Винница</option>
+          
+            <option data-count="51" value='/currency/auction/rub/buy/dnepropetrovsk/' >Днепр (Днепропетровск)</option>
+          
+            <option data-count="87" value='/currency/auction/rub/buy/donetsk/' >Донецк</option>
+          
+            <option data-count="1" value='/currency/auction/rub/buy/zhitomir/' >Житомир</option>
+          
+            <option data-count="8" value='/currency/auction/rub/buy/zaporozhye/' >Запорожье</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/ivano-frankovsk/' >Ивано-Франковск</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/kievobl/' >Киевская обл.</option>
+          
+            <option data-count="6" value='/currency/auction/rub/buy/kremenchug/' >Кременчуг</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/krivoyrog/' >Кривой Рог</option>
+          
+            <option data-count="4" value='/currency/auction/rub/buy/kirovograd/' >Кропивницкий</option>
+          
+            <option data-count="3" value='/currency/auction/rub/buy/lugansk/' >Луганск</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/lutsk/' >Луцк</option>
+          
+            <option data-count="10" value='/currency/auction/rub/buy/lvov/' >Львов</option>
+          
+            <option data-count="8" value='/currency/auction/rub/buy/mariupol/' >Мариуполь</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/melitopol/' >Мелитополь</option>
+          
+            <option data-count="1" value='/currency/auction/rub/buy/nikolaev/' >Николаев</option>
+          
+            <option data-count="2" value='/currency/auction/rub/buy/odessa/' >Одесса</option>
+          
+            <option data-count="2" value='/currency/auction/rub/buy/pavlograd/' >Павлоград</option>
+          
+            <option data-count="2" value='/currency/auction/rub/buy/poltava/' >Полтава</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/rovno/' >Ровно</option>
+          
+            <option data-count="9" value='/currency/auction/rub/buy/sumy/' >Сумы</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/ternopol/' >Тернополь</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/uzhgorod/' >Ужгород</option>
+          
+            <option data-count="75" value='/currency/auction/rub/buy/kharkov/' >Харьков</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/kherson/' >Херсон</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/khmelnitskiy/' >Хмельницкий</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/cherkassy/' >Черкассы</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/chernigov/' >Чернигов</option>
+          
+            <option data-count="0" value='/currency/auction/rub/buy/chernovtsy/' >Черновцы</option>
+          
+        </select>
+      </div>
+    </div>
+    
+  </div>
+      
+
+      <div class="mfm-grey-bg">
+
+        <div class="au-status">
+
+
+          <div class="au-status--group">
+            <div class="au-status--group">
+              <div class="au-mid-buysell">
+                <small class="au-mid-buysell--title">Средняя покупка:</small>
+                0,454 грн
+              </div>
+            </div>
+            <div class="au-status--group">
+              <div class="au-mid-buysell">
+                <small class="au-mid-buysell--title">Средняя продажа:</small>
+                0,458 грн
+                <i class="icon-help-circled-contour mfm-tooltip mfm-tooltip-top" style="font-size: 12px;position: relative;top: -6px;">
+                  <span class="mfm-tooltip-body">
+                    Средний курс рассчитан как медиана курсов из 1226 объявлений, опубликованных за последние 12 часов. Заявки с завышенным или заниженным курсом не учитываются. Обновляется каждые 15 минут.
+                    <hr>
+                  </span>
+                </i>
+              </div>
+            </div>
+
+            
+          </div>
+
+
+
+          <div class="au-status--group">
+            <div class="au-status--group">
+              <div class="au-pbar">
+                На покупку&nbsp;
+                <span class="au-pbar--panel mfm-tooltip-right-top mfm-tooltip">
+                  <span class="mfm-tooltip-body">
+                  
+                    <span class="au-pbar-tooltip-grey"><strong>24</strong>&nbsp;заявки доступны вам</span><br>
+                    <span class="au-pbar-tooltip-blue"><strong>42</strong>&nbsp;заявки доступны Pro-пользователям</span>
+                    <br><a href="/currency/auction/pro/?mpr=Auction_pro&mpl=page&mcr=stat">Подробнее о Pro-версии</a>
+                  
+                  <hr>
+                  </span>
+                  <span style="width: 31px;" class="au-pbar--bar"> </span>
+                  <span style="width: 54px;" class="au-pbar--bar au-pbar--bar-pro"> </span>
+
+                </span>
+                
+                  24 заявки
+                
+              </div>
+              <div class="au-pbar">
+                На продажу
+                <span class="au-pbar--panel mfm-tooltip-right-bottom mfm-tooltip">
+                  <span class="mfm-tooltip-body">
+                  <hr>
+                  
+                    <span class="au-pbar-tooltip-grey"><strong>29</strong>&nbsp;заявок доступно вам</span><br>
+                    <span class="au-pbar-tooltip-blue"><strong>53</strong>&nbsp;заявки доступны Pro-пользователям</span>
+                    <br><a href="/currency/auction/pro/?mpr=Auction_pro&mpl=page&mcr=stat">Подробнее о Pro-версии</a>
+                  
+                  </span>
+                  <span style="width: 38px;" class="au-pbar--bar"> </span>
+                  <span style="width: 69px;" class="au-pbar--bar au-pbar--bar-pro"> </span>
+                </span>
+                
+                  29 заявок
+                
+              </div>
+            </div>
+
+  
+            <div class="au-status--group">
+              <div class="au-pbar">
+                Покупают
+                <span class="au-pbar--panel mfm-tooltip-top mfm-tooltip">
+                  <span class="mfm-tooltip-body">
+                  
+                    <span class="au-pbar-tooltip-grey"><strong>17 520 006&nbsp; <i class='rurs'>P</i></strong> покупают на валютном аукционе</span><br>
+                    <span class="au-pbar-tooltip-blue"><strong>31 790 013&nbsp; <i class='rurs'>P</i></strong> покупают на валютном аукционе Pro</span>
+                    <br><a href="/currency/auction/pro/?mpr=Auction_pro&mpl=page&mcr=stat">Подробнее о Pro-версии</a>
+                  
+                  <hr>
+                  </span>
+                  <span style="width: 39px;" class="au-pbar--bar"> </span>
+                  <span style="width: 70px;" class="au-pbar--bar au-pbar--bar-pro"> </span>
+                </span>
+                
+                  17 520 006  <i class='rurs'>P</i>
+                
+              </div>
+              <div class="au-pbar">
+                Продают&nbsp;&nbsp;
+                <span class="au-pbar--panel mfm-tooltip-bottom mfm-tooltip">
+                  <span class="mfm-tooltip-body">
+                  <hr>
+                  
+                    <span class="au-pbar-tooltip-grey"><strong>16 209 759&nbsp; <i class='rurs'>P</i></strong> продают на валютном аукционе</span><br>
+                    <span class="au-pbar-tooltip-blue"><strong>29 529 516&nbsp; <i class='rurs'>P</i></strong> продают на валютном аукционе Pro</span>
+                    <br><a href="/currency/auction/pro/?mpr=Auction_pro&mpl=page&mcr=stat">Подробнее о Pro-версии</a>
+                  
+                  </span>
+                  <span style="width: 36px;" class="au-pbar--bar"> </span>
+                  <span style="width: 65px;" class="au-pbar--bar au-pbar--bar-pro"> </span>
+                </span>
+                
+                  16 209 759  <i class='rurs'>P</i>
+                
+              </div>
+            </div>
+          </div>
+  
+
+        </div><!-- end status -->
+
+      <div class="js-mfva-archive mfz-v-hidden" style="display:none;text-align:right;position:relative;background-color:#fff;border:1px solid #CCC;border-bottom:0;padding:8px 10px 0;">
+        <a href="/currency/auction/archive/rub/kiev" class="mfmArchive-btn-light">Архив курсов  &rarr;</a>
+        <a href="#" class="js-mfva-closeChart icon-cancel mfm-close-chart" style="display:block;position:absolute;right:-1px;top: -38px;color:#838383;height: 38px;background-color: #fff;padding: 6px;border-left: 1px solid #ccc;border-right: 1px solid #ccc;border-top: 2px solid #838383;"></a>
+      </div>
+
+
+      <div class="au-deals-wrap">
+        <div class="au-buy-sell-tabs">
+        
+          <h3 class="active"><a href="/currency/auction/rub/buy/kiev/?presort=&sort=time&order=desc">ПОКУПАЮТ</a></h3>
+          <h3><a href="/currency/auction/rub/sell/kiev/?presort=&sort=time&order=desc">ПРОДАЮТ</a></h3>
+        
+        </div>
+
+        
+        
+        
+        
+        
+        
+        
+
+        
+
+        
+
+        
+          
+           
+<div class="au-dropdown-filters">
+
+    <!-- <input type="text" placeholder="Поиск по району" value="Все районы" class="js-district-filter"> -->
+    <!-- <span class=" mfm-caret-down"> -->
+    <div class="au-dropdown-filter--group">
+      <input type="text" class="js-district-filter js-district-filter-input" value="Все районы">
+    </div>
+
+    <div class="au-dropdown-filter--group">
+      
+      <div class="au-dropdown-filter--chb-group is-inline">
+        <label onclick="window.location = '?presort=rating&sort=time&order=desc'">
+          <input type="checkbox" > <span onclick="ga('send', 'event', 'vapro', 'filter', 'rate')">Сортировать по рейтингу</span>
+        </label>
+      </div>
+      
+    </div>
+
+
+</div>
+
+<div class="au-deals-sort au-deals-sort-pro">
+  <a href="?presort=&sort=time&order=asc" class="au-deal-time au-sort-param active">ВРЕМЯ
+    <i class="icon-sort-down"></i></a>
+
+    
+      <a href="?presort=&sort=course&order=desc" class="au-deal-currency au-sort-param">КУРС
+    
+      <i class="icon-sort"></i>
+    </a>
+
+  <a href="?presort=&sort=amount&order=desc" class="au-deal-sum au-sort-param" >СУММА
+    <i class="icon-sort"></i></a>
+
+  <div class="au-empty-cell"></div>
+  <span class="au-dealer-phone au-sort-param">ТЕЛЕФОН</span>
+  <!-- <div class="au-deal-filters au-sort-param">
+
+
+
+  </div> -->
+
+</div>
+
+  <!-- WGT -->
+  <div class="mfSelect-wrap mfSelect-triangle js-district-filter-body" style="display: none;">
+    <div class="mfSelect-lists-scroll-view">
+      <div class="mfSelect-lists-container">
+        <div class="mfSelect-list-item active"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs0"  type="checkbox" checked>Все районы</label></div>
+        <div class="mfSelect-list-item"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs1"  type="checkbox">Голосеевский</label></div>
+        <div class="mfSelect-list-item"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs2"  type="checkbox">Дарницкий</label></div>
+        <div class="mfSelect-list-item"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs3"  type="checkbox">Деснянский</label></div>
+        <div class="mfSelect-list-item"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs4"  type="checkbox">Днепровский</label></div>
+        <div class="mfSelect-list-item"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs5"  type="checkbox">Оболонский</label></div>
+        <div class="mfSelect-list-item"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs6"  type="checkbox">Печерский</label></div>
+        <div class="mfSelect-list-item"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs7"  type="checkbox">Подольский</label></div>
+        <div class="mfSelect-list-item"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs8"  type="checkbox">Святошинский</label></div>
+        <div class="mfSelect-list-item"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs9"  type="checkbox">Соломенский</label></div>
+        <div class="mfSelect-list-item"><label class="mfSelect-col1"><input class="mfSelect-checkbox" value="dfMfs10" type="checkbox">Шевченковский</label></div>
+      </div>
+    </div>
+    <!-- <div class="mfSelect-list-item mfSelect-bottom-tags" data-href="#bottomLink">Показать</div> -->
+  </div>
+  <!-- WGT -->
+
+
+          
+          
+          
+          <script>
+
+            var mfSelectJSON = {
+              "dfMfs0":{
+                "name":"Все районы",
+                "tags":[""]
+              },
+              "dfMfs1":{
+                "name":"Голосеевский",
+                "tags":["Голосеево","Дворец Украина","Палац Украіна","Палац Україна","Дворец Україна","Палац Украина","Теремки","Магелан","Т Е Р Е М К И","ТЦ Магелан","Олимпийская","Голосеевский","Демеевка","ВДНХ","Васильковская","Лыбидская","Лыбедская","океанплаза","OCEAN PLAZA","OCEANPLAZA","Либідська"]
+              },
+              "dfMfs2":{
+                "name":"Дарницкий",
+                "tags":["Дарницкий","Дарница","Дарницький","вырлица","черниговская, Дарница","Красный хутор","Бровары","рынок Юность","Юность","Позняки","П О З Н Я К И","харьковский","Гмыри","Алладин","Осокорки","Харёк"]
+              },
+              "dfMfs3":{
+                "name":"Деснянский",
+                "tags":["Деснянский","Троещино","Троещина","трощина","троя","деснянский","бальзака","флоренция"]
+              },
+              "dfMfs4":{
+                "name":"Днепровский",
+                "tags":["Днепровский","Лесная","Магнитагорская","воскресенка","Русановка","Лесная","Левобережная","Расковой","Ленинградская площадь","Ленинградская","Березняки"]
+              },
+              "dfMfs5":{
+                "name":"Оболонский",
+                "tags":["Оболонский","Куреневка","Оболонь","Минская","O B O L O N J","Героев Днепр","Героев Днепра","Луговая","Автозаводская","Минская","Пл. Шевченка","оболонь центр","петровка"]
+              },
+              "dfMfs6":{
+                "name":"Печерский",
+                "tags":["Печерский","Печерск","Дружбы Народов","центр, печерск.","Палац Спорту","Gulliver","Печерск, Голосеево","Бассейная"]
+              },
+              "dfMfs7":{
+                "name":"Подольский",
+                "tags":["Подольский","Подол","Петровка","КОНТРАКТОВАЯ","Воздвиженская","ул. Межигорская","подол куренёвка"]
+              },
+              "dfMfs8":{
+                "name":"Святошинский",
+                "tags":["Борщаговка","Героев Космоса","Нивки, Святошин","Академгородок","Святошинский","Святошино","Житомирская","Академ-Нивки","Академгородок","Окружная","Ирпень","Буча","софиевская борщаговка","ЖК.София"]
+              },
+              "dfMfs9":{
+                "name":"Соломенский",
+                "tags":["Соломенский","Соломенка","Интер","Вокзальная","Цирк","КПИ","Севастопольская","Большевик","Гарматная","караваевы дачи","Протасов","Гринченка","индустриальный","Шулявка","ЖД","Лепсе","ушинского","радиорынок","Саксаганського","Чоколовка","Турецкий городок","отрадный"]
+              },
+              "dfMfs10":{
+                "name":"Шевченковский",
+                "tags":["Куреневка","Крещатик","Артема","Шевченковский","Берестейская","Золотые ворота","Победы","Университет","Лукьяновка","НИВКИ", "Сырец,","Экскаваторная","Майдан","Хрещатик","Центр","Льва Толстого","НивкиСырец","Дорогожичи","Жилянская","Большая Житомирская","дорогожичи","цирк"]
+              }
+            };
+
+          </script>
+          
+
+        <div class="au-deals-list">
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32166582" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:34</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >700 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    центр, Леси Украинки, Парус, Бесcарабка, м. льва толстого, 
+      можно частями, обменный пункт, отделение банка, безопасно, счетчик, детектор валюты ⏰9 -20 обмен USD, EUR, RUR, PLN, GBP, CNY
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        068&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235645" data-bid-id="32166582" >xxx-x</a>7-95
+      
+
+      
+    </span>
+  </div>
+
+  
+  <div class="au-deal-row au-deal-row--rating js-deal-row-rating">
+    <span class="au-deal-rating">
+    
+      
+      
+      
+      
+      
+      
+      <a class="mfm-tooltip mfm-tooltip-right-top au-rating-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-rating-tooltip--body">
+            50% положительных отзывов по оценкам
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Pro-пользователей</span>
+          </span>
+
+          <hr>
+        </span>
+        <span class="au-rating-label"><span>Рейтинг</span>:</span>
+        <span class="au-deal-rating-star" data-rate="5"><span></span></span>
+      </a>
+    
+
+    
+    </span>
+  </div>
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32162033" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:34</small>
+  
+  <span class="au-deal-currency">0,453</span>
+  <span class="au-deal-sum" >1 000 001 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    Б А Н К, пр. Бандери м. Петрiвка, бiля Макдональдс, 
+      целиком, обменный пункт, Обмiнний пунк у банку, до 500 т р курс договорний, можливо за доллар, евро ., c 9 до 19 
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        073&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235645" data-bid-id="32162033" >xxx-x</a>4-59
+      
+
+      
+    </span>
+  </div>
+
+  
+  <div class="au-deal-row au-deal-row--rating js-deal-row-rating">
+    <span class="au-deal-rating">
+    
+      
+      
+      
+      
+      
+      
+      <a class="mfm-tooltip mfm-tooltip-right-top au-rating-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-rating-tooltip--body">
+            25% положительных отзывов по оценкам
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Pro-пользователей</span>
+          </span>
+
+          <hr>
+        </span>
+        <span class="au-rating-label"><span>Рейтинг</span>:</span>
+        <span class="au-deal-rating-star" data-rate="2"><span></span></span>
+      </a>
+    
+
+    
+
+      
+      <a class="au-exchanger-mark mfm-tooltip mfm-tooltip-right-top au-license-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-license-tooltip--body">
+            <strong>Лицензия проверена «Минфином»</strong>
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Как получить статус обменника?</span>
+          </span>
+        </span>
+        Лицензированный обменник
+      </a>
+      
+        <strong>Адрес:</strong> Киев, Проспект Московский, 16
+      
+      
+
+      
+
+      
+    </span>
+  </div>
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32167710" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:32</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >700 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    
+      целиком, обменный пункт, Куреневка Подол, Виноградарь, курс от суммы. обмен всех валют. с 10 :00 до 20 :00 
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        050&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235524" data-bid-id="32167710" >xxx-x</a>0-34
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32166654" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:32</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >600 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    центр, дворец спорта, трц gulliver, крещатик, 
+      можно частями, обменный пункт, отделение банка, безопасно, счетчик, детектор валюты ⏰9 -20 обмен USD, EUR, RUR, PLN, GBP, CNY
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        050&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235524" data-bid-id="32166654" >xxx-x</a>2-21
+      
+
+      
+    </span>
+  </div>
+
+  
+  <div class="au-deal-row au-deal-row--rating js-deal-row-rating">
+    <span class="au-deal-rating">
+    
+      
+      
+      
+      
+      
+      
+      <a class="mfm-tooltip mfm-tooltip-right-top au-rating-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-rating-tooltip--body">
+            35% положительных отзывов по оценкам
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Pro-пользователей</span>
+          </span>
+
+          <hr>
+        </span>
+        <span class="au-rating-label"><span>Рейтинг</span>:</span>
+        <span class="au-deal-rating-star" data-rate="3"><span></span></span>
+      </a>
+    
+
+    
+    </span>
+  </div>
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32152836" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:32</small>
+  
+  <span class="au-deal-currency">0,455</span>
+  <span class="au-deal-sum" >700 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    центр. , 
+      можно частями, обменный пункт, , Обмен валют. можно частями, Львовская пл. или кросс дорого 
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        098&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235524" data-bid-id="32152836" >xxx-x</a>6-30
+      
+
+      
+    </span>
+  </div>
+
+  
+  <div class="au-deal-row au-deal-row--rating js-deal-row-rating">
+    <span class="au-deal-rating">
+    
+      
+      
+      
+      
+      
+      
+      <a class="mfm-tooltip mfm-tooltip-right-top au-rating-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-rating-tooltip--body">
+            14% положительных отзывов по оценкам
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Pro-пользователей</span>
+          </span>
+
+          <hr>
+        </span>
+        <span class="au-rating-label"><span>Рейтинг</span>:</span>
+        <span class="au-deal-rating-star" data-rate="1"><span></span></span>
+      </a>
+    
+
+    
+    </span>
+  </div>
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32151677" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:32</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >300 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    КПИ, Обмен Валют, 
+      можно частями, обменный пункт, безопасно, от 10 тыс
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        095&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235524" data-bid-id="32151677" >xxx-x</a>7-02
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32151248" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:32</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >500 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    ПОДОЛ, Контракт. пл, Почтовая пл, Петровка, Оболонь, 
+      целиком, обменный пункт, безопасно, обмен на USD-60.1, EUR, PLN, CHF, GBP. ⏰9 -19 курс уточняйте. 
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        066&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235524" data-bid-id="32151248" >xxx-x</a>6-74
+      
+
+      
+    </span>
+  </div>
+
+  
+  <div class="au-deal-row au-deal-row--rating js-deal-row-rating">
+    <span class="au-deal-rating">
+    
+      
+      
+      
+      
+      
+      
+      <a class="mfm-tooltip mfm-tooltip-right-top au-rating-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-rating-tooltip--body">
+            46% положительных отзывов по оценкам
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Pro-пользователей</span>
+          </span>
+
+          <hr>
+        </span>
+        <span class="au-rating-label"><span>Рейтинг</span>:</span>
+        <span class="au-deal-rating-star" data-rate="4"><span></span></span>
+      </a>
+    
+
+    
+
+      
+      <a class="au-exchanger-mark mfm-tooltip mfm-tooltip-right-top au-license-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-license-tooltip--body">
+            <strong>Лицензия проверена «Минфином»</strong>
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Как получить статус обменника?</span>
+          </span>
+        </span>
+        Лицензированный обменник
+      </a>
+      
+      
+
+      
+
+      
+    </span>
+  </div>
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32081293" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:32</small>
+  
+  <span class="au-deal-currency">0,455</span>
+  <span class="au-deal-sum" >1 400 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    м. Печерская, Демеевская, Ленинградская пл. , 
+      можно частями, могу подъехать, обменный пункт, БАНК от 100 тыс., Выезд от 500 тыс. 
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        095&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235524" data-bid-id="32081293" >xxx-x</a>5-07
+      
+
+      
+    </span>
+  </div>
+
+  
+  <div class="au-deal-row au-deal-row--rating js-deal-row-rating">
+    <span class="au-deal-rating">
+    
+      
+      
+      
+      
+      
+      
+      <a class="mfm-tooltip mfm-tooltip-right-top au-rating-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-rating-tooltip--body">
+            41% положительных отзывов по оценкам
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Pro-пользователей</span>
+          </span>
+
+          <hr>
+        </span>
+        <span class="au-rating-label"><span>Рейтинг</span>:</span>
+        <span class="au-deal-rating-star" data-rate="4"><span></span></span>
+      </a>
+    
+
+    
+    </span>
+  </div>
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32054581" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:32</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >250 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    Шулявская, Индустриальный мост, Берестейская, КПИ, 
+      можно частями, обменный пункт, безопасно, отд банка, парковка, до 20 -00 Обмен на другую валюту
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        097&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235524" data-bid-id="32054581" >xxx-x</a>2-18
+      
+
+      
+    </span>
+  </div>
+
+  
+  <div class="au-deal-row au-deal-row--rating js-deal-row-rating">
+    <span class="au-deal-rating">
+    
+      
+      
+      
+      
+      
+      
+      <a class="mfm-tooltip mfm-tooltip-right-top au-rating-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-rating-tooltip--body">
+            70% положительных отзывов по оценкам
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Pro-пользователей</span>
+          </span>
+
+          <hr>
+        </span>
+        <span class="au-rating-label"><span>Рейтинг</span>:</span>
+        <span class="au-deal-rating-star" data-rate="5"><span></span></span>
+      </a>
+    
+
+    
+    </span>
+  </div>
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32158280" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:30</small>
+  
+  <span class="au-deal-currency">0,455</span>
+  <span class="au-deal-sum" >500 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    ЛЕНИНГРАДКА обменник возле Bills лимон , 
+      можно частями, обменный пункт
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        067&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235404" data-bid-id="32158280" >xxx-x</a>5-59
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal au-exchanger" data-bid="32154376" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:30</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >50 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    Центр, 
+      можно частями, могу подъехать, обменный пункт, Актуально пока есть заявка
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        068&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489235404" data-bid-id="32154376" >xxx-x</a>9-39
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32117507" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:22</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >500 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    Ленинградская площадь (военторг), 
+      можно частями, от 5000 
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        066&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489234923" data-bid-id="32117507" >xxx-x</a>0-55
+      
+
+      
+    </span>
+  </div>
+
+  
+  <div class="au-deal-row au-deal-row--rating js-deal-row-rating">
+    <span class="au-deal-rating">
+    
+      
+      
+      
+      
+      
+      
+      <a class="mfm-tooltip mfm-tooltip-right-top au-rating-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-rating-tooltip--body">
+            32% положительных отзывов по оценкам
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Pro-пользователей</span>
+          </span>
+
+          <hr>
+        </span>
+        <span class="au-rating-label"><span>Рейтинг</span>:</span>
+        <span class="au-deal-rating-star" data-rate="3"><span></span></span>
+      </a>
+    
+
+    
+    </span>
+  </div>
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32170095" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:18</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >100 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    Лукьяновка, КПИ, Теремки, 
+      можно частями, обменник, безопасно, удобно, частями
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        099&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="0" data-timer="1489234737" data-bid-id="32170095" >xxx-x</a>8-93
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32155630" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:16</small>
+  
+  <span class="au-deal-currency">0,455</span>
+  <span class="au-deal-sum" >2 500 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    
+      можно частями, могу подъехать, Левобережная. Русановский бульвар. Обменный пункт. Курс актуальный. 
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        063&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489234564" data-bid-id="32155630" >xxx-x</a>8-05
+      
+
+      
+    </span>
+  </div>
+
+  
+  <div class="au-deal-row au-deal-row--rating js-deal-row-rating">
+    <span class="au-deal-rating">
+    
+      
+      
+      
+      
+      
+      
+      <a class="mfm-tooltip mfm-tooltip-right-top au-rating-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-rating-tooltip--body">
+            48% положительных отзывов по оценкам
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Pro-пользователей</span>
+          </span>
+
+          <hr>
+        </span>
+        <span class="au-rating-label"><span>Рейтинг</span>:</span>
+        <span class="au-deal-rating-star" data-rate="4"><span></span></span>
+      </a>
+    
+
+    
+    </span>
+  </div>
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32169256" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:09</small>
+  
+  <span class="au-deal-currency">0,455</span>
+  <span class="au-deal-sum" >500 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    
+      можно частями, обмен. пункт, комната пересчета, детектор, парковка., удобно
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        073&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="0" data-timer="1489234154" data-bid-id="32169256" >xxx-x</a>2-22
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+          
+            
+            
+            <div class="au-deal" style="text-align: center; padding-top: 5px; background-color: #FFFFFF;  overflow: hidden;" tabindex="0">
+              <!-- BANNER PLACE: company-banner -->
+
+  <div class="ad-type-html ad-item ad-content" style="overflow: hidden;  height: 250px;  width: 300px; display: block; margin:0 auto;">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-7462546778979920"
+data-ad-slot="9862275746/1025007386">
+</ins>
+<script>
+(adsbygoogle=window.adsbygoogle || []).push({});
+</script>
+
+    
+
+    </div>
+
+
+            </div>
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32162134" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:06</small>
+  
+  <span class="au-deal-currency">0,453</span>
+  <span class="au-deal-sum" >900 005 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    Саксаганског, льва толстого, 
+      можно частями, Или за €, £, $… куплю обменный пункт или сеть..., 0 … от суммы… 
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        063&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489233963" data-bid-id="32162134" >xxx-x</a>2-38
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+              
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32058711" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">14:06</small>
+  
+  <span class="au-deal-currency">0,455</span>
+  <span class="au-deal-sum" >1 600 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    ДАРНИЦКАЯ пл Обменный пункт, 
+      можно частями, От 500 т рублей. Подьеду. Звоните
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        093&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="3" data-timer="1489233963" data-bid-id="32058711" >xxx-x</a>9-88
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+              
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32166659" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">13:37</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >500 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    м. Лыбидская. Дружбы народов. Теремки, 
+      можно частями, Обменный пункт. курс от суммы
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        093&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="0" data-timer="1489232233" data-bid-id="32166659" >xxx-x</a>0-50
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+              
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32165015" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">13:13</small>
+  
+  <span class="au-deal-currency">0,453</span>
+  <span class="au-deal-sum" >200 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    м. Дружбы народов, 
+      можно частями, обменный пункт
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        095&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="0" data-timer="1489230826" data-bid-id="32165015" >xxx-x</a>1-21
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+              
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32164655" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">13:10</small>
+  
+  <span class="au-deal-currency">0,453</span>
+  <span class="au-deal-sum" >200 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    М Дружбы народов, 
+      целиком, обмен валют
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        098&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="0" data-timer="1489230632" data-bid-id="32164655" >xxx-x</a>4-44
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+              
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32164299" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">13:06</small>
+  
+  <span class="au-deal-currency">0,453</span>
+  <span class="au-deal-sum" >2 300 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    
+      можно частями, Александр или 59.60 за доллар
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        098&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="0" data-timer="1489230364" data-bid-id="32164299" >xxx-x</a>1-08
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+              
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32162439" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">12:39</small>
+  
+  <span class="au-deal-currency">0,450</span>
+  <span class="au-deal-sum" >600 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    
+      можно частями
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        091&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="0" data-timer="1489228787" data-bid-id="32162439" >xxx-x</a>2-22
+      
+
+      
+    </span>
+  </div>
+
+  
+  <div class="au-deal-row au-deal-row--rating js-deal-row-rating">
+    <span class="au-deal-rating">
+    
+      
+      
+      
+      
+      
+      
+      <a class="mfm-tooltip mfm-tooltip-right-top au-rating-tooltip">
+        <span class="mfm-hover-tooltip"></span>
+        <span class="mfm-tooltip-body">
+          <span class="au-rating-tooltip--body">
+            29% положительных отзывов по оценкам
+            <span class="au-promo-link" onclick="window.location='/currency/auction/pro'">Pro-пользователей</span>
+          </span>
+
+          <hr>
+        </span>
+        <span class="au-rating-label"><span>Рейтинг</span>:</span>
+        <span class="au-deal-rating-star" data-rate="2"><span></span></span>
+      </a>
+    
+
+    
+    </span>
+  </div>
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+              
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32162054" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">12:34</small>
+  
+  <span class="au-deal-currency">0,453</span>
+  <span class="au-deal-sum" >220 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    м Дружбы народов, 
+      можно частями, детектор, обмен валют
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        063&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="0" data-timer="1489228477" data-bid-id="32162054" >xxx-x</a>7-77
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+              
+            
+          
+            
+            
+
+            
+
+
+
+
+
+
+
+<div class="au-deal js-au-deal" data-bid="32161317" tabindex="0">
+  <div class="au-deal-row js-deal-row-default">
+  
+    <small class="au-deal-time">12:23</small>
+  
+  <span class="au-deal-currency">0,454</span>
+  <span class="au-deal-sum" >700 000 <label title="российские рубли"> <i class='rurs'>P</i></label></span>
+
+
+  <span class="au-deal-msg">
+    
+    <span class="au-msg-wrapper js-au-msg-wrapper">
+    любой, 
+      можно частями, могу подъехать, Андрей
+      
+
+    </span>
+  </span>
+
+  
+
+    <span class="au-dealer-phone">
+      
+        063&nbsp;<a class="js-showPhone au-dealer-phone-xxx" data-mf="3" data-status="0" data-timer="1489227824" data-bid-id="32161317" >xxx-x</a>9-20
+      
+
+      
+    </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+            
+            
+            
+              
+            
+          
+          
+          
+        </div>
+      </div>
+      <h2 class="au-administration-warning">Внимание: администрация не несёт ответственности за содержание объявлений на валютном аукционе.</h2>
+      <div class="au-administration-warning"><!-- BANNER PLACE: content-bottom -->
+
+    <script type="text/javascript" data-key="84D6-12B9-9FCB-1647-1YtHXj">
+  var __nc_widgets = __nc_widgets || [];
+  var __nc_j = __nc_j || null;
+
+  __nc_widgets.push(['84D6-12B9-9FCB-1647-1YtHXj', 'minfin.com.ua', 'advertisement', 1, 1, 0, 'ua']);
+
+  (function() {
+    var __nc = document.createElement('script'); __nc.type = 'text/javascript'; __nc.async = true; __nc.id = 'Nextclick_Manager';
+    __nc.src = 'http://nextclick.com.ua/widget/widget.advertisement.1.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(__nc, s);
+  })();
+</script>
+    
+
+</div>
+      </div> <!-- end grey bg -->
+    </div> <!-- end content column -->
+  <!-- end mfz container -->
+  </div>
+
+  
+
+
+  <div class="modal fade" id="au-rules">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Правила публикации объявлений на валютном аукционе</h4>
+      </div>
+      <div class="modal-body">
+        <h4>График работы валютного аукциона</h4>
+        <p>Валютный аукцион на портале Минфин работает <strong>24/7</strong>.<br />
+          Операторы технической поддержки работают <strong>ежедневно с 9:00 до 21:00</strong>.</p>
+        <h4>Размещение объявлений</h4>
+        <p>Ваше объявление может быть размещено <strong>только на подтвержденный</strong> вами номер телефона. Подтвердить номер телефона можно, добавив его в личном кабинете, в разделе &laquo;<a href="/profile/?r=d74634ccd8f3d40c24eff26905a7f706">Данные&nbsp;обо&nbsp;мне</a>&raquo; или при создании заявки. Подтверждение мобильных номеров происходит через sms-верификацию. Подтверждение городских номеров &ndash; через звонок оператора на указанный вами номер.</p>
+        <p>Объявление находится на сайте <strong>12 часов</strong>, а затем автоматически удаляется.</p>
+        <p>Один пользователь может разместить только одно объявление на покупку и одно объявление на продажу по каждой из валют.</p>
+        <h4>Информация в объявлении</h4>
+        <p>Указанный вами курс не должен отличаться от среднего курса более чем на 15%.</p>
+        <p>Информация в объявлении &ndash; общедоступна. Администрация сайта не несет ответственности за содержание объявления.</p>
+        <p>Объявление не должно содержать чрезмерное число вспомогательных символов и более одного слова, написанного заглавными буквами.</p>
+        <h4>Удаление объявления</h4>
+        <p>Объявление может быть обновлено пользователем, но не чаще 1 раза в 2 часа. При обновлении нельзя изменить текст объявления, Объявление нельзя редактировать, его можно удалить и разместить новое. Для удаления объявления – нажмите на красный крестик напротив вашего объявления в списке или в разделе «Мои объявления» на странице Валютного аукциона. Функция редактирования объявлений доступна только пользователям версии Pro (<a href="/currency/auction/pro/?mpr=Auction_pro&mpl=page&mcr=rules">подробнее</a>).</p>
+        <p><strong>Объявление будет удалено</strong> администрацией сайта, если пользователь опубликовал <strong>телефон или курс операции в тексте объявления</strong>, а не в соответствующих специальных полях, <strong>нарушил <a href="/using-rules/" target="_blank">Правила сайта</a></strong> или если на объявления данного пользователя <strong>постоянно поступают жалобы</strong> от участников аукциона.</p>
+        <p><strong>Внимание!</strong> В случае удаления выделенного объявления, в связи с нарушением правил Валютного аукциона, деньги за предоставленную услугу выделения не возвращаются.</p>
+        <h4>Рейтинг</h4>
+        <p>Рейтинг - это совокупность всех оценок, которые поставили вам Pro-пользователи Валютного аукциона. Рейтинг показывает уровень доверия к каждому пользователю и рассчитывается по алгоритму, который мы не разглашаем для того, чтоб избежать накруток. "Минфин" не влияет на рейтинг пользователей.</p>
+        <h4>Валютный аукцион Pro</h4>
+        <p>Подписаться на Pro-версию Валютного аукциона и получить дополнительные возможности можно <a href="/currency/auction/pro/?mpr=Auction_pro&mpl=page&mcr=rules">здесь</a>.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+                </div>
+            </div>
+            <!-- End content block  -->
+            
+        </div>
+    </div>
+</main>
+
+<div class="mfz-social-footer-btns mfz-section">
+    <div class="mfz-container">
+        <span>Читайте нас также:</span>
+        <a onclick="ga('send', 'event', 'SiteButton', 'twitter');" href="https://twitter.com/MinfinComUa"
+           target="_blank" class="icon-twitter-bird"></a>
+        <a onclick="ga('send', 'event', 'SiteButton', 'facebook');"
+           href="https://www.facebook.com/pages/%D0%9C%D0%B8%D0%BD%D1%84%D0%B8%D0%BD/156954217697441?fref=ts"
+           target="_blank" class="icon-facebook"></a>
+        <a onclick="ga('send', 'event', 'SiteButton', 'google+');"
+           href="https://plus.google.com/u/0/b/111474665256349195005/+minfincomua/posts" target="_blank"
+           class="icon-gplus"></a>
+    </div>
+</div>
+
+
+
+    
+
+
+<footer class="mfz-footer mfz-section">
+    <div class="mfz-container js-container">
+        <div class="mfz-footer-col js-col js-col-copyrights">
+            <div id="footerMenuCopyrights" class="mfz-footer-copyrights">
+                <p>© Минфин, 2008—2017.</p>
+                <p>Копирование и размещение материалов на&nbsp;других сайтах разрешается только с&nbsp;гиперссылкой&nbsp;вида:<br> www.minfin.com.ua</p>
+                <p><a href="/using-rules/">Правила пользования</a></p>
+                <p class="js-bigmir-counter">
+                    <script type="text/javascript"><!--
+                        function BM_Draw(oBM_STAT) {
+                            $('.js-bigmir-counter').append('<table cellpadding="0" cellspacing="0" border="0" style="display:inline;"><tr><td><div style="margin:0px;padding:0px;font-size:1px;width:88px;"><div style="background:url(\'http://i.bigmir.net/cnt/samples/diagonal/b58_top.gif\') no-repeat bottom; height:2px;"> </div><div style="font:10px Tahoma;background:url(\'http://i.bigmir.net/cnt/samples/diagonal/b58_center.gif\');"><div style="text-align:center;"><a href="http://www.bigmir.net/" target="_blank" style="color:#0000ab;text-decoration:none;font:10px Tahoma;">bigmir<span style="color:#ff0000;">)</span>net</a></div><div style="margin-top:3px;padding: 0px 6px 0px 6px;color:#003596;"><div style="float:left;font:10px Tahoma;">' + oBM_STAT.hosts + '</div><div style="float:right;font:10px Tahoma;">' + oBM_STAT.hits + '</div></div><br clear="all"/></div><div style="background:url(\'http://i.bigmir.net/cnt/samples/diagonal/b58_bottom.gif\') no-repeat top; height:2px;"> </div></div></td></tr></table>');
+                        }
+                        //-->
+                    </script>
+                <noscript><a href="http://www.bigmir.net/" target="_blank"><img
+                                src="http://c.bigmir.net/?v16800631&s16800631&t2" width="88" height="31"
+                                alt="bigmir)net TOP 100"
+                                title="bigmir)net TOP 100" border="0"/></a></noscript>
+
+                </p>
+            </div>
+        </div>
+
+        <div class="mfz-footer-col js-col">
+            <div id="footerMenuPopular" class="mfz-footer-popular">
+                <span class="mfz-footer-title">Популярные страницы</span>
+                <a href="/forum/">Блоги</a>,
+                <a href="/questions/">консультации экспертов</a><br/>
+                <a href="/currency/usd/">Курс доллара</a>,&nbsp;
+                <a href="/currency/eur/">курс евро</a>,&nbsp;
+                <a href="/currency/rub/">курс рубля</a><br/>
+                <a href="/currency/converter/">Конвертер валют</a>,&nbsp;
+                <a href="/credits/">кредиты</a>,&nbsp;
+                <a href="/deposits/">депозиты</a><br/>
+                <a href="/currency/">Курс валют</a>,&nbsp;
+                <a href="/currency/nbu/">курс НБУ</a>,&nbsp;
+                <a href="/currency/mb/">межбанк</a><br/>
+                <a href="/currency/discuss/?r=d74634ccd8f3d40c24eff26905a7f706">Валютный форум</a>,&nbsp;
+                <a href="/cabinet/talk/">переговорная</a>,<br/>
+                <a href="/company/ideabank/credits/">IDEAальна карта - 3 міс без %</a><br/>
+                <a href="/articles/">Архив публикаций</a>,&nbsp;
+                <a href="http://index.minfin.com.ua/index/infl/">Индекс инфляции</a>,&nbsp;
+                <a href="http://index.minfin.com.ua/index/salary/">Минимальная зарплата</a>,&nbsp;
+                <a href="/insurance/rating/kasko/">Каско</a>,&nbsp;
+                <a href="/insurance/rating/osago/">ОСАГО</a>
+            </div>
+        </div>
+
+        <div class="mfz-footer-col js-col">
+            <div id="footerMenuPopularBanks" class="mfz-footer-banks">
+                <span class="mfz-footer-title">Популярные страницы банков</span>
+                <a href="/company/privatbank/">ПриватБанк</a>,&nbsp;
+                <a href="/company/delta-bank/">Дельта Банк</a>,&nbsp;
+                <a href="/company/oschadbank/">Ощадбанк</a>,&nbsp;
+                <a href="/company/ukrsibbank/">УкрСиббанк</a>,&nbsp;
+                <a href="/company/alfa-bank/">Альфа-Банк</a>,&nbsp;
+                <a href="/company/ukrsocbank/">Укрсоцбанк</a>,<br/>
+                <a href="/company/pumb/">ПУМБ</a>,&nbsp;
+                <a href="/company/ukrgasbank/">Укргазбанк</a>
+            </div>
+        </div>
+
+        <div class="mfz-footer-col js-col">
+            <div id="footerMenuHelp" class="mfz-footer-help">
+                <span class="mfz-footer-title">Помощь</span>
+                <a href="/help/registration/">Что даёт регистрация</a>,&nbsp;
+                <a href="/users/minfin/blog/">Блог Минфина</a>,&nbsp;
+                <a href="/job/">Вакансии</a>,&nbsp;
+                <a href="/sitemap/">Карта сайта</a>,&nbsp;
+                <a href="/advertise/">Реклама</a>,&nbsp;
+                <a href="/contacts/">О сайте и редакции</a>
+                <div class="mfz-footer-search">
+                    <form action="/search/" method="GET">
+                        <span class="icon icon-magnifying-glass"></span>
+                        <input class="mfz-footer-search-input" type="text" name="text">
+                        <input type="hidden" name="searchid" value="1783219">
+                        <input type="hidden" name="l10n" value="ru">
+                        <button class="mfz-footer-search-submit" type="submit">Найти</button>
+                    </form>
+                </div>
+
+                <div >
+
+<a href="#" class="link-dotted red" id="feedbackBtn">Сообщить об ошибке</a>
+<div id="feedbackWnd" style="display:none;height:385px;width:380px;" class="bg-grey clear">
+  <div class="close">X</div>
+  <p style="font-size:12px;font-weight:bold;margin-bottom:5px">Сообщить об ошибке</p>
+  <p style="margin-bottom:5px">
+    <input type="radio" name="type" value="1" id="type1" checked="checked" /><label for="type1">Ошибка в тексте</label><br />
+    <input type="radio" name="type" value="2" id="type2" /><label for="type2">Что-то не работает</label><br />
+    <input type="radio" name="type" value="3" id="type3" /><label for="type3">Идея, пожелание</label>
+  </p>
+
+  <p>Гость пишет:</p>
+  <p><textarea id="feedbackText" data-uid="1"></textarea></p>
+  <p>Введите email, чтобы получить ответ:</p>
+  <p style="padding-bottom:10px;"><input type="text" name="email" id="feedbackEmail" value="" style="width: 300px;" /></p>
+  
+  <p><input type="button" name="submit" value="Отправить" id="feedbackSendBtn" /></p>
+</div>
+<div id="feedbackResultWnd" style="display:none;" class="bg-grey clear">
+  <div class="close">X</div>
+  <div class="text"></div>
+</div></div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- Modal -->
+    <div class="mfz-modal js-mfz-modal hidden">
+        <div class="mfz-modal-4scroll">
+            <div class="mfz-modal-tint"></div>
+            <div class="mfm-auth--reg js-mfz-auth-window hidden">
+                <span class="mfz-close-modal js-mfz-close-modal">&times;</span>
+
+                <form class="js-register-form" action="/register/" method="post">
+                    <h4>Регистрация</h4>
+
+                    <div class="mfm-auth--social">
+                        <a href="/auth/social/facebook" class="js-auth-social mfm-auth--social--btn icon-facebook"></a>
+                        <a href="/auth/social/vkontakte" class="js-auth-social mfm-auth--social--btn icon-vkontakte"
+                           data-width="700"
+                           data-height="500"></a>
+                        <a href="/auth/social/linkedin" class="js-auth-social mfm-auth--social--btn icon-linkedin"></a>
+                        <a href="/auth/social/google" class="js-auth-social mfm-auth--social--btn icon-gplus"></a>
+                    </div>
+                    <div class="mfm-auth--input-group js-mfz-no-email hidden">
+          <span
+                  class="mfm-auth--input-group-sub">В выбранной сети не указан ваш e-mail, войдите через другую сеть или зарегистрируйтесь на портале.</span>
+                    </div>
+                    <div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="loginRequired">Логин обязательное поле</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="loginCheck">Такой пользователь уже существует</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="loginValid">Только латинские  буквы и цифры</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="loginMinLenght">От 4 до 15 символов</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="lohinMaxLenght">От 4 до 15 символов</span>
+                        <input class="mfm-auth--input" name="Login" type="text" maxlength="15"
+                               placeholder="Логин" required>
+                        <span class="mfm-auth--input-group-sub">От 4 до 15 символов</span>
+                    </div>
+                    <div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="emailRequired">Email обязательное поле</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="emailCheck">Такой Email уже существует</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="emailValid">Введите корректный Email адрес</span>
+                        <input class="mfm-auth--input" type="email" placeholder="Email" name="Email" required>
+                    </div>
+                    <div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="passwordRequired">Пароль обязательное поле</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="passwordMinLenght">От 4 до 15 символов</span>
+                        <span class="js-form-error mfm-auth-error hidden"
+                              data-error="passwordMaxLenght">От 4 до 15 символов</span>
+                        <input class="mfm-auth--input" type="password" name="Password"
+                               placeholder="Пароль"
+                               required>
+                    </div>
+                    <div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="passwordCheck">Пароли не совпадают</span>
+                        <input class="mfm-auth--input" type="password" name="Password2"
+                               placeholder="Повтор пароля" required>
+                    </div>
+                    <div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="rulesCheck">Примите правила сайта</span>
+                        <input class="mfm-auth--checkbox" id="mc1" type="checkbox" name="Rules" checked required>
+                        <label class="mfm-auth--checkbox-label"
+                               for="mc1">Я согласен с <a target="_blank" href="/using-rules/">правилами</a></label>
+                    </div>
+                    <div class="mfm-auth--input-group">
+          <span class="js-form-error mfm-auth-error hidden"
+                data-error="privacyCheck">Примите соглашение</span>
+                        <input class="mfm-auth--checkbox" id="mc5" type="checkbox" name="Privacy" checked required>
+                        <label class="mfm-auth--checkbox-label"
+                               for="mc5">Я согласен с <a target="_blank" href="/policy/">политикой конфиденциальности</a></label>
+                    </div>
+                    <input type="hidden" name="action" value="register"/>
+                    <input type="hidden" name="check" value="3"/>
+                    <input type="hidden" name="ident" value="">
+                    <button class="mfm-auth--submit-btn" type="submit">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+<script type="text/javascript" src="/min/js/common.min.js?336"></script>
+<script type="text/javascript" src="/min/js/banners.min.js?336"></script>
+
+  <script src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="/min/js/content_auction.pro.min.js?336"></script>
+<script src="/js/bootstrap/bootstrap-for-modal.min.js?20170307"></script>
+<script src="/js/jquery/jquery.mf-select.js?20170307"></script>
+<!-- <script src="/js/jquery/jquery.sticky.js?20170307"></script> -->
+
+<script src="/js/jquery/jquery.mf-message.js?20170307"></script>
+<script src="/js/currency/au-promo-pro-tips.js?20170307"></script>
+
+<script>
+  var nowTime = 1489235732;
+  var delay = 5;
+
+
+</script>
+
+  <script>
+
+  // $('body').mfMessage({
+  //   title: 'Test title for mf-message sss',
+  //   text: 'Смотрите объявления об обмене валюты со всего интернета на одной странице в Pro-версии Валютного аукциона. <a href="#0">Перейти</a>',
+  //   themeClass: 'vapro',
+  //   // closeBtn:false,
+  //   // TTL:7,
+  //   closeOnOutsideClick: false,
+  //   position: 'center center'
+  // });
+
+
+
+  function getTagList(ids){
+    var tags = [];
+    $.each(ids, function(i, el){
+      $.each(mfSelectJSON, function(_i, _el){
+        if(_i === el){
+          tags = tags.concat( _el.tags );
+        }
+      });
+    });
+    return tags;
+  }
+
+
+  function checkForEmptyResults(){
+    $.each($('.au-deals-list'),function(i,el){
+      if ($(el).find('.au-deal:visible').length > 0) {
+        $(el).find('.au-deal-empty').remove();
+      } else if($(el).find('.au-deal-empty').length === 0){
+        $(el).append('<div class="au-deal-empty"><span>Нет объявлений, соответствующих данным параметрам</span></div>')
+      }
+    });
+  }
+
+
+
+  function scanDeals(id, keyWord,dealDiv){
+    $.each(dealsList, function(i,el){
+      if(el.text.indexOf(keyWord.toLowerCase())>-1){
+        $(el.deal).addClass(id);
+      }
+    });
+  }
+  function applyFilterJSON(){
+    $.each(mfSelectJSON,function(id,el){
+      $.each(el.tags,function(_i,keyWord){
+        scanDeals(id,keyWord,el.deal);
+      })
+    });
+  };
+  function getDeals(){
+    var arr = [];
+    $.each($('.au-deal'),function(i,el){
+      var txt = $(el).find('.au-deal-msg').text();
+      arr.push({deal:el,text:txt.toLowerCase()})
+    });
+    return arr;
+  };
+  var dealsList = getDeals();
+  applyFilterJSON();
+
+  function filterDeals(ids){
+    if(ids.length>0){
+      $('.au-deal').not('.au-premium-deal').addClass('mfz-hidden');
+      $.each(ids,function(i,el){
+        $('.au-deal.'+el.id).not('.au-premium-deal').removeClass('mfz-hidden');
+      });
+    }else{
+      $('.au-deal').not('.au-premium-deal').removeClass('mfz-hidden');
+    }
+    checkForEmptyResults();
+  }
+
+  function createMfSelectTag(wgtBody, ids){
+    $(wgtBody).find('.mfSelect-bottom-tags').html('');
+    $.each(ids,function(i,el){
+      var tag = $('<a></a>');
+      tag.addClass(el.id).text(el.txt);
+      $(wgtBody).find('.mfSelect-bottom-tags').append(tag);
+    });
+  }
+
+  function insertSelectedLabels(self, ids){
+    var selectedLabels = '';
+    $.each(ids, function(i,el){
+      var comma = (i!==0)?', ':'';
+      selectedLabels += comma + el.txt;
+    });
+    selectedLabels = (selectedLabels.length>17) ? selectedLabels.slice(0,17)+'...' : selectedLabels;
+    console.log(self);
+    if(selectedLabels.length === 0){
+      selectedLabels = self.itemsCollection[0].innerText;
+      $(self.itemsCollection[0]).find('input').prop('checked',true);
+      $(self.itemsCollection[0]).addClass('active');
+    }
+    $(self).val(selectedLabels);
+  }
+
+  $('.js-district-filter').mfSelect({
+      wgtBody:'.js-district-filter-body',
+      wgtCustomWidth:205,
+      triangle: false,
+      offsetXY: [-25,25],
+      closeOnSelect: false,
+      multiSelect: true,
+      triangle: true,
+      bottomLink: true,
+      onItemClick: function(e, self){
+        // target fix
+        var target = (e.currentTarget) ? e.currentTarget : e.srcElement;
+        var ids = [];
+        if($('.js-user-type').attr('data-user-type') !== 'pro'){
+          if(typeof doProPromoTips !== 'undefined'){
+            doProPromoTips({data:{promo:'promoFiltersUsedOrScroll',targ:'body'}});
+          }
+        }
+        // collect checked checkboxes to 'ids' array
+        $.each($(self.wgtWrap).find('.mfSelect-checkbox[type=checkbox]:checked'),function(i,el){
+          var elID = $(el).val(), labelText = $(el).parent().text();
+          ids.push({ id:elID, txt:labelText });
+        });
+        // if array isn't empty
+        if(ids.length > 0){
+          // if all districts was selected uncheck all other checkboxes and return false
+          if($(target).find('input').val() === 'dfMfs0'){
+            $(self.wgtWrap).find('.mfSelect-list-item:not(:nth(0))').removeClass('active');
+            $(self.wgtWrap).find('.mfSelect-checkbox[type=checkbox]:not(:nth(0))').prop('checked',false);
+            // remove all other values from generated array
+            var allDistricts = ids[0];
+            ids.length = 0;
+            ids.push(allDistricts);
+          }else{
+            // allways uncheck 'all districs' if any other checkbox was checked
+            $(self.wgtWrap).find('.mfSelect-checkbox[type=checkbox]:nth(0)').prop('checked',false);
+            $(self.wgtWrap).find('.mfSelect-list-item:nth(0)').removeClass('active');
+            // remove 'all districs' from generated array
+            if(ids[0].id === 'dfMfs0'){
+              ids.shift();
+            }
+          }
+          // if(ids[0].id === 'dfMfs0'){
+            // $(self.wgtWrap).find('.mfSelect-checkbox[type=checkbox]:not(:nth(0))').prop('checked',false);
+            // return false;
+          // }
+        }
+        if($(target).find('input').is(':checked')){
+          sendCode('filter' , $(target).text());
+        }
+        // pass them to filter func
+        filterDeals(ids);
+        // draw tags
+        insertSelectedLabels(self, ids);
+      },
+      onWgtClose: function(self){ }
+    });
+
+    $(document).ready(function() {
+      var $offerThanks = $('#offerThanks');
+      if ($offerThanks.length){ $offerThanks.modal(); }
+    });
+  </script>
+
+
+
+    <!-- Google Tag Manager -->
+    <noscript>
+        <iframe src="//www.googletagmanager.com/ns.html?id=GTM-T387CZ"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(), event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-T387CZ');</script>
+    <!-- End Google Tag Manager -->
+
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    
+        ga('create', 'UA-107502-7', 'auto', {'allowLinker': true});
+    
+    ga('require', 'linkid', 'linkid.js');
+    ga('require', 'linker');
+    ga('linker:autoLink', ['.minfin.com.ua']);
+    
+    ga('set', 'User Type', 'guest');
+    
+        ga('set', 'PageType', 'Currency');
+    
+    ga('send', 'pageview');
+</script>
+
+
+  <!-- (C)2000-2009 Gemius SA - gemiusAudience / minfin.com.ua / Glavnaja stranitsa sajta -->
+  <script type="text/javascript"><!--//--><![CDATA[//><!--
+    var pp_gemius_identifier = new String('ndnrQLMGJFKBeGNJDDdDPvU5fStRVi_O7VOea51J7mr.y7');
+    //--><!]]></script>
+  <script type="text/javascript" src="/js/gemius/xgemius.js"></script>
+
+
+
+
+
+
+    <script type="text/javascript">
+  ga('send', 'event', 'earnings', 'visit', 'adx', 1749, true);
+</script>
+
+
+
+
+
+    
+
+  <style>
+    /* SIDE SLIDER BANNER */
+    .mf-ad-side-slider{
+      position: fixed;
+      top: -2000px;
+      width: 0px;
+      height: auto;
+      background: #f00;
+      z-index: 1000000;
+    }
+    .mf-ad-side-slider:after{
+      content: '';
+      display: table;
+      clear: both;
+    }
+    .mf-ad-side-slider.is-left{
+      left: -2px;
+      top: auto;
+    }
+    .mf-ad-side-slider.is-right{
+      right: -2px;
+      top: auto;
+    }
+    .mf-ad-side-slider--window{
+      position: relative;
+      background: #fff;
+      padding: 2px;
+      -webkit-box-shadow: 0 0 10px 4px rgba(0,0,0,.8);
+      box-shadow: 0 0 10px 4px rgba(0,0,0,.8);
+    }
+    .mf-ad-side-slider--window iframe{
+      display: block;
+      pointer-events: none;
+    }
+    .mf-ad-side-slider.is-right .mf-ad-side-slider--window{
+      float: left;
+    }
+    .mf-ad-side-slider.is-left .mf-ad-side-slider--window{
+      float: right;
+    }
+    .mf-ad-side-slider--close{
+      position: absolute;
+      top: 8px;
+      width: 21px;
+      height: 21px;
+      border-radius: 50%;
+      background: #fff;
+      color: #555555;
+      -webkit-box-shadow: inset 0 0 0 1px rgba(0,0,0,.4);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.4);
+      text-align: center;
+      text-decoration: none !important;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 21px;
+      -webkit-transition: background .4s, -webkit-box-shadow .4s;
+      transition: background .4s, box-shadow .4s;
+    }
+    .mf-ad-side-slider--close:hover{
+      background: #ccc;
+      -webkit-box-shadow: inset 0 0 0 1px rgba(0,0,0,.8);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.8);
+    }
+    .mf-ad-side-slider.is-right .mf-ad-side-slider--close{
+      left: 8px;
+    }
+    .mf-ad-side-slider.is-left .mf-ad-side-slider--close{
+      right: 8px;
+    }
+    .mf-ad-side-slider--content{
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+  </style>
+
+<div class="js-ad-side-slider mf-ad-side-slider">
+  <div class="mf-ad-side-slider--window js-ad-side-slider--window">
+    <div class="mf-ad-side-slider--content js-ad-side-slider--content">
+      <a href="{URL}" target="_blank"><img src="http://minfin.com.ua/files/banners/201602/20160226095058.png"></a>
+      <!--<iframe src="http://monoserver.dev/404.html" width="468" height="70" frameborder="0" scrolling="no"></iframe>-->
+    </div>
+    <a href="#" class="mf-ad-side-slider--close js-ad-side-slider--close">&times;</a>
+  </div>
+</div>
+
+<script type="text/javascript">
+  window.banners = window.banners || {};
+  window.banners.counter = new MFFrontCounter('sideSlider657', 1, {
+    maxWisits: 1,
+    maxViews: 1,
+    period: 15,
+    eventPeriod: 0,
+    periodModifier: 'day',
+    debug: true
+  });
+
+
+
+  banners.counter.setHandler(function(){
+    $('.js-ad-side-slider').mfSideSlider({
+      side:'left',
+      bottom: 100,
+      closeTimeout: 15,
+      showTimeout: 2,
+      url: 'http://h.holder.com.ua/c?tz&z1585&b113743&s03908&r[rndID]&u',
+      onButtonClose: function(){
+        
+      },
+      onShow: function(){
+        (new Image()).src='http://h.holder.com.ua/s?b1585&s3908&tz&a113743&r'+Math.random();
+      },
+      onAutoHide: function(){
+        
+      },
+      onUrlClick: function(){
+        
+      }
+    });
+  });
+
+
+
+</script>
+    
+
+
+    <!-- bigmir async -->
+    <script async type="text/javascript"><!--
+        bmN = navigator, bmD = document, bmD.cookie = 'b=b', i = 0, bs = [], bm = {
+            o: 1,
+            v: 16800631,
+            s: 16800631,
+            t: 0,
+            c: bmD.cookie ? 1 : 0,
+            n: Math.round((Math.random() * 1000000)),
+            w: 0
+        };
+        for (var f = self; f != f.parent; f = f.parent)bm.w++;
+        try {
+            if (bmN.plugins && bmN.mimeTypes.length && (x = bmN.plugins['Shockwave Flash'])) bm.m = parseInt(x.description.replace(/([a-zA-Z]|\s)+/, ''));
+            else for (var f = 3; f < 20; f++)if (eval('new ActiveXObject("ShockwaveFlash.ShockwaveFlash.' + f + '")')) bm.m = f
+        } catch (e) {
+            ;
+        }
+        try {
+            bm.y = bmN.javaEnabled() ? 1 : 0
+        } catch (e) {
+            ;
+        }
+        try {
+            bmS = screen;
+            bm.v ^= bm.d = bmS.colorDepth || bmS.pixelDepth;
+            bm.v ^= bm.r = bmS.width
+        } catch (e) {
+            ;
+        }
+        r = bmD.referrer.slice(7);
+        if (r && r.split('/')[0] != window.location.host) {
+            bm.f = escape(r);
+            bm.v ^= r.length
+        }
+        bm.v ^= window.location.href.length;
+        for (var x in bm) if (/^[ovstcnwmydrf]$/.test(x)) bs[i++] = x + bm[x];
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = 'http://c.bigmir.net/?' + bs.join('&');
+        document.getElementsByClassName('js-bigmir-counter')[0].appendChild(script);
+        //-->
+    </script>
+
+<!-- BANNER PLACE: no_place -->
+
+<!-- END BANNER PLACE: no_place -->
+
+<script async src="https://cdn.onthe.io/io.js/6DQkRyIxDGKg"></script>
+
+</body>
+
+</html>

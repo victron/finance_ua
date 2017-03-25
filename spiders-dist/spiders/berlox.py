@@ -12,7 +12,7 @@ from spiders import filters
 from spiders import parameters
 from spiders.check_proxy import proxy_is_used
 from spiders.simple_encrypt_import import secret
-from spiders.common_spider import current_datetime_tz, date_handler
+from spiders.common_spider import current_datetime_tz, date_handler, kyiv_tz
 from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
 
 # user settings
@@ -59,7 +59,7 @@ conv_dict_orig = {'d' : 'd',
                 'cm': 'comment'}
 
 # @timer()
-def fetch_data():
+def fetch_data(test_data=None):
     def decrypt_file(key, iv, in_file, out_file=None, chunksize=24*1024):
         """
         Function not in use, just for reference
@@ -91,14 +91,13 @@ def fetch_data():
                         break
                     outfile.write(decryptor.decrypt(chunk))
 
-
     def get_belox_data(proxy_is_used: bool = False) -> requests:
         url = 'http://berlox.com/finance/listz.bin'
         # print('--------------- berlox fetch -------------')
-        if proxy_is_used == False:
+        if test_data is None:
             return requests.get(url).content
         else:
-            return requests.get(url, proxies=proxies).content
+            return test_data
             # return requests.get(url, proxies=proxies)
 
 
@@ -131,13 +130,13 @@ def data_api_berlox(fn_fetch):
         out_dic['source'] = 'b'
         try:
             out_dic['time'] = datetime.strptime(out_dic['time'], '%Y-%m-%dT%H:%M:%S')
-            out_dic['time'] = out_dic['time'].replace(tzinfo=current_date.tzinfo)
+            out_dic['time'] = kyiv_tz.localize(out_dic['time'])
         except ValueError:
             try:
                 out_dic['time'] = datetime.strptime(out_dic['time'], '%Y-%m-%dT%H:%M:%S.%f%z')
             except ValueError:
                 out_dic['time'] = datetime.strptime(out_dic['time'][:19], '%Y-%m-%dT%H:%M:%S')
-                out_dic['time'] = out_dic['time'].replace(tzinfo=current_date.tzinfo)
+                out_dic['time'] = kyiv_tz.localize(out_dic['time'])
         return out_dic
     data = fn_fetch()
     current_date = current_datetime_tz()

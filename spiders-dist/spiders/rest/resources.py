@@ -7,7 +7,7 @@ import pymongo
 from spiders.parallel import update_news, update_lists
 from spiders.parameters import client, simple_rest_secret
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 
@@ -34,7 +34,7 @@ vary: Accept
     logger.debug('def check_mongo: req.stream= {}'.format(req.stream))
     try:
         client.server_info()
-    except pymongo.errors.ServerSelectionTimeoutError:
+    except:
         msg = 'DB down'
         code = 15
         logger.error('{}, error code={}'.format(msg, code))

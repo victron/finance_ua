@@ -10,7 +10,7 @@ from spiders import filters
 from spiders import parameters
 import requests
 
-from spiders.common_spider import current_datetime_tz, date_handler
+from spiders.common_spider import current_datetime_tz, date_handler, local_tz
 from spiders.tables import print_table_as_is, reform_table_fix_columns_sizes
 
 # from tools.mytools import timer
@@ -94,16 +94,26 @@ def print_result(id_list):
 #
 # ------ fetch via requests ---------
 # @timer()
-def fetch_data():
-    if check_proxy.proxy_is_used == False:
-        responce_get = requests.get(url, headers=headers)
+def fetch_data(test_data=None) -> dict:
+    """
+
+    :param test_data: str; decoded text injection for test purpose
+    :return:
+    """
+    if test_data is None:
+        if check_proxy.proxy_is_used == False:
+            responce_get = requests.get(url, headers=headers)
+        else:
+            responce_get = requests.get(url, headers=headers, timeout=3, proxies=proxies)
+        if responce_get.status_code != requests.codes.ok:
+            return []
+        responce_get_text = responce_get.text
     else:
-        responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
-    if responce_get.status_code != requests.codes.ok:
-        return []
-    start_dict = responce_get.text.find('({')
-    end_dict = responce_get.text.find('})')
-    data = responce_get.text[start_dict+1 : end_dict+1]
+        responce_get_text = test_data    # test injection
+
+    start_dict = responce_get_text.find('({')
+    end_dict = responce_get_text.find('})')
+    data = responce_get_text[start_dict+1: end_dict+1]
 
     # data = eval(data)
     data = literal_eval(data)
@@ -129,7 +139,7 @@ def data_api_finance_ua(fn):
     if len(data) == 0:
         return []
     data_len = len(data['location'])
-    current_date = current_datetime_tz()
+    current_date = datetime.now(tz=local_tz)
     return [convertor_finance_ua(i, current_date, data) for i in range(data_len)]
 
 

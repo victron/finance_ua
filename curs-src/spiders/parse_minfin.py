@@ -23,6 +23,7 @@ from spiders.simple_encrypt_import import secret
 from spiders.common_spider import current_datetime_tz, date_handler
 # from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
 import requests
+from collections import namedtuple
 
 # user settings
 currency = filters.currency.lower()
@@ -45,7 +46,7 @@ cook = {}
 
 
 # @timer()
-def get_triple_data(currency: str, operation: str) -> tuple:
+def get_triple_data(currency: str, operation: str, test_page: namedtuple = None) -> tuple:
 
     # minfin_urls = {'usd_sell' : 'http://minfin.com.ua/currency/auction/usd/sell/kiev/?presort=&sort=time&order=desc',
     #                'usd_buy' : 'http://minfin.com.ua/currency/auction/usd/buy/kiev/?presort=&sort=time&order=desc',
@@ -69,7 +70,12 @@ def get_triple_data(currency: str, operation: str) -> tuple:
         responce_get = requests.get(url, headers=headers, timeout = 3, proxies=proxies)
 
     ###
-    soup = BeautifulSoup(responce_get.text, "html.parser")
+    if test_page is not None:
+        logger.debug('TEST is active')
+        soup = BeautifulSoup(test_page.text, "html.parser")
+    else:
+        logger.debug('TEST is inactive')
+        soup = BeautifulSoup(responce_get.text, "html.parser")
     # global cook
     # cook['cookies'] = responce_get.cookies
     # cook['url'] = url
@@ -101,7 +107,10 @@ def get_triple_data(currency: str, operation: str) -> tuple:
     # print('----------------- fetch -------------------------')
     # transfer session parameters
     session_parm = {}
-    session_parm['cookies'] = pickle.dumps(responce_get.cookies)
+    if test_page is not None:
+        session_parm['cookies'] = pickle.dumps(test_page.cookies)
+    else:
+        session_parm['cookies'] = pickle.dumps(responce_get.cookies)
     session_parm['url'] = url
     return data, session_parm
 

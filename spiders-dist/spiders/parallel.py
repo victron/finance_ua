@@ -2,6 +2,7 @@ import logging
 import multiprocessing
 from functools import reduce
 from multiprocessing.connection import wait
+from datetime import datetime
 
 from spiders import berlox
 from spiders import finance_ua
@@ -91,13 +92,14 @@ class writer_lists(writer_news):
                     else:
                         logger.debug('updated doc with key= {}'.format(key))
                 except:
-                    print(document)
-                    print(self.docs)
+                    logger.error('error in inserting doc= {}'.format(document))
+                    logger.error('original doc= {}'.format(self.docs))
                     raise
             else:
                 # insert document with cookies, (new cookies need to insert any way)
-                key = {'currency': document['currency'], 'operation': document['operation']}
+                key = {'currency': document['currency'], 'operation': document['operation'], 'session': True}
                 self.data_active.replace_one(key, document, upsert=True)
+                logger.debug('REPLACE doc {}'.format(document))
 
         self.result_delete = self.data_active.delete_many({'$or': [{'time_update': {'$lt': update_time}},
                                                                    {'time_update': None}], 'source': source})
@@ -126,7 +128,7 @@ def parent(funcs: list, collection) -> tuple:
     """
 
     # pipe is a tuple (parent , chield)
-    update_time = current_datetime_tz()
+    update_time = datetime.utcnow()
     pipes = [multiprocessing.Pipe(duplex=False) for _ in funcs]
     processes_news = [multiprocessing.Process(target=workerANDconnector, args=(params[0],),
                                               kwargs={'connector': params[1][1], 'collection': collection,

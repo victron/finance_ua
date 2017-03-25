@@ -27,15 +27,15 @@
 #    become_method: sudo
 
   - block:
-    - name: Initiate virtualenv for python3.6
-#      command: python3.6 -m venv --without-pip {{ home_dir }}/{{ venv_dir }}
-      command: python3.6 -m venv {{ home_dir }}/{{ venv_dir }}
+    - name: Initiate virtualenv for {{ python_ver }}
+      command: python3.6 -m venv --without-pip {{ home_dir }}/{{ venv_dir }}
+      # command: "{{ python_ver }} -m venv {{ home_dir }}/{{ venv_dir }}"
 #    - name: download get-pip.py
 #      get_url: url=https://bootstrap.pypa.io/get-pip.py
 #        dest={{ home_dir }}/get-pip.py
 #        force=no
-#    - name: install pip3.6
-#      command: "{{ home_dir }}/{{ venv_dir }}/bin/python3.6 {{ home_dir }}/get-pip.py"
+    - name: install pip3.6
+      command: "{{ home_dir }}/{{ venv_dir }}/bin/python3.6 {{ home_dir }}/get-pip.py"
     become: yes
     become_user: "{{ app_user }}"
     become_method: sudo

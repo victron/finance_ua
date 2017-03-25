@@ -27,7 +27,7 @@ setup(
     #           # 'tools'
     #           ],
 
-    packages = find_packages(),
+    packages = find_packages(exclude=('tests',)),
     # package_dir = {'': 'src'},
 
     # Details

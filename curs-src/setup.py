@@ -22,7 +22,7 @@ setup(
     #           'spiders',
     #           'spiders.simple_encrypt_import',
     #           'tools'],
-    packages=find_packages(),
+    packages=find_packages(exclude=('tests',)),
 
 
     # Details
