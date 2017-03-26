@@ -73,4 +73,5 @@ try:
 
 except pymongo.errors.ServerSelectionTimeoutError as e:
     logger.error('MONGO not ready; sckip index creating in case clean start - {}'.format(e))
+finally:
     pass

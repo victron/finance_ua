@@ -34,6 +34,11 @@ vary: Accept
     logger.debug('def check_mongo: req.stream= {}'.format(req.stream))
     try:
         client.server_info()
+    except pymongo.errors.WriteError as e:
+        logger.error('write error; check DB size; {}'.format(e))
+        msg = 'DB write problem, check DB size'
+        code = 14
+        raise falcon.HTTPServiceUnavailable('Service Unavailable', msg, code=code)
     except:
         msg = 'DB down'
         code = 15

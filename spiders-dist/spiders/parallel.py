@@ -19,9 +19,11 @@ logger = logging.getLogger('curs.mongo_collector.parallel')
 class writer_news():
     def __init__(self, db_name, *funs):
         # TODO: put import outside
-        from pymongo import MongoClient
-        client = MongoClient(connect=False)
-        self.DATABASE = client[db_name]
+        # from pymongo import MongoClient
+        # client = MongoClient(connect=False)
+        # self.DATABASE = client[db_name]
+        from spiders.parameters import DATABASE
+        self.DATABASE = DATABASE
         self.docs = []
         self.funs = funs
 
