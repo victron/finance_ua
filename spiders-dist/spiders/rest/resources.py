@@ -6,10 +6,11 @@ import pymongo
 
 from spiders.parallel import update_news, update_lists
 from spiders.parameters import client, simple_rest_secret
+from spiders.commodities.update_all import update_all
 
 logger = logging.getLogger(__name__)
 
-
+UPDATE_ALLOWED = {'news', 'lists', 'commodities'}
 
 def check_mongo(req, resp, resource, params):
     """
@@ -136,7 +137,7 @@ content-type: application/json; charset=UTF-8
         :param resp:
         :return:
         """
-        update_allowed = {'news', 'lists'}
+
 
         logger.debug('on_post>>> request = {}'.format(req.stream))
         try:
@@ -147,7 +148,7 @@ content-type: application/json; charset=UTF-8
 
         if simple_authentication(doc):
             update = doc.get('update')
-            if update is None or update not in update_allowed:
+            if update is None or update not in UPDATE_ALLOWED:
                 msg = 'wrong value in \"update\",  update= {}'.format(update)
                 logger.info(msg)
                 raise falcon.HTTPBadRequest('Bad request', msg)
@@ -159,10 +160,33 @@ content-type: application/json; charset=UTF-8
                 responce['inserted_count'], responce['duplicate_count'] = update_news()
                 responce['update'] = 'news'
 
-            if update == 'lists':
+            elif update == 'lists':
                 logger.info('updating lists')
                 responce['inserted_count'], responce['deleted_count'] = update_lists()
                 responce['update'] = 'lists'
+
+            elif update == 'commodities':
+                logger.info('updating commodities')
+                try:
+                    lists = doc['list']
+                except KeyError as e:
+                    msg = 'request error; list is empty {}'.format(e)
+                    logger.error(msg)
+                    raise falcon.HTTPBadRequest('Bad request', msg)
+                except Exception as e:
+                    msg = 'unknown error; error= {}'.format(e)
+                    logger.error(msg)
+                    raise falcon.HTTPBadRequest('Bad request', msg)
+
+                try:
+                    for k, v in update_all(lists).items():
+                        responce[k] = str(v)        # convert nametuple in str, for more information in REST
+                    responce['update'] = update
+                except NameError as e:
+                    msg = 'commodities: {} not in available list'.format(e)
+                    logger.error(msg)
+                    raise falcon.HTTPBadRequest('Bad request', msg)
+
 
             responce.update(responce_ok)
             logger.debug('responce = {}'.format(responce))

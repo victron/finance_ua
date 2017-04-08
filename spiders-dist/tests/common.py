@@ -5,6 +5,7 @@ import pickle
 from spiders.common_spider import local_tz, kyiv_tz
 
 DATA_PATH = path.join('data', 'pages', '')
+DB_NAME = 'TEST'
 
 # current_datetime = datetime.now(tz=local_tz)
 
@@ -13,9 +14,17 @@ url_to_file = {
     'http://minfin.com.ua/news/': 'news_minfin.pickle',
     'http://www.minfin.gov.ua/news/borg/zovnishni-suverenni-zobovjazannja': 'minfin_headlines_ZSZ.pickle',
     'http://www.minfin.gov.ua/news/novini-ta-media': 'minfin_headlines_novini-ta-media.pickle',
-    'http://www.minfin.gov.ua/news/view/informatsiia-shchodo-auktsioniv-ovdp': 'parse_announcement_ovdp.pickle'}
+    'http://www.minfin.gov.ua/news/view/informatsiia-shchodo-auktsioniv-ovdp': 'parse_announcement_ovdp.pickle',
+    'http://markets.businessinsider.com/commodities': 'businessinsider_commodities.pickle',
+    'http://markets.businessinsider.com/commodities/historical-prices/iron-ore-price/1.1.2014_28.3.2017':
+        'history_post1_responce.pickle',
+    'http://markets.businessinsider.com/Ajax/CommodityController_HistoricPriceList/iron-ore-price/USD/1.1.2014_28.3.2017':
+        'history_post2_responce.pickle',
+    'http://www.tradingeconomics.com/commodities': 'tradingeconomics_commodities.pickle',
+    'https://graintrade.com.ua/en': 'graintrade_get.pickle'
+}
 
-def mock_requests(url: str) -> str:
+def mock_requests(url: str, **kwargs) -> str:
     if url not in url_to_file:
         raise KeyError('url= {} not in dict url_to_file'.format(url))
     with open(DATA_PATH + url_to_file[url], 'rb') as f:

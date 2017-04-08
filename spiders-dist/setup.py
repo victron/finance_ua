@@ -77,7 +77,7 @@ setup(
 
     data_files=[
         ('.spiders', ['./config/uwsgi.ini',
-                      # 'config/logging.yml'
+                      'config/logging.yml'
                       ]),
         # ('logs', ['logs/curs.log']),
         # ('.curs', ['config']),

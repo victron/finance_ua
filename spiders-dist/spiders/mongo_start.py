@@ -32,6 +32,7 @@ news = DATABASE['news']
 meta = aware_times('meta')
 swaps = DATABASE['swaps']
 aggregators = DATABASE['aggregators']
+commodities = DATABASE['commodities']
 
 try:
     records.create_index([('bid', pymongo.ASCENDING),

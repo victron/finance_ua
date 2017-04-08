@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import sys
 
+# DB for test, in test_businessinsider used mock on test DB
 if 'unittest' in list(sys.modules.keys()):
     DB_NAME = 'TEST'
 else:

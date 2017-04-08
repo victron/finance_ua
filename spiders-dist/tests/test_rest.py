@@ -5,10 +5,11 @@ import subprocess
 import logging
 from unittest.mock import patch
 from pymongo import MongoClient
+from datetime import date
 
 from spiders.rest.app import api
 from spiders.parameters import simple_rest_secret
-from common import mock_requests
+from common import mock_requests, DATA_PATH
 
 secret = {'secret': simple_rest_secret,
           'responce': ['ok', 'nok'],
@@ -19,6 +20,7 @@ logger = logging.getLogger(__name__)
 DB_NAME = 'TEST'
 client = MongoClient()
 DATABASE = client[DB_NAME]
+TEST_DATABASE = client[DB_NAME]
 
 class InitTestCase(testing.TestCase):
     def setUp(self):
@@ -108,5 +110,32 @@ class TestRest(InitTestCase):
         # start back MONGO
         start = subprocess.run(mongo_start, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         sleep(1)
+
+    @patch('spiders.parameters.DATABASE', TEST_DATABASE)    # mock DB only for this test
+    @patch('spiders.commodities.businessinsider.requests.get', side_effect=mock_requests)
+    @patch('spiders.commodities.businessinsider.requests.post', side_effect=mock_requests)
+    @patch('spiders.commodities.graintrade.requests.get', side_effect=mock_requests)
+    def test7_commudities(self, get_f, post_f, graitrade_f):
+        from spiders.mongo_start import commodities
+        from spiders.commodities.update_history_logic import update_commudities_collection
+
+        headers = {'content_type': 'application/json'}
+        body_init = dict(secret)
+        body_init.update({'update': 'commodities', 'list': ['iron_ore',]})
+        body = json.dumps(body_init)
+
+        # http://www.voidspace.org.uk/python/mock/examples.html#partial-mocking
+        with patch('spiders.commodities.update_history_logic.date') as mock_date:
+            mock_date.today.return_value = date(2017, 3, 28)
+            mock_date.side_effect = lambda *args, **kw: date(*args, **kw)
+
+            # update_commudities_collection(['Iron Ore', ])
+            # find_all = commodities.find()
+            # with open(DATA_PATH + 'update_commudities_collection.data', 'rb') as f:
+            #     etalon_dict = pickle.load(f)
+            # self.assertEqual(etalon_dict, [i for i in find_all])
+            result = self.simulate_post('/command', body=body, headers=headers)
+            print(result.text)
+
 
 

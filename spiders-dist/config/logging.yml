@@ -1,0 +1,49 @@
+version: 1
+formatters:
+#  simple:
+  file_format:
+    format: '{asctime} - {name} - {levelname:5s} {filename} LINE: {lineno} {message}'
+    style: '{'
+    msg: curs
+#    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  syslog_format:
+    format: '{name} - {levelname:5s} LINE: {lineno} {message}'
+    style: '{'
+    msg: curs
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: file_format
+    stream: ext://sys.stdout
+#    filters: [allow_foo]
+  file:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: file_format
+    filename: spiders.log
+    maxBytes: 5120
+    backupCount: 3
+  # comment syslog section if windows
+  syslog:
+    class: logging.handlers.SysLogHandler
+    address: /dev/log
+    facility: local5
+    formatter: syslog_format
+
+loggers:
+  commodities:
+    level: INFO
+#    handlers: [file, syslog]
+    handlers: [file]
+    propagate: yes
+  rest:
+    level: WARNING
+#    handlers: [file, syslog]
+    handlers: [file]
+    propagate: yes
+root:
+  level: INFO
+#  handlers: [console, file, syslog]
+  handlers: [file, syslog]
