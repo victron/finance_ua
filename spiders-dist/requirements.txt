@@ -1,0 +1,9 @@
+falcon
+pymongo
+PyYAML
+pytz
+requests
+pycrypto
+beautifulsoup4
+#apscheduler
+uwsgi

@@ -1,31 +1,14 @@
 ---
 # create venv and install application
-- name: check venv
+- name: check venv -> {{ venv_dir }}
   stat: path={{ home_dir }}/{{ venv_dir }}/bin/activate
   register: venv_result
 
-- block:
-  - name: create app. user
-    user: name={{ app_user }}
-      comment="User for curs application"
-      groups=www-data
-      home={{ home_dir }}
-      shell=/usr/sbin/nologin
-    become: yes
-    become_method: sudo
-
-  - block:
-    - name: Initiate virtualenv for python3.5
-      command: python3.5 -m venv --without-pip {{ home_dir }}/{{ venv_dir }}
-    - name: download get-pip.py
-      get_url: url=https://bootstrap.pypa.io/get-pip.py
-        dest={{ home_dir }}/get-pip.py
-        force=no
-    - name: install pip3.5
-      command: "{{ home_dir }}/{{ venv_dir }}/bin/python3.5 {{ home_dir }}/get-pip.py"
-    become: yes
-    become_user: "{{ app_user }}"
-    become_method: sudo
+- name: Initiate virtualenv for {{ python_ver }}
+  command: "{{ python_ver }} -m venv {{ home_dir }}/{{ venv_dir }}"
+  become: yes
+  become_user: "{{ app_user }}"
+  become_method: sudo
   when: not venv_result.stat.exists
 
 # ------------------ remove application if installed ----------
@@ -35,10 +18,8 @@
   register: curs_config
 
 - block:
-  - name: stop curs.service
-    service: name=curs  state=stopped
-  - name: stop cursauto.service
-    service: name=cursauto  state=stopped
+  - name: stop {{ service }}.service
+    service: name={{ service }}  state=stopped
   become: yes
   become_method: sudo
   when: curs_config.stat.exists == True
@@ -48,10 +29,10 @@
   - name: remove application from env
     pip: name=curs
          virtualenv={{ home_dir }}/{{ venv_dir }}
-         virtualenv_python=python3.5
+         virtualenv_python={{ python_ver }}
          state=absent
   - name: delete previos file package
-    file: name=/{{ home_dir }}/{{ app_file }}
+    file: name=/{{ home_dir }}/{{ pkg_curs }}
       state=absent
   become: yes
   become_user: "{{ app_user }}"
@@ -60,26 +41,27 @@
 
 # ---------- create package localy ----------------
 - name: generate wheel
-  command: python3.5 setup.py bdist_wheel
+  # command: python3.6 setup.py bdist_wheel
+  local_action: command {{ python_ver }} setup.py bdist_wheel
   args:
-    chdir: ../
+    chdir: ../{{ src_dir }}
   delegate_to: 127.0.0.1
   # local_action: command /usr/bin/take_out_of_pool {{ inventory_hostname }}
 # =======================================================
 
 - block:
   - name: copy application package on remote
-    copy: src=../dist/{{ app_file }} dest={{ home_dir }}/
+    copy: src=../dist/{{ pkg_curs }} dest={{ home_dir }}/
+
   # installing application
   - name: install application
-    pip: name='file://{{ home_dir }}/{{ app_file }}'
-         virtualenv={{ home_dir }}/{{ venv_dir}}
-         virtualenv_python=python3.5
+    pip: name='file://{{ home_dir }}/{{ pkg_curs }}'
+         virtualenv={{ home_dir }}/{{ venv_dir }}
+         virtualenv_python={{ python_ver }}
   - name: generate logging.yaml
     template: src=logging.yml.j2 dest={{ home_dir }}/{{ venv_dir }}/.curs/logging.yml
     notify:
       - start uwsgi
-      - start cursauto
   become: yes
   become_user: "{{ app_user }}"
   become_method: sudo
@@ -87,7 +69,7 @@
 # configure app
 - block:
   - name: copy static files
-    shell: cp -R {{ home_dir }}/{{ venv_dir }}/lib/python3.5/site-packages/app/static/* {{ static_path }}
+    shell: cp -R {{ home_dir }}/{{ venv_dir }}/lib/{{ python_ver }}/site-packages/curs/static/* {{ static_path }}
     notify:
       - start nginx
 
@@ -107,33 +89,12 @@
   - name: generate curs systemd config
     template: src=curs.service.j2 dest=/etc/systemd/system/curs.service
     with_items:
-      - "{{ curs }}"
+      - "{{ required }}"
     when: ansible_service_mgr == "systemd"
     notify:
-      - reload systemd
-      - start uwsgi
+      - systemd {{ service }} start
+#      - start uwsgi # alternative string above
       - start nginx
-
-
-  # -------------- cursauto configs ---------------
-  - name: generate curs_auto  script into init.d
-    template: src=init-script.j2 dest=/etc/init.d/curs_auto mode="a+x"
-    # in ansible2 vars could be inside tasks
-    vars:
-      cmd: $dir/bin/curs_auto
-      provider: curs_auto
-      Required_Start: mongodb $network $syslog
-    when: ansible_service_mgr == "upstart"
-    notify:
-      - start cursauto
-  - name: generate cursauto systemd config
-    template: src=cursauto.service.j2 dest=/etc/systemd/system/cursauto.service
-    with_items:
-      - "{{ cursauto }}"
-    when: ansible_service_mgr == "systemd"
-    notify:
-      - reload systemd
-      - start cursauto
   become: yes
   become_method: sudo
 

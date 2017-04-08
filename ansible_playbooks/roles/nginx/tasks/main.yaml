@@ -9,6 +9,7 @@
     # 17 21 * * 6 /usr/bin/letsencrypt renew >>  /var/log/letsencrypt/le-renew.log
   - name: install letsencrypt
     apt: name=letsencrypt state=present
+    when: ansible_distribution_version != "14.04"
 
 # -------------- get cert ------------------
 #  - name: check cert file
@@ -35,7 +36,9 @@
     - name: get letsencrypt cert
       command: letsencrypt certonly --agree-tos --config /etc/letsencrypt/letsencrypt.conf
     # don't execute block when cert.pem exists
-    when: cert.stat.isreg is not defined and cert.stat.exists == False
+    when:
+      - cert.stat.isreg is not defined and cert.stat.exists == False
+      - ansible_distribution_version != "14.04"
 
   - name: make static directory
     command: mkdir -p {{ static_path }}

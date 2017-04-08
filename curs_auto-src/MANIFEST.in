@@ -1,0 +1,4 @@
+include curs_auto/spiders_legacy/simple_encrypt_import/secret_data.pye
+recursive-include config *
+
+

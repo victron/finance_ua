@@ -1,10 +1,28 @@
 ---
 - block:
+    ########################
+    # create user
+    #######################
+  - name: create app. user
+    user: name={{ app_user }}
+      comment="User for curs application"
+      groups=www-data
+      home={{ home_dir }}
+      shell=/usr/sbin/nologin
+
   - name: install python's repos
     apt_repository: repo='ppa:fkrull/deadsnakes'
-  - name: install python3.5
-    apt: name=python3.5  state=present
-  - name: install python3.5-dev
-    apt: name=python3.5-dev   state=present
+  - name: install {{ python_ver }}
+    apt: name={{ python_ver }}  state=present
+  - name: install {{ python_ver }}-dev
+    apt: name={{ python_ver }}-dev   state=present
+  - name: download get-pip.py
+    get_url: url=https://bootstrap.pypa.io/get-pip.py
+      dest={{ home_dir }}/get-pip.py
+      force=no
+  - name: install pip for {{ python_ver }}
+    command: "{{ python_ver }} {{ home_dir }}/get-pip.py"
+
+
   become: yes
   become_method: sudo

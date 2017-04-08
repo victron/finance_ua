@@ -1,0 +1,126 @@
+---
+
+- block:
+  - name: install libssl-dev
+  # need for uwsgi https !!!!
+    apt: name=libssl-dev  state=present
+    register: libssl
+#  - name: remove pip cache
+#
+#    when: libssl.changed
+  become: yes
+  become_method: sudo
+# create venv and install application
+
+- name: check venv "{{ venv_dir }}"
+  stat: path={{ home_dir }}/{{ venv_dir }}/bin/activate
+  register: venv_result
+
+- block:
+#  - name: create app. user
+#    user: name={{ app_user }}
+#      comment="User for curs application"
+#      groups=www-data
+#      home={{ home_dir }}
+#      shell=/usr/sbin/nologin
+#    become: yes
+#    become_method: sudo
+
+  - block:
+    - name: Initiate virtualenv for {{ python_ver }}
+      command: python3.6 -m venv --without-pip {{ home_dir }}/{{ venv_dir }}
+      # command: "{{ python_ver }} -m venv {{ home_dir }}/{{ venv_dir }}"
+#    - name: download get-pip.py
+#      get_url: url=https://bootstrap.pypa.io/get-pip.py
+#        dest={{ home_dir }}/get-pip.py
+#        force=no
+    - name: install pip3.6
+      command: "{{ home_dir }}/{{ venv_dir }}/bin/python3.6 {{ home_dir }}/get-pip.py"
+    become: yes
+    become_user: "{{ app_user }}"
+    become_method: sudo
+  when: not venv_result.stat.exists
+
+# ------------------ remove application if installed ----------
+  # ------- stop services -----------
+- name: check  spiders.service file exists
+  stat: path=/etc/systemd/system/{{ service }}.service follow=yes
+  register: spiders_config
+
+- block:
+  - name: stop spiders.service
+    service: name={{ service }}  state=stopped
+#  - name: stop cursauto.service
+#    service: name=cursauto  state=stopped
+  become: yes
+  become_method: sudo
+  when: spiders_config.stat.exists == True
+
+  # remove app from venv and home dir
+- block:
+  - name: remove application from env
+    pip: name={{ service }}
+         virtualenv={{ home_dir }}/{{ venv_dir }}
+         virtualenv_python=python3.6
+         state=absent
+  - name: delete previos file package
+    file: name=/{{ home_dir }}/{{ app_spiders }}
+      state=absent
+  become: yes
+  become_user: "{{ app_user }}"
+  become_method: sudo
+  when: spiders_config.stat.exists == True
+
+# ---------- create package localy ----------------
+- name: generate wheel
+  command: python3.6 setup.py bdist_wheel
+  args:
+    chdir: ../{{ src_dir }}
+  delegate_to: 127.0.0.1
+
+  # local_action: command /usr/bin/take_out_of_pool {{ inventory_hostname }}
+# =======================================================
+
+- block:
+  - name: copy application package on remote
+    copy: src=../dist/{{ app_spiders }} dest={{ home_dir }}/
+
+  # installing application
+  - name: install application
+  # TODO:
+    pip: name='file://{{ home_dir }}/{{ app_spiders }}'
+         virtualenv={{ home_dir }}/{{ venv_dir }}
+         virtualenv_python=python3.6
+#  - name: generate logging.yaml
+#    template: src=logging.yml.j2 dest={{ home_dir }}/{{ venv_dir }}/.curs/logging.yml
+    notify:
+      - start {{ service }}
+    when: not libssl.changed
+  - name: install application without cache
+    pip: name='file://{{ home_dir }}/{{ app_spiders }}'
+         virtualenv={{ home_dir }}/{{ venv_dir }}
+         virtualenv_python=python3.6
+         extra_args=--no-cache-dir
+#  - name: generate logging.yaml
+#    template: src=logging.yml.j2 dest={{ home_dir }}/{{ venv_dir }}/.curs/logging.yml
+    notify:
+      - start {{ service }}
+    when: libssl.changed
+  become: yes
+  become_user: "{{ app_user }}"
+  become_method: sudo
+
+# configure app
+- block:
+  - name: generate {{ service }} systemd config
+    template: src=spiders.service.j2 dest=/etc/systemd/system/{{ service }}.service
+    with_items:
+      - "{{ required }}"
+    when: ansible_service_mgr == "systemd"
+    notify:
+      - systemd {{ service }} start
+
+  become: yes
+  become_method: sudo
+
+
