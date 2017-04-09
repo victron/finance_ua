@@ -39,10 +39,10 @@ def update(object: str) -> dict :
         return result
 
 
-def update_dict(doc: dict) -> dict :
-    logger.debug('update arg= {}'.format(object))
+def update_dict(doc: dict) -> dict:
+    logger.debug('update arg= {}'.format(doc))
     if doc['update'] not in update_allowed:
-        msg = 'not allowed update ' + object
+        msg = 'not allowed update ' + doc
         logger.error(msg)
         return {'msg': msg, 'responce': req_template['responce'][1]}
     logger.debug('request template= {}'.format(req_template))

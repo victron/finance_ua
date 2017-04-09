@@ -26,8 +26,8 @@ logging.config.dictConfig(yaml.load(open(logging_config, 'r')))
 
 logger = logging.getLogger('curs_auto')
 
-UPDATE_COMMODITIES = {'list': ['corn', 'iron_ore', 'oats', 'oil_brent', 'soybean_meal', 'soybeans_oil', 'soybeans',
-                               'sugar', 'wheat', 'sunflower_oil']}
+UPDATE_COMMODITIES = ['corn', 'iron_ore', 'oats', 'oil_brent', 'soybean_meal', 'soybeans_oil', 'soybeans',
+                      'sugar', 'wheat', 'sunflower_oil']
 
 kiev_tz = pytz.timezone('Europe/Kiev')
 jobstores = {'longTerm': MongoDBJobStore(),
@@ -64,10 +64,13 @@ daily_bonds = scheduler.add_job(update_bonds, 'cron', name='daily_bonds', hour=1
                                 replace_existing=True, jobstore='longTerm', args=[True])
 daily_swaps = scheduler.add_job(collect_nbu_swaps, 'cron', name='daily_swaps', hour=18, minute=5, id='daily_swaps',
                                 replace_existing=True, jobstore='longTerm')
-daily_commodities = scheduler.add_job(rest_client.update, 'interval',
-                                      args=[{'update': 'commodities'}.update(UPDATE_COMMODITIES)],
-                                      name='auto_commodities', hours=4, id='commodities',
-                                      next_run_time=datetime.now(kiev_tz) + timedelta(minutes=10))
+i = 0
+for commodity in UPDATE_COMMODITIES:
+    scheduler.add_job(rest_client.update_dict, 'interval',
+                                      args=[{**{'update': 'commodities'}, **{'list': [commodity]}}],
+                                      name='auto_' + commodity, hours=4, id='auto_' + commodity,
+                                      next_run_time=datetime.now(kiev_tz) + timedelta(minutes=10 + i))
+    i += 1
 
 # Todo: aspscheduler problem
 # problem with aspscheduler, try to move to another module

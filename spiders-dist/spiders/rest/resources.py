@@ -40,8 +40,8 @@ vary: Accept
         msg = 'DB write problem, check DB size'
         code = 14
         raise falcon.HTTPServiceUnavailable('Service Unavailable', msg, code=code)
-    except:
-        msg = 'DB down'
+    except Exception as e:
+        msg = 'DB down; exception= {}'.format(e)
         code = 15
         logger.error('{}, error code={}'.format(msg, code))
         raise falcon.HTTPServiceUnavailable('Service Unavailable', msg, code=code)
