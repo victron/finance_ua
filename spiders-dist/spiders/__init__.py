@@ -9,4 +9,8 @@ import sys
 import yaml
 # import logging.config
 logging_config = os.path.join(sys.prefix, '.spiders', 'logging.yml')
-logging.config.dictConfig(yaml.load(open(logging_config, 'r')))
+try:
+    logging.config.dictConfig(yaml.load(open(logging_config, 'r')))
+except FileNotFoundError:
+    # for testing, (working directory 'tests')
+    logging.config.dictConfig(yaml.load(open('../config/logging.yml', 'r')))

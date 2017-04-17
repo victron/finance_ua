@@ -38,6 +38,7 @@ loggers:
     handlers: [file]
     propagate: yes
 root:
-  level: WARNING
+  level: INFO
+  propagate: no
 #  handlers: [console, file, syslog]
   handlers: [file, console]

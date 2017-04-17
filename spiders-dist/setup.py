@@ -79,7 +79,8 @@ setup(
         ('.spiders', ['./config/uwsgi.ini',
                       'config/logging.yml'
                       ]),
-        # ('logs', ['logs/curs.log']),
+        ('bin', ['bin/geckodriver',
+                 'bin/chromedriver']),
         # ('.curs', ['config']),
         # ('/etc/init.d', ['init-script'])
                 ]

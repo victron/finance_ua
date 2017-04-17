@@ -6,18 +6,22 @@ import sys
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 
-from .decrypt_config import file_with_code
+import logging
+logger = logging.getLogger(__name__)
+
+from spiders.simple_encrypt_import.decrypt_config import file_with_code
 
 try:
-    from .decrypt_config import stdinput
+    from spiders.simple_encrypt_import.decrypt_config import stdinput
 except ImportError:
+    logger.error('file with passord not found')
     stdinput = False
 
 if stdinput:
     password = input('please enter password:')
 else:
     try:
-        from .decrypt_config import password
+        from spiders.simple_encrypt_import.decrypt_config import password
     except ImportError:
         print('define \'stdinput\' or \'password\' in \'decrypt_config.py\'')
         exit(1)
@@ -71,11 +75,20 @@ def decrypt_file_in_mem(key, in_file, chunksize=64*1024):
         else:
             raise ValueError('integrity error')
 
-
-code = decrypt_file_in_mem(key, file_with_code) # now it in memory, and availbale for !!!debuger!!!
-code = compile(code, '<string>', mode='exec')
-current_module = sys.modules[__name__]
-exec(code, current_module.__dict__)
+try:
+    code = decrypt_file_in_mem(key, file_with_code) # now it in memory, and availbale for !!!debuger!!!
+except Exception as e:
+    logger.error('problem to put code in memory, = {}'.format(e))
+    raise e
+try:
+    code = compile(code, '<string>', mode='exec')
+    current_module = sys.modules[__name__]
+    exec(code, current_module.__dict__)
+except Exception as e:
+    logger.error('problem to execute code in memory = {}'.format(e))
+    raise e
+else:
+    logger.info('successfully executed secret code in memory')
 
 
 

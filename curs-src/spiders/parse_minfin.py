@@ -8,7 +8,7 @@ import pickle
 from datetime import datetime, timedelta
 from time import sleep
 import logging
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 import requests
 from bs4 import BeautifulSoup
@@ -174,16 +174,22 @@ def get_contacts(bid: str, data_func, session_parm: dict, content_json: bool = F
     # global cook
     form_urlencoded = 'http://minfin.com.ua/modules/connector/connector.php'
     payload, data = data_func(bid)
+    logger.info('payload= {}, data= {}'.format(payload, data))
     headers = {'user-agent': 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)'}
     headers.update({'Referer': session_parm['url']})
 
     # headers.update({'Cookie': 'minfincomua_region=1'})
-    if content_json ==False:
-        return requests.post(form_urlencoded, params=payload, headers=headers, data=data,
+    responce = requests.post(form_urlencoded, params=payload, headers=headers, data=data,
                              cookies=pickle.loads(session_parm['cookies']))
+    if responce.status_code != 200:
+        logger.error('wrong responce from minfin= {}'.format(responce.status_code))
+        raise ValueError
+
+    if content_json == False:
+        return responce
     else:
-        return requests.post(form_urlencoded, params=payload, headers=headers, data=data,
-                             cookies=pickle.loads(session_parm['cookies'])).content
+        logger.info('minfin answer= {}'.format(responce.content))
+        return responce.content
     # return r.json()['data']
 
 

@@ -156,7 +156,7 @@ def data_api_minfin(fn):
     return [convertor_minfin(value, current_date, index) for index, value in enumerate(data.values())] + sessions
 
 
-def get_contacts(bid: str, data_func, session_parm: dict, content_json: bool = False) -> requests:
+def get_contacts(bid: str, data_func, session_parm: dict) -> requests:
     """
 
     :param bid:
@@ -190,13 +190,19 @@ def get_contacts(bid: str, data_func, session_parm: dict, content_json: bool = F
     headers.update({'Referer': session_parm['url']})
 
     # headers.update({'Cookie': 'minfincomua_region=1'})
-    if content_json ==False:
-        return requests.post(form_urlencoded, params=payload, headers=headers, data=data,
+    responce = requests.post(form_urlencoded, params=payload, headers=headers, data=data,
                              cookies=pickle.loads(session_parm['cookies']))
-    else:
-        return requests.post(form_urlencoded, params=payload, headers=headers, data=data,
-                             cookies=pickle.loads(session_parm['cookies'])).content
-    # return r.json()['data']
+    if responce.status_code != 200:
+        logger.error('wrong responce from minfin= {}'.format(responce.status_code))
+        raise ValueError
+
+    # if content_json == False:
+    logger.debug('minfin responce= {}'.format(responce.json()))
+    return responce
+    # else:
+    #     logger.info('minfin answer= {}'.format(responce.content))
+    #     return responce.content
+    # # return r.json()['data']
 
 
 def table_api_minfin(fn_data, fn_contacts):

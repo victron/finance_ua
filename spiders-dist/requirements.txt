@@ -7,3 +7,5 @@ pycrypto
 beautifulsoup4
 #apscheduler
 uwsgi
+pyvirtualdisplay
+selenium

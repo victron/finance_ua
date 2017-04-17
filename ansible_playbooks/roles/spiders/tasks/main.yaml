@@ -8,6 +8,8 @@
 #  - name: remove pip cache
 #
 #    when: libssl.changed
+  - name: install X virtual framebuffer (not need for chrom with --headless)
+    apt: name=xvfb state=present
   become: yes
   become_method: sudo
 # create venv and install application

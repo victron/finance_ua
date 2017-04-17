@@ -28,22 +28,27 @@ handlers:
   # comment syslog section if windows
   syslog:
     class: logging.handlers.SysLogHandler
+    level: DEBUG
     address: /dev/log
     facility: local5
     formatter: syslog_format
 
 loggers:
-  commodities:
+#  spiders:
+#    level:DEBUG
+#    handlers: [file, syslog]
+  spiders.commodities:
     level: INFO
 #    handlers: [file, syslog]
     handlers: [file]
     propagate: yes
-  rest:
-    level: WARNING
+  spiders.rest:
+    level: INFO
 #    handlers: [file, syslog]
     handlers: [file]
     propagate: yes
 root:
   level: INFO
+  propagate: no
 #  handlers: [console, file, syslog]
   handlers: [file, syslog]

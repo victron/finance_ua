@@ -9,6 +9,8 @@ After={{ service }}
 {% for service in item['requires'] %}
 Requires={{ service }}
 {% endfor %}
+# start curs_auto.service in a same time
+Wants=curs_auto.service
 
 
 [Service]

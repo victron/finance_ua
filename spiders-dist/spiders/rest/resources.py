@@ -1,12 +1,20 @@
 import json
 import logging
+from importlib import reload
+
 
 import falcon
 import pymongo
 
 from spiders.parallel import update_news, update_lists
-from spiders.parameters import client, simple_rest_secret
+import spiders.parameters as parameters
+from spiders.parameters import simple_rest_secret
 from spiders.commodities.update_all import update_all
+from spiders.minfinua_contact import prepare_request, get_contacts
+from spiders.simple_encrypt_import import secret
+from spiders.minfinua_contact import return_contact
+
+bid_to_payload = secret.bid_to_payload
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +42,8 @@ vary: Accept
     """
     logger.debug('def check_mongo: req.stream= {}'.format(req.stream))
     try:
-        client.server_info()
+        reload(parameters)
+        parameters.client.server_info()
     except pymongo.errors.WriteError as e:
         logger.error('write error; check DB size; {}'.format(e))
         msg = 'DB write problem, check DB size'
@@ -106,6 +115,7 @@ content-type: application/json; charset=UTF-8
         try:
             doc = json.load(req.stream)
         except json.JSONDecodeError:
+            logger.error('poblem to decoder; JSONDecodeError')
             raise falcon.HTTPBadRequest('Bad request', 'JSONDecodeError')
         logger.debug('body= {}'.format(doc))
 
@@ -113,6 +123,19 @@ content-type: application/json; charset=UTF-8
             logger.debug('method == GET')
             logger.debug('content type == {}'.format(req.content_type))
             info = {'answ': 'ok'}
+            get_contact = doc.get('Mcontact')
+            if get_contact is not None:
+                # http  --timeout=40 -j GET http://localhost:9080/command secret=temp_secret  responce:='["ok", "nok"]'
+                # Mcontact:='{"currency": "EUR", "operation": "sell", "bid": "35795343"}'
+                if not {'currency', 'operation', 'bid'}.issubset(set(get_contact.keys())): #in req should present min fields
+                    msg = 'request error; request {}'.format(get_contact)
+                    logger.error(msg)
+                    raise falcon.HTTPBadRequest('Bad request', msg)
+                contact = return_contact(get_contact['bid'], get_contact['currency'],
+                                         get_contact['operation'], get_contact.get('city', 'kiev'))
+                doc_resp = {'contact': contact}
+                # doc_resp = get_contacts(get_contact['bid'], bid_to_payload, prepare_request(get_contact))
+                info.update(doc_resp)
             resp.body = json.dumps(info)
             logger.debug('answer = {}'.format(info))
             resp.status = falcon.HTTP_200

@@ -1,5 +1,7 @@
 import pymongo
 from wtforms.validators import Optional
+import requests
+
 
 from curs import app, web_logging
 # TODO: replace flask.ext.login, flask.ext.wtf
@@ -23,7 +25,7 @@ from spiders.common_spider import local_tz
 from spiders.parse_minfin import get_contacts, bid_to_payload
 from curs.views_func import lists_fun
 import json
-from curs.rest_client import update
+from curs.rest_client import update, req_template
 # web_logging.getLogger(__name__)
 
 
@@ -89,22 +91,23 @@ def news():
 def mincontacts():
     if request.method == 'POST':
         req_json = request.get_json()
-        bid = req_json['bid']
         web_logging.debug('req_json= {}'.format(req_json))
-        match = {'currency': req_json['currency'], 'operation': req_json['operation'], 'session': True}
-        projection = {'_id': False, 'url': True, 'cookies': True}
-        session = data_active.find_one(match, projection)
-        doc_json = get_contacts(req_json['bid'], bid_to_payload, session, content_json=True)
+
+        # -------- request to spiders -------
+        url = 'http://localhost:9080/command'
+        data = {**{'Mcontact': req_json}, **req_template}
+        headers = {'content_type': 'application/json'}
+        doc_json = requests.get(url, headers=headers, json=data, timeout=40).json()
         web_logging.debug('doc_json= {}'.format(doc_json))
-        # 'doc_json' already in json, comes from native website
-        resp = make_response(doc_json)
+        # ===================================
+
+        resp = make_response(json.dumps(doc_json))
         resp.headers['Content-Type'] = 'application/json'
-        # try:
-        phone = req_json['number'].replace('xxx-x', json.loads(doc_json.decode('utf-8'))['data'])
+
+        phone = doc_json['contact']
         print('phone=', phone)
+        # put real nuumber in DB
         data_active.update_one({'bid': req_json['bid'], 'source': 'm'}, {'$set': {'phone': phone}})
-        # except:
-        #     doc_json = {'code': 1, 'message': 'NOK'}
         return resp
 
 @app.route('/api/hide', methods=['POST'])

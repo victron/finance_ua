@@ -22,9 +22,10 @@ $(document).ready(function(){
         data: JSON.stringify({ bid: e, currency: currency, operation: operation, number: number}),
         dataType: "json",
         success: function(response, statusTxt, xhr) {
-                    if (response['code'] == 0){
+                    if (response['answ'] == "ok"){
                        // alert("Error: " + xhr.status + ": " + xhr.statusText + "jj" + response['number']);
-                        t.text(number.replace("xxx-x", "-" + response['data']));
+                        t.text(response['contact']);
+                        // t.text(number.replace("xxx-x", "-" + response['data']));
                         t.addClass("contact-shown");
                         t.removeClass("contact-hiden");
                         // t.remove();
