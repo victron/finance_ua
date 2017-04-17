@@ -44,6 +44,7 @@ config.vm.hostname = "vagrant"
 # config.vm.synced_folder "C:/Users/vtsymbal/Documents/_ALU", "/home/ubuntu/_ALU", create: true
 # config.vm.synced_folder "C:/Users/vtsymbal/Documents/_ALU_priv", "/home/ubuntu/_ALU_priv", create: true
 #config.vm.synced_folder "C:/Users/vtsymbal/Documents/_NSN", "/home/vagrant/_NSN"
+  config.vm.synced_folder "C:/Users/vtsymbal/Documents/_ALU_priv/GO", "/home/ubuntu/GO", create: true
 
 
   # Provider-specific configuration so you can fine-tune various
