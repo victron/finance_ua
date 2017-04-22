@@ -21,7 +21,8 @@ url_to_file = {
     'http://markets.businessinsider.com/Ajax/CommodityController_HistoricPriceList/iron-ore-price/USD/1.1.2014_28.3.2017':
         'history_post2_responce.pickle',
     'http://www.tradingeconomics.com/commodities': 'tradingeconomics_commodities.pickle',
-    'https://graintrade.com.ua/en': 'graintrade_get.pickle'
+    'https://graintrade.com.ua/en': 'graintrade_get.pickle',
+    'http://berlox.com/finance/listz.bin': 'berlox_listz.enc'
 }
 
 def mock_requests(url: str, **kwargs) -> str:

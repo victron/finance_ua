@@ -59,7 +59,7 @@ conv_dict_orig = {'d' : 'd',
                 'cm': 'comment'}
 
 # @timer()
-def fetch_data(test_data=None):
+def fetch_data():
     def decrypt_file(key, iv, in_file, out_file=None, chunksize=24*1024):
         """
         Function not in use, just for reference
@@ -94,10 +94,8 @@ def fetch_data(test_data=None):
     def get_belox_data(proxy_is_used: bool = False) -> requests:
         url = 'http://berlox.com/finance/listz.bin'
         # print('--------------- berlox fetch -------------')
-        if test_data is None:
-            return requests.get(url).content
-        else:
-            return test_data
+        resp = requests.get(url).content
+        return resp
             # return requests.get(url, proxies=proxies)
 
 
