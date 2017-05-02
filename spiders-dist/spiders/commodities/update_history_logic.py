@@ -12,6 +12,21 @@ from spiders.commodities.common_dict import businessinsder_key
 
 logger = logging.getLogger(__name__)
 
+def convert_bushel_tonn(key: str, val: float) -> float:
+    """
+    on businessinsider some data in USc per Bushel; check if need convert in tons, and convert it
+     
+    :param key: 
+    :param val: 
+    :return: 
+    """
+    multiplires = {'corn': 39.3680, 'oats': 64.8420, 'soybean': 36.7440,
+                   'soybeans_oil': 2204.622621848776, 'sugar': 2204.622621848776, 'rice': 19.6841305522}
+    if key in multiplires.keys():
+        return round(val * multiplires[key], 2)
+    else:
+        return val
+
 def update_history(docs: list, collection_: collection) -> namedtuple:
     """
     input like:
@@ -27,6 +42,9 @@ def update_history(docs: list, collection_: collection) -> namedtuple:
     matched_count, modified_count, upserted = 0, 0, 0
     for doc in docs:
         _id = doc.pop('time')   # remove key 'time', and set value to _id
+        keys = doc.keys()
+        # convert into metric
+        doc[keys[0]] = convert_bushel_tonn(keys[0], doc[keys[0]])
         update_result = collection_.update_one({'_id': _id}, {'$set': doc}, upsert=True)
         matched_count += update_result.matched_count
         modified_count += update_result.modified_count
