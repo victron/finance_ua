@@ -27,41 +27,10 @@ ukrstat = DATABASE['ukrstat']
 bonds_auction = DATABASE['bonds_auction']
 bonds_payments = DATABASE['bonds_payments']
 
-records.create_index([('bid', pymongo.ASCENDING),
-                      ('time', pymongo.ASCENDING),
-                      ('source', pymongo.ASCENDING)], unique=True, name='unique_keys')
-
-data_active.create_index([('bid', pymongo.ASCENDING),
-                          ('time', pymongo.ASCENDING),
-                          ('source', pymongo.ASCENDING)], name='acctive_key')
-
-data_active.create_index([('time_update', pymongo.ASCENDING)], name='update_time_key')
-data_active.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')
 
 # -------- news ---------------
 news = DATABASE['news']
-news.create_index([
-                  #  ('time', pymongo.ASCENDING),
-                   ('href', pymongo.ASCENDING)], name='news_time', unique=True)
-news.create_index([('headline', pymongo.TEXT)], default_language='russian', name='headline')
-
-bonds_auction.create_index([('auctiondate', pymongo.ASCENDING),
-                            ('auctionnum', pymongo.ASCENDING)], unique=True, name='bonds_auction')
-bonds_payments.create_index([('bond', pymongo.ASCENDING),
-                             ('time', pymongo.ASCENDING),
-                             ('pay_type', pymongo.ASCENDING)], unique=True, name='payments')
-
-history.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
 # information about collections
 meta = aware_times('meta')
 swaps = DATABASE['swaps']
-swaps.create_index([('date', pymongo.ASCENDING),
-                    ('period', pymongo.ASCENDING)], unique=True, name='swaps')
 aggregators = DATABASE['aggregators']
-aggregators.create_index([('date', pymongo.ASCENDING),
-                          ('id_api', pymongo.ASCENDING),
-                          ('k076txt', pymongo.ASCENDING)], unique=True, name='aggregators')
-
-for currency in ['USD', 'EUR', 'RUB']:
-    DB = DATABASE[currency]
-    DB.create_index([('time', pymongo.DESCENDING)], name='history_time', unique=True)
