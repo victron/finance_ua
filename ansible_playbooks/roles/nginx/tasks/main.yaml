@@ -33,6 +33,7 @@
       file: path=/etc/letsencrypt state=directory
     - name: create letsencrypt config file
       template: src=letsencrypt.conf.j2 dest=/etc/letsencrypt/letsencrypt.conf
+      # or to update cert
     - name: get letsencrypt cert
       command: letsencrypt certonly --agree-tos --config /etc/letsencrypt/letsencrypt.conf
     # don't execute block when cert.pem exists
@@ -44,7 +45,7 @@
     command: mkdir -p {{ static_path }}
   - name: generate nginx.conf (production config)
     template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
-  - name: reload ninx
+  - name: reload nginx
     service: name=nginx state=reloaded
 #  - name: create ssl directory in nginx
 #    command: mkdir -p /etc/nginx/ssl
