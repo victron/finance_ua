@@ -21,6 +21,11 @@ DB_NAME = 'TEST'
 client = MongoClient()
 DATABASE = client[DB_NAME]
 
+def current_key():
+    # test key for test file
+    return b'2\xe8[9%g\xacL\xe2\x10Q)\x96\xfeI<)\xec\x9b\xa0\xdf\xa3\xc5;\x13\xe4F\x14\x15\xa2\xd6\x0f'
+
+
 def set_tes_environ(fn, data):
     def wraper(*args):
         return fn(data)
@@ -40,7 +45,8 @@ class InitTestsCase(unittest.TestCase):
 class ParseBerlox(InitTestsCase):
 
     @patch('spiders.berlox.requests.get', side_effect=mock_requests)
-    def test1_decryptor(self, request_fun):
+    @patch('spiders.berlox.current_key', side_effect=current_key)
+    def test1_decryptor(self, request_fun, current_key_fun):
         decrypt_result = berlox.fetch_data()
         with open(DATA_PATH + 'berlox.json', 'r') as f:
             data_raw = json.load(f)
@@ -52,7 +58,8 @@ class ParseBerlox(InitTestsCase):
 
 
     @patch('spiders.berlox.requests.get', side_effect=mock_requests)
-    def test2_mongo_data(self, requests_fun,):
+    @patch('spiders.berlox.current_key', side_effect=current_key)
+    def test2_mongo_data(self, requests_fun, current_key_fun):
         result = parent([(berlox.data_api_berlox, berlox.fetch_data), ], 'records')
         print(result)
         first_insert_time = datetime.now(tz=local_tz)
