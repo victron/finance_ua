@@ -2,12 +2,12 @@ import logging
 from collections import namedtuple
 
 from spiders.filters import location, currency, operation, filter_or
-from pymongo.errors import DuplicateKeyError
+from pymongo.errors import DuplicateKeyError, WriteError
 
 from spiders.mongo_start import data_active
 from spiders.parameters import DATABASE
 
-logger = logging.getLogger('curs.mongo_collector.mongo_update')
+logger = logging.getLogger(__name__)
 # TODO:
 # - delete some fields, before saving into history
 # + delete from data_active all records without "time_update"
@@ -32,6 +32,8 @@ def mongo_insert_history(docs: list, collection):
         except DuplicateKeyError as e:
             duplicate_count += 1
             logger.debug('duplicate found={}'.format(str(e)))
+        except WriteError as e:
+            logger.critical('DB write problem; error= {}'.format(e))
     result = namedtuple('result', ['inserted_count', 'duplicate_count'])
     return result(inserted_count, duplicate_count)
 

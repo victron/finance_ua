@@ -42,7 +42,7 @@ def update_history(docs: list, collection_: collection) -> namedtuple:
     matched_count, modified_count, upserted = 0, 0, 0
     for doc in docs:
         _id = doc.pop('time')   # remove key 'time', and set value to _id
-        keys = doc.keys()
+        keys = list(doc.keys())
         # convert into metric
         doc[keys[0]] = convert_bushel_tonn(keys[0], doc[keys[0]])
         update_result = collection_.update_one({'_id': _id}, {'$set': doc}, upsert=True)

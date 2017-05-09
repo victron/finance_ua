@@ -1,3 +1,5 @@
+# collect info from www.minfin.gov.ua (only news)
+
 import json
 import logging
 from datetime import datetime

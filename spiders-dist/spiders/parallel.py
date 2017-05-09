@@ -14,7 +14,7 @@ from spiders.mongo_update import mongo_insert_history
 from spiders import parse_minfin
 from spiders.common_spider import current_datetime_tz
 
-logger = logging.getLogger('curs.mongo_collector.parallel')
+logger = logging.getLogger(__name__)
 
 class writer_news():
     def __init__(self, db_name, *funs):
@@ -36,6 +36,7 @@ class writer_news():
             fun_list.reverse()
             # docs = fun_list[1](fun_list[0]) #test string
             self.docs = reduce(lambda x, y: y(x), fun_list)
+            logger.debug('functions= {} gave docs num= {}'.format(fun_list, len(self.docs)))
         return self.docs
 
     def update(self, collection, update_time):
@@ -46,6 +47,7 @@ class writer_news():
         """
         collection = self.DATABASE[collection]
         named_tuple = mongo_insert_history(self.fetch(), collection)
+        logger.debug('inserted into= {} result= {}'.format(collection, named_tuple))
         self.update_result = (named_tuple.inserted_count, named_tuple.duplicate_count)
 
     def send(self, connector):
@@ -103,6 +105,7 @@ class writer_lists(writer_news):
                 self.data_active.replace_one(key, document, upsert=True)
                 logger.debug('REPLACE doc {}'.format(document))
 
+        # delete old bids
         self.result_delete = self.data_active.delete_many({'$or': [{'time_update': {'$lt': update_time}},
                                                                    {'time_update': None}], 'source': source})
         self.result_delete = self.result_delete.deleted_count
@@ -112,13 +115,16 @@ class writer_lists(writer_news):
 
 def workerANDconnector(funs, **kargs):
     # from mongo_collector import DB_NAME
+    logger.debug('worker called = {}'.format(funs))
     if kargs['collection'] == 'records':
         writer = writer_lists(DB_NAME, *funs)
     elif kargs['collection'] == 'news':
         writer = writer_news(DB_NAME, *funs)
     else:
         raise ValueError('wrong collection {}'.format(kargs['collection']))
+    logger.debug('start calling writer with args= {}, {}'.format(kargs['collection'], kargs['update_time']))
     writer.update(kargs['collection'], kargs['update_time'])
+    logger.debug('called writer with args= {}, {}'.format(kargs['collection'], kargs['update_time']))
     writer.send(kargs['connector'])
 
 
@@ -136,6 +142,7 @@ def parent(funcs: list, collection) -> tuple:
                                               kwargs={'connector': params[1][1], 'collection': collection,
                                                       'update_time': update_time})
                       for params in zip(funcs, pipes)]
+    logger.debug('created process num= {}'.format(len(processes_news)))
     for process, pipe in zip(processes_news, pipes):
         process.start()
         pipe[1].close()
@@ -174,9 +181,11 @@ def update_lists():
 
     :return: tuple inserted_count, ddeleted_count
     """
-    spiders_lists = [(parse_minfin.data_api_minfin, parse_minfin.get_triple_data),
+    spiders_lists = [
+                    (parse_minfin.data_api_minfin, parse_minfin.get_triple_data),
                      (finance_ua.data_api_finance_ua, finance_ua.fetch_data),
                      (berlox.data_api_berlox, berlox.fetch_data), ]
+    logger.debug('spiders_lists len= {}'.format(len(spiders_lists)))
     result = parent(spiders_lists, 'records')
     return result
 

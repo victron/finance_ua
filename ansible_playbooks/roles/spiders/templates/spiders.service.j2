@@ -14,14 +14,18 @@ Wants=curs_auto.service
 
 
 [Service]
-Type=forking
+# systemd will fork your daemon
+Type=simple
+# daemon needs to fork itself, and then quit before systemd continues
+# (process itself will take care of its deamonizing)
+# Type=forking
 WorkingDirectory={{ home_dir }}/{{ venv_dir }}
 #Restart=always
 KillSignal=SIGQUIT
 #KillSignal=SIGINT
-PIDFile={{ item['pidfile'] }}
-ExecStart={{ item['cmd'] }} --pidfile {{ item['pidfile'] }}
-
+{#PIDFile={{ item['pidfile'] }}#}
+{#ExecStart={{ item['cmd'] }} --pidfile {{ item['pidfile'] }}#}
+ExecStart={{ item['cmd'] }}
 User={{ app_user }}
 Group={{ app_user }}
 
@@ -32,6 +36,7 @@ OOMScoreAdjust=-100
 #ExecStop=
 #ExecReload=
 TimeoutSec=300
+# forward stderr to syslog and journal
 StandardError=syslog
 
 [Install]

@@ -35,8 +35,9 @@ handlers:
 
 loggers:
 #  spiders:
-#    level:DEBUG
-#    handlers: [file, syslog]
+#    level: DEBUG
+#    propagate: yes
+#    handlers: [syslog]
   spiders.commodities:
     level: INFO
 #    handlers: [file, syslog]
@@ -49,6 +50,6 @@ loggers:
     propagate: yes
 root:
   level: INFO
-  propagate: no
+  propagate: yes
 #  handlers: [console, file, syslog]
   handlers: [file, syslog]

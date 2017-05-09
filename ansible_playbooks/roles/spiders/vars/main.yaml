@@ -12,4 +12,5 @@ required:
 #    - nginx.service
   # /var/run need spesial write permitions
   pidfile: /tmp/{{ service }}.pid
-  cmd: "{{ home_dir }}/{{ venv_dir }}/bin/uwsgi --ini {{ home_dir }}/{{ venv_dir }}/.{{ service }}/uwsgi.ini --venv {{ home_dir }}/{{ venv_dir }} --daemonize {{ home_dir }}/{{ venv_dir }}/{{ service }}_uwsgi.log"
+#  cmd: "{{ home_dir }}/{{ venv_dir }}/bin/uwsgi --ini {{ home_dir }}/{{ venv_dir }}/.{{ service }}/uwsgi.ini --venv {{ home_dir }}/{{ venv_dir }} --daemonize {{ home_dir }}/{{ venv_dir }}/{{ service }}_uwsgi.log"
+  cmd: "{{ home_dir }}/{{ venv_dir }}/bin/uwsgi --ini {{ home_dir }}/{{ venv_dir }}/.{{ service }}/uwsgi.ini --venv {{ home_dir }}/{{ venv_dir }}"
