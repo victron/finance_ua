@@ -25,6 +25,13 @@ handlers:
     filename: spiders.log
     maxBytes: 5120
     backupCount: 3
+  errors:
+    class: logging.handlers.RotatingFileHandler
+    level: WARNING
+    formatter: file_format
+    filename: spiders_errors.log
+    maxBytes: 5120
+    backupCount: 3
   # comment syslog section if windows
   syslog:
     class: logging.handlers.SysLogHandler
@@ -52,4 +59,4 @@ root:
   level: INFO
   propagate: yes
 #  handlers: [console, file, syslog]
-  handlers: [file, syslog]
+  handlers: [syslog, errors]

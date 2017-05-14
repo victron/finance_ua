@@ -15,6 +15,8 @@ def update_all(commodities: list):
         raise NameError(unknown_commodities)
     businessinsder_set = set(businessinsder_key).intersection(commodities)  # set only for available commodities
     graintrade_set = set(graintrade_key).intersection(commodities)
+    # collect from "graintraide" only specific commodities
+    graintrade_set = graintrade_set.intersection({'sunflower_oil',})
     graintrade_result = update_mongo(graintrade_set)    # insert firstly from EURONEXT
     businessinsder_result = update_commudities_collection(businessinsder_set)
     # graintrade_result = []

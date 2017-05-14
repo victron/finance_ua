@@ -107,7 +107,9 @@ class writer_lists(writer_news):
 
         # delete old bids
         self.result_delete = self.data_active.delete_many({'$or': [{'time_update': {'$lt': update_time}},
-                                                                   {'time_update': None}], 'source': source})
+                                                                   {'time_update': None}],
+                                                           # 'source': source
+                                                           })
         self.result_delete = self.result_delete.deleted_count
         self.update_result = (self.update_result[0], self.result_delete)
         return self.update_result

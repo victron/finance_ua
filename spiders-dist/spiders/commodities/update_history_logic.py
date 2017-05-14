@@ -27,6 +27,55 @@ def convert_bushel_tonn(key: str, val: float) -> float:
     else:
         return val
 
+
+def get_previous_value(commodity: str, current_time: datetime, collection_: collection) -> dict:
+    """
+    
+    :param commodity: 
+    :param current_time: 
+    :param collection_: 
+    :return: dict of previous data for  commodity
+    { "_id" : datetime,  'commodity': 185.66 }
+    """
+    doc = collection_.find_one({commodity: {'$exists': True}, '_id': {'$lt': current_time}},
+                               projection={commodity: True},
+                               sort=[('_id', -1)], limit=1)
+    logger.debug('previous data for {} = {}'.format(commodity, doc))
+    return doc
+
+
+def allowed_to_insert(input_doc: dict, collection_: collection) -> bool:
+    """
+    There is logic to decide insert or not value in DB
+    compare curent value with previous, if current lower or bigger then previous in 'k' 
+    times - don't insert
+    :param input_doc: {'rhodium': 1015.0, 'time': datetime}; received data for commodity
+    :param collection_: 
+    :return: allowed to insert or not True / False
+    """
+    k = 2   # multiplier for top and down edge
+    if len(input_doc) > 2:
+        raise IndexError('more then 2 elements in dict= {}'.format(input_doc))
+    doc = dict(input_doc)
+    current_time = doc.pop('time')
+    keys = list(doc.keys())
+    commodity = keys[0]
+    # convert in tonns if val in bushel
+    doc[commodity] = convert_bushel_tonn(commodity, doc[commodity])
+    previous_doc = get_previous_value(commodity, current_time, collection_)
+    if previous_doc is None:
+        logger.warning('data for commodity= {}, early then= {} - not found; '
+                       'suspecting new data correct'.format(commodity, current_time))
+        return True
+    if previous_doc[commodity] / k < doc[commodity] < previous_doc[commodity] * k:
+        logger.debug('current value= {} of commodity= {} - in OK range'.format(doc[commodity], commodity))
+        return True
+    else:
+        logger.warning('current value= {} of commodity= {} - in Nok range'.format(doc[commodity], commodity))
+        logger.warning('currentcommodity= {}; previous commodity= {}'.format(doc, previous_doc))
+        return False
+
+
 def update_history(docs: list, collection_: collection) -> namedtuple:
     """
     input like:
@@ -41,6 +90,8 @@ def update_history(docs: list, collection_: collection) -> namedtuple:
     result_obj = namedtuple('update_history', ['matched_count', 'modified_count', 'upserted'])
     matched_count, modified_count, upserted = 0, 0, 0
     for doc in docs:
+        if not allowed_to_insert(doc, collection_):
+            continue
         _id = doc.pop('time')   # remove key 'time', and set value to _id
         keys = list(doc.keys())
         # convert into metric
