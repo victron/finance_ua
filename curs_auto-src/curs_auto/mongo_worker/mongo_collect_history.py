@@ -170,16 +170,19 @@ def hour_stat(collection: data_active) -> list:
     pipeline = [{'$match': {'location': location,
                             '$and': [{'time': {'$gte': start_time}}, {'time': {'$lt': stop_time}}]}},
                 {'$group': {'_id': {'operation': '$operation', 'currency': '$currency'},
-                            'rates': {'$push':  '$rate'}}},
-                {'$project': {'_id': False, 'operation': '$_id.operation', 'currency': '$_id.currency', 'rates': '$rates'}}]
+                            'rates': {'$push':  '$rate'}, 'vales': {'$push': '$amount'}}},
+                {'$project': {'_id': False, 'operation': '$_id.operation', 'currency': '$_id.currency',
+                              'rates': '$rates', 'vales': '$vales'}}]
 
     command_cursor = collection.aggregate(pipeline)
 
     def form_output_doc(document):
         document[document['operation']] = round(statistics.median(document['rates']), 2)
         document[document['operation'] + '_rates'] = document['rates']
+        document[document['operation'] + '_vales'] = document['vales']
         del document['operation']
         del document['rates']
+        del document['vales']
         document['source'] = source
         document['time'] = stop_time
         return document

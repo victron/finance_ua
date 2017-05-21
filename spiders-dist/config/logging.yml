@@ -27,7 +27,7 @@ handlers:
     backupCount: 3
   errors:
     class: logging.handlers.RotatingFileHandler
-    level: WARNING
+    level: ERROR
     formatter: file_format
     filename: spiders_errors.log
     maxBytes: 5120
