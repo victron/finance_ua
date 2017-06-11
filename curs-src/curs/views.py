@@ -23,7 +23,7 @@ from mongo_collector.parallel import update_news
 from datetime import datetime, timedelta
 from spiders.common_spider import local_tz
 from spiders.parse_minfin import get_contacts, bid_to_payload
-from curs.views_func import lists_fun
+from curs.views_func import lists_fun, list_numbers, save_contact
 import json
 from curs.rest_client import update, req_template
 # web_logging.getLogger(__name__)
@@ -67,7 +67,17 @@ def lists_hidden():
     kwargs = {'hidden': {'hidden': True}, 'title': 'Hidden Lists'}
     return lists_fun(**kwargs)
 
+@app.route('/numbers', methods=['GET', 'POST'])
+@login_required
+def add_edit_number():
+    kwargs = {'title': 'Numbers'}
+    return list_numbers(**kwargs)
 
+@app.route('/save_contact', methods=['GET', 'POST'])
+@login_required
+def save_contact_number():
+    kwargs = {'title': 'Save contact'}
+    return save_contact(**kwargs)
 
 @app.route('/news', methods=['GET', 'POST'])
 @login_required

@@ -16,8 +16,9 @@ from curs import web_logging
 # /home/vic/flask/lib/python3.5/site-packages/flask/exthook.py:71: ExtDeprecationWarning: Importing flask.ext.wtf is deprecated, use flask_wtf instead
 from flask import render_template, flash, redirect, url_for, abort, jsonify, request, make_response
 from mongo_collector.mongo_start import DATABASE
-from mongo_collector.mongo_start import data_active
-from curs.forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
+from mongo_collector.mongo_start import data_active, numbers
+from curs.forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList, SortNumbers, \
+    FilterNumbers, SaveNumber, Transaction
 from mongo_collector.parallel import update_lists
 import logging
 from curs.rest_client import update
@@ -283,6 +284,78 @@ def lists_fun(**kwargs):
                            form_filter=form_filter,
                            result=result,
                            result_top=result_top)
+
+
+def list_numbers(**kwargs):
+    # hidden_filter = kwargs.get('hidden', {})
+    title = kwargs.get('title', 'Numbers')
+    class Filter(FilterNumbers):
+        pass
+    setattr(Filter, 'sort_order', FieldList(FormField(SortNumbers), min_entries=3, validators=[Optional()]))
+    form_filter = Filter()
+    filter_recieved = {'contact_type': form_filter.contact_type.data, 'comment': form_filter.comment.data,
+                       'number': form_filter.number.data}
+    # filter_recieved.update(hidden_filter)
+    direction_dict = {'ASCENDING': pymongo.ASCENDING, 'DESCENDING': pymongo.DESCENDING}
+    sort_list = [(group_order.form.sort_field.data, direction_dict[group_order.form.sort_direction.data])
+                 for group_order in form_filter.sort_order if group_order.form.sort_field.data != 'None']
+
+    def mongo_request(original: dict) -> dict:
+        mongo_dict = dict(original)
+        for key, val in original.items():
+            if (val == 'None' or val == 'all' or val == '') and not key.startswith('$'):
+                del mongo_dict[key]
+            elif key.startswith('$') and (val == {'$search': ''} or val == {'$search': None}):
+                del mongo_dict[key]
+        return mongo_dict
+
+    if form_filter.validate_on_submit():
+        web_logging.debug('filter pushed')
+        flash('filter: number={number}, contact_typ={contact_type}, comment={comment}'
+              .format(number=filter_recieved['number'],
+                      contact_type=filter_recieved['contact_type'],
+                      comment=filter_recieved['comment']))
+        flash('Sort: {sort_list}'.format(sort_list=sort_list))
+        flash('filter_recieved={}'.format(filter_recieved))
+        flash('find req= {}'.format(mongo_request(filter_recieved)))
+        result = numbers.find(mongo_request(filter_recieved), sort=sort_list)
+    else:
+        result = numbers.find(mongo_request(filter_recieved), sort=(('time', pymongo.DESCENDING),))
+    flash('found count={}'.format(result.count()))
+    return render_template('numbers.html', title=title, form_filter=form_filter, result=result)
+
+
+def save_contact(**kwargs):
+    # hidden_filter = kwargs.get('hidden', {})
+    title = kwargs.get('title', 'Save contacts')
+    form = SaveNumber()
+
+    form_recieved = {'contact_type': form.contact_type.data, 'loc_comments': form.loc_comment.data,
+                     'nic': form.nic.data, 'org_type': form.org_type.data, 'names': form.names.data,
+                     'city': form.city.data, 'street': form.street.data, 'building': form.building.data,
+                     'numbers': form.numbers.data}
+
+    doc = dict(form_recieved)
+    # form_recieved.update(hidden_filter)
+
+    if form.validate_on_submit():
+        web_logging.debug('request to save number')
+        flash('nic= {nic}; contact_typ= {contact_type}; org_type= {org_type}; names= {names}; numbers= {numbers};'
+              'city= {city}; street= {street}, building={building}, loc_comments={loc_comments}'
+              .format(nic=form_recieved['nic'], contact_type=form_recieved['contact_type'],
+                      org_type=form_recieved['org_type'], names=form_recieved['names'],
+                      numbers=form_recieved['numbers'], city=form_recieved['city'], street=form_recieved['street'],
+                      building=form_recieved['building'], loc_comments=form_recieved['loc_comments']))
+        create_time = {'create_time': datetime.now()}
+        update_time = {'update_time': datetime.now()}
+        doc.update(create_time)
+        doc.update(update_time)
+        result = numbers.insert_one({key: val for key, val in doc.items() if val != ''}) # delete empty fields before insert
+        flash('_id= {}'.format(result))
+        # return list_numbers()
+        return render_template('save_contact.html', title=title, form=form)
+    return render_template('save_contact.html', title=title, form=form)
+
 
 
 if __name__ == '__main__':

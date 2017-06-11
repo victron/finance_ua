@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <a href="/save_contact">Save Contacts</a>
+<form action="" method="post" name="numbers">
+    {{ form_filter.hidden_tag() }}
+    <p>
+        Filter:<br>
+        List Type: {{ form_filter.contact_type }}
+        Number: {{ form_filter.number }}
+        Comment: {{ form_filter.comment }}
+        <br>
+        Sort Order:
+        <br>
+        {% for i in form_filter.sort_order.entries %}
+            {{ i.form.sort_field }}
+            {{ i.form.sort_direction }} <br>
+        {% endfor %}
+        <br><input type="submit" value="Filter">
+    </p>
+</form>
+    ==========================================<br>
+    {% for res in result %}
+        <div>
+            <p>
+                {{ res.nic }} {{ res.update_time.strftime('%Y-%m-%d_%H:%M') }}
+                {{ res.create_time.strftime('%Y-%m-%d_%H:%M') }} {{ res.comment }} {{ res.contact_type }}
+                {{ res.loc_comments }} {{ res.org_type }} {{ res.names }} {{ res.city }} {{ res.street }}
+                {{ res.building }} {{ res.numbers }}
+            </p>
+        </div>
+    {% endfor %}
+{% endblock %}
