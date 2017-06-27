@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block header %}
+    <link rel="stylesheet" href="../static/styles/numbers.css" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -18,18 +19,65 @@
             {{ i.form.sort_field }}
             {{ i.form.sort_direction }} <br>
         {% endfor %}
-        <br><input type="submit" value="Filter">
+        <br>{{ form_filter.filter }}
     </p>
 </form>
     ==========================================<br>
-    {% for res in result %}
-        <div>
-            <p>
-                {{ res.nic }} {{ res.update_time.strftime('%Y-%m-%d_%H:%M') }}
-                {{ res.create_time.strftime('%Y-%m-%d_%H:%M') }} {{ res.comment }} {{ res.contact_type }}
-                {{ res.loc_comments }} {{ res.org_type }} {{ res.names }} {{ res.city }} {{ res.street }}
-                {{ res.building }} {{ res.numbers }}
-            </p>
-        </div>
-    {% endfor %}
+
+<div>
+    <table width="100%">
+        <tr>
+            <th>Nic</th>
+            <th>Update time</th>
+            <th>Create time</th>
+            <th>Comment</th>
+{#            <th>type</th>#}
+            <th>Loc. comments</th>
+            <th>Org. type</th>
+            <th>Names</th>
+{#            <th>City</th>#}
+            <th>Street</th>
+            <th>b.#</th>
+            <th>Numbers</th>
+            <th>del?</th>
+        </tr>
+        {% for res in result %}
+        <tr>
+            <td>{{ res.nic }}</td>
+            <td>{{ res.update_time.strftime('%Y-%m-%d') }}<br>
+                {{ res.update_time.strftime('%H:%M') }}</td>
+            <td>{{ res.create_time.strftime('%Y-%m-%d') }}<br>
+                {{ res.create_time.strftime('%H:%M') }}</td>
+            <td>{{ res.comment }}</td>
+{#            <td>{{ res.contact_type }}</td>#}
+            <td>{{ res.loc_comments }}</td>
+            <td>{{ res.org_type }}</td>
+            <td>{# list all Names separated by commas  #}
+                {% for name in  res.names %}
+                    {{ name }}<br>
+                {% endfor %}</td>
+{#            <td>{{ res.city }}</td>#}
+            <td>{{ res.street }}</td>
+            <td>{{ res.building }}</td>
+            <td>{% for number in res.numbers %}
+                    {{ number }}<br>
+                {% endfor %}</td>
+            <td>
+                <form method="post" name="delete_record">
+{#  don't forget about csrf - validate_on_submit not working without it #}
+                    {{ form_del_number.csrf_token }}
+{#  trick: set data from one j2 value into another       #}
+                    {{ form_del_number.record_id(value=res._id) }}
+{#  save filter values in hidden field             #}
+                    {{ form_del_number.filters }}
+                    {{ form_del_number.delete(class="delete-button") }}
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+
 {% endblock %}

@@ -33,8 +33,10 @@ meta = aware_times('meta')
 swaps = DATABASE['swaps']
 aggregators = DATABASE['aggregators']
 commodities = DATABASE['commodities']
+numbers = aware_times('numbers')
 
 try:
+    numbers.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')
     records.create_index([('bid', pymongo.ASCENDING),
                           ('time', pymongo.ASCENDING),
                           ('source', pymongo.ASCENDING)], unique=True, name='unique_keys')

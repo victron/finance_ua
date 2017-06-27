@@ -1,0 +1,14 @@
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+.delete-button {
+    font-size: 9px;
+    padding: 1px 1px;
+    border: none;
+    border-radius: 50%;
+    margin: 4px 2px;
+    color: #ffb3cb;
+    /*background-color: red;*/
+    cursor: pointer;
+}
