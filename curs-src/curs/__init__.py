@@ -6,7 +6,7 @@
 # https://www.zharenkov.ru/post/write-a-tumblelog-application-with-flask-mongoenginev
 
 from flask import Flask
-from flask.ext.login import LoginManager
+from flask_login import LoginManager
 import os
 import sys
 
@@ -46,6 +46,7 @@ login_manager.login_view = "login"
 
 
 from curs import views
+from curs import views_numbers
 
 if __name__ == "__main__":
     app.run()

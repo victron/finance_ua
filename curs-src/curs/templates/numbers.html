@@ -39,7 +39,7 @@
             <th>Street</th>
             <th>b.#</th>
             <th>Numbers</th>
-            <th>del?</th>
+            <th>act.</th>
         </tr>
         {% for res in result %}
         <tr>
@@ -72,6 +72,8 @@
                     {{ form_del_number.filters }}
                     {{ form_del_number.delete(class="delete-button") }}
                 </form>
+                <br>
+                <input type="button" class="edit-button" onclick="location.href='./edit_contact/{{ res._id }}';" value="edit" />
             </td>
         </tr>
         {% endfor %}

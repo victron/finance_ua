@@ -12,3 +12,13 @@ table, th, td {
     /*background-color: red;*/
     cursor: pointer;
 }
+.edit-button {
+    font-size: 10px;
+    padding: 1px 3px;
+    border: none;
+    border-radius: 50%;
+    margin: 1px 1px;
+    color: #277cff;
+    /*background-color: red;*/
+    cursor: pointer;
+}
