@@ -9,6 +9,7 @@ from flask import Flask
 from flask_login import LoginManager
 import os
 import sys
+# from curs.momentjs import MomentJS
 
 # from flask.ext.mongoengine import MongoEngine
 import logging
@@ -34,6 +35,7 @@ web_logging = logging.getLogger('curs')
 
 app = Flask(__name__)
 app.config.from_object('curs.default_config')
+# app.jinja_env.globals['momentjs'] = MomentJS
 try:
     app.config.from_envvar('env_config')
 except RuntimeError:

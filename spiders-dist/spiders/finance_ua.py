@@ -123,7 +123,7 @@ def fetch_data(test_data=None) -> dict:
 def convertor_finance_ua(id: int, current_date: datetime, data) -> dict:
     out_dic = {conv_dict_orig[key] : data[key][id] for key in conv_dict_orig}
     out_dic['operation'] = conv_operation_orig[out_dic['operation']]
-    # out_dic['id'] = id
+    out_dic['bid'] = 'f' + str(out_dic['bid'])
     out_dic['location'] = location_dict_orig.get(out_dic['location'], 'None')
     out_dic['source'] = 'f'
     out_dic['rate'] = float(out_dic['rate'])

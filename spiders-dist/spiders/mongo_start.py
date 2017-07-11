@@ -34,6 +34,7 @@ swaps = DATABASE['swaps']
 aggregators = DATABASE['aggregators']
 commodities = DATABASE['commodities']
 numbers = aware_times('numbers')
+contracts = aware_times('contracts')
 
 try:
     numbers.create_index([('comment', pymongo.TEXT)], default_language='russian', name='comment_text')

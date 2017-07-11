@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block header %}
+    <link rel="stylesheet" href="../static/styles/numbers.css" type="text/css">
+{% endblock %}
+
+{% block content %}
+        {% if form.errors %}
+    <ul class="errors">
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <li>{{ form[field_name].label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <a href="./create_contract/new">Create contract</a>
+
+    <form action="" method="post" name="contracts">
+        {{ form.hidden_tag() }}
+        {{ form.contract_time_low.label }}: {{ form.contract_time_low }}
+        {{ form.contract_time_high.label }}: {{ form.contract_time_high }}
+        <br>
+        {{ form.contract_currency.label }}: {{ form.contract_currency }}
+        {{ form.contract_rate.label }}: {{ form.contract_rate }}
+        {{ form.contract_amount.label }}: {{ form.contract_amount }}
+        <br>
+        {{ form.contract_phones.label }}: {{ form.contract_phones }}
+        <br>
+        {{ form.contract_comments.label }}: {{ form.contract_comments }}
+        <br>
+        {{ form.done_time.label }}: {{ form.done_time }}
+        {{ form.finished.label }}: {{ form.finished }}
+        <br>
+        -------------- Sort Options ----------------
+        <br>
+        {{ form.sort_field }} {{ form.sort_direction }}
+        <br>
+        {{ form.filter }}
+    </form>
+    <div>
+        <table width="100%">
+            <tr>
+                <th>meeting<br>time</th>
+                <th>curr.</th>
+                <th>rate</th>
+                <th>amount</th>
+                <th>contr.<br>
+                    phones</th>
+                <th>contr.<br>
+                    comment</th>
+                <th>act.</th>
+            </tr>
+            {% for doc in docs %}
+            <tr>
+                <td>{{ doc.contract_time.strftime('%Y-%m-%d') }}<br>
+                    {{ doc.contract_time.strftime('%H:%M') }}</td>
+                <td>{{ doc.contract_currency }}</td>
+                <td>{{ doc.contract_rate }}</td>
+                <td>{{ doc.contract_amount }}</td>
+                <td>
+                    {% for phone in doc.contract_phones %}
+                        {{ phone }}<br>
+                    {% endfor %}
+                </td>
+                <td>{{ doc.contract_comments }}</td>
+                <td>
+                    <form action="" method="post" name="Delete contract">
+                        {{ delete_contract.csrf_token }}
+                        {{ delete_contract.record_id(value=doc._id) }}
+                        {{ delete_contract.delete(class="delete-button") }}
+                    </form>
+                    <br>
+                <input type="button" class="edit-button" onclick="location.href='./create_contract/{{ doc._id }}';" value="edit" />
+                </td>
+            {% endfor %}
+            </tr>
+        </table>
+    </div>
+{% endblock %}

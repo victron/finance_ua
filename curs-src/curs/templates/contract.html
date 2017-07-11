@@ -1,0 +1,14 @@
+{% extends "save_contact.html" %}
+{% block contract %}
+    {{ form.contract_time.label }}: {{ form.contract_time }}
+    {{ form.contract_phones.label }}: {{ form.contract_phones }}
+    <br>
+    {{ form.contract_currency.label }}: {{ form.contract_currency }}
+    {{ form.contract_rate.label }}: {{ form.contract_rate }}
+    {{ form.contract_amount.label }}: {{ form.contract_amount }}
+    <br>
+    {{ form.contract_comments.label }}: {{ form.contract_comments }}
+    <br>
+    {{ info }}
+    <hr>
+{% endblock %}

@@ -3,6 +3,7 @@ import pytz
 from datetime import datetime, timezone, timedelta
 
 
+kyiv_tz = pytz.timezone('Europe/Kiev')
 
 
 def current_datetime_tz() -> datetime:

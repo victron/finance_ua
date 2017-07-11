@@ -15,6 +15,7 @@
 
     <form action="" method="post" name="save_contact">
         {{ form.hidden_tag() }}
+        {% block contract %}{% endblock %}
         <p>
             {{ form.nic.label }}: {{ form.nic }}*
             {{ form.org_type.label }}: {{ form.org_type }}*

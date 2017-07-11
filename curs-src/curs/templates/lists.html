@@ -74,6 +74,7 @@
             <button type="button" class="unhide-button">unhide</button>
         {% endif %}
         <b>{{res_t.time.strftime('%H:%M')}}</b> {{res_t.amount}} <b>{{res_t.rate}}</b>
+            <a href="./save_contract/{{ res_t.bid }}">go</a>
             {% if  res_t.phone.find('xxx-x') != -1 %}
                 <a class="contact-hiden"> {{ res_t.phone }} </a>
             {% else %}
@@ -95,6 +96,7 @@
             <button type="button" class="unhide-button">unhide</button>
         {% endif %}
         <b>{{res.time.strftime('%H:%M')}}</b> {{res.amount}} <b>{{res.rate}}</b>
+        <a href="./save_contract/{{ res.bid }}">go</a>
         <!--{{res.location}} <b>{{res.operation}} {{res.currency}} -->
         {% if  res.phone.find('xxx-x') != -1 %}
             <a class="contact-hiden" data-bid-id="{{ res.bid }}"> {{ res.phone }} </a>

@@ -22,6 +22,7 @@ aware_times = lambda collection: DATABASE[collection].with_options(codec_options
 # data_active = db['data_active']
 data_active = aware_times('data_active') # pymongo 3.2.2
 numbers = aware_times('numbers')
+contracts = aware_times('contracts')
 
 bonds = DATABASE['bonds']
 ukrstat = DATABASE['ukrstat']

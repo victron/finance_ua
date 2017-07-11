@@ -32,6 +32,9 @@ OOMScoreAdjust=-100
 TimeoutSec=300
 StandardError=syslog
 
+Restart=on-failure
+RestartSec=5
+
 [Install]
 WantedBy=multi-user.target
 
