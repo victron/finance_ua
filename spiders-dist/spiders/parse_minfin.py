@@ -21,7 +21,7 @@ from spiders import filters
 from spiders import parameters
 from spiders.check_proxy import proxy_is_used
 from spiders.simple_encrypt_import import secret
-from spiders.common_spider import current_datetime_tz, date_handler
+from spiders.common_spider import current_datetime_tz, date_handler, kyiv_tz
 from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
 import requests
 
@@ -153,7 +153,7 @@ def data_api_minfin(fn):
             sessions.append({'currency': cur.upper(), 'source': 'm', 'operation': oper,
                              'url': fn_result[1]['url'], 'cookies': fn_result[1]['cookies'],
                              'session': True})
-    current_date = datetime.utcnow()
+    current_date = kyiv_tz.localize(datetime.now())
     return [convertor_minfin(value, current_date, index) for index, value in enumerate(data.values())] + sessions
 
 
