@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 
 from curs import web_logging
 from flask import render_template, flash, redirect, url_for, abort, jsonify, request, make_response
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from curs import app, web_logging
 from mongo_collector.mongo_start import data_active, numbers, contracts
 from curs.forms_numbers import FilterNumbers, SaveNumber, Transaction, DeleteNumber, Contracts, DeleteContract, \
@@ -19,6 +19,7 @@ class Contract:
         self._mandatory = {'contract_time': datetime, 'contract_rate': float, 'contract_currency': str,
                            'contract_amount': int, 'contract_phones': list}
         self._optional = {'done_time': datetime, 'contract_comments': str}
+        self._collection = contracts
         self.contract_time: datetime = None
         self.contract_rate: float = None
         self.contract_currency: str = None
@@ -71,7 +72,9 @@ class Contract:
                 doc[key] = doc[key].astimezone(kyiv_tz)
 
         # convert list to string
-        doc['contract_phones'] = ', '.join(doc['contract_phones'])
+        for key in [key for key, val in all_attrs.items() if val == list]:
+            if doc.get(key) is not None:
+                doc[key] = ', '.join((doc[key]))
 
         return doc
 
@@ -88,6 +91,25 @@ class Contract:
         return {key: val for key, val in self.__dict__.items()
                 if not key.startswith('_') and val is not None and val != ''}
 
+    def mongo_insert(self):
+        """
+
+        :return: _id of inserted document or None in error
+        """
+        additional_fields = {'create_user': current_user.username}
+        doc = self.as_dict()
+        doc.update(additional_fields)
+        result = self._collection.insert_one(doc)
+        return result.inserted_id
+
+    def mongo_update(self, _id, fields={}):
+        additional_fields = {'edit_user': current_user.username}
+        doc = self.as_dict()
+        doc.update(additional_fields)
+        doc.update(fields)
+        result = self._collection.update_one({'_id': ObjectId(_id)}, {'$set': doc})
+        return result.matched_count, result.modified_count
+
 
 class Contact(Contract):
     def __init__(self):
@@ -95,6 +117,7 @@ class Contact(Contract):
                            'update_time': datetime}
         self._optional = {'comment': str, 'loc_comments': str, 'names': list, 'city': str, 'street': str,
                           'building': str, 'contact_id': str}
+        self._collection = numbers
         self.contact_type, self.nic, self.org_type = None, None, None
         self.numbers: list = None
         self.create_time: datetime = None
@@ -104,6 +127,7 @@ class Contact(Contract):
         self.city: str = u'Киев'
         self.street, self.building = None, None
         self.contact_id: ObjectId = None
+        self.user: str = None
 
 
 
@@ -139,7 +163,6 @@ def add_edit_number():
                         # 'number': {'$in': [form_filter.number.data.split(',')]},
                         'numbers': {'$eq': form_filter.number.data},
                         '$text': {'$search': form_filter.comment.data}}
-    # filter_recieved.update(hidden_filter)
     direction_dict = {'ASCENDING': pymongo.ASCENDING, 'DESCENDING': pymongo.DESCENDING}
     sort_mongo = [(group_order.form.sort_field.data, direction_dict[group_order.form.sort_direction.data])
                   for group_order in form_filter.sort_order if group_order.form.sort_field.data != 'None']
@@ -195,9 +218,8 @@ def add_edit_number():
 @app.route('/save_contact', methods=['GET', 'POST'])
 @login_required
 def save_contact():
-    # hidden_filter = kwargs.get('hidden', {})
     title = 'Save contacts'
-    form = SaveNumber()
+    form = SaveNumber(user=current_user.username)
 
     form_recieved = Contact()
     form_recieved.from_form(form.data)
@@ -215,7 +237,7 @@ def save_contact():
         form_recieved.create_time = datetime.utcnow()
         form_recieved.update_time = form_recieved.create_time
 
-        result = numbers.insert_one(form_recieved.as_dict())
+        result = form_recieved.mongo_insert()
         flash('_id= {}'.format(result))
         # return list_numbers()
         return redirect(url_for('add_edit_number'))
@@ -245,8 +267,8 @@ def edit_contact(_id: str):
         form_recieved.from_form(form.data)
         form_recieved.update_time = datetime.utcnow()
 
-        result = numbers.update_one({'_id': ObjectId(_id)}, {'$set': form_recieved.as_dict()})
-        match_count, modified_count = result.matched_count, result.modified_count
+        result = form_recieved.mongo_update(_id)
+        match_count, modified_count = result
         flash("match_count= {}, modified_count= {}".format(match_count, modified_count))
         return redirect(url_for('add_edit_number'))
 
@@ -256,6 +278,11 @@ def edit_contact(_id: str):
 @app.route('/save_contract/<bid>', methods=['GET', 'POST'])
 @login_required
 def save_contract(bid):
+    """
+    combined form to save contract and contact
+    :param bid:
+    :return:
+    """
     title = 'Create contract -- ' + bid
     doc = data_active.find_one({'bid': bid})
     if doc is None:
@@ -269,7 +296,8 @@ def save_contract(bid):
     doc['phone'] = doc['phone'][len(doc['phone'])-10:]
 
     search_number = numbers.find_one({'numbers': {'$eq': doc['phone']}})
-    contract: dict = Contract().from_lists(doc)
+    contract = Contract()
+    contract.from_lists(doc)
 
     if search_number is None:
         # no contacts with such number, call create new contact form
@@ -278,17 +306,9 @@ def save_contract(bid):
         info = '--------- New Contact ------------'
     else:
         form_doc = Contact().to_form(search_number)
-        # form_doc = {'city': search_number['city'],
-        #             'numbers': ', '.join(search_number['numbers']),
-        #             'comment': search_number.get('comment', ''),
-        #             'loc_comments': search_number.get('loc_comments', ''),
-        #             'contact_type': search_number['contact_type'], 'nic': search_number['nic'],
-        #             'org_type': search_number['org_type'], 'names': ', '.join(search_number.get('names', '')),
-        #             'contact_id': search_number['_id']}
-
         info = '========= Contact already known, please check ======'
 
-    form_doc.update(contract)
+    form_doc.update(contract.as_dict())
     web_logging.debug('data for form= {}'.format(form_doc))
     form = Transaction(**form_doc)
 
@@ -296,7 +316,8 @@ def save_contract(bid):
         contact_info = Contact()
         contact_info.from_form(form.data)
 
-        contract_info = Contract().from_form(form.data)
+        contract_info = Contract()
+        contract_info.from_form(form.data)
 
         if contact_info.contact_id is None:
             # contact is new
@@ -305,23 +326,22 @@ def save_contract(bid):
             web_logging.debug('inserting contact_info= {}'.format(contact_info.as_dict()))
             web_logging.debug('inserting contract_info= {}'.format(contract_info))
             flash('inserting contact_info= {}, contract_info= {}'.format(contact_info.as_dict(), contract_info))
-            result_contract = contracts.insert_one(contract_info)
-            result_contact = numbers.insert_one(contact_info.as_dict())
+            result_contract = contract_info.mongo_insert()
+            result_contact = contact_info.mongo_insert()
             # add contact id into document
-            result_contract_upd = contracts.update_one({'_id': ObjectId(result_contract.inserted_id)},
-                                               {'$set': {'contact': ObjectId(result_contact.inserted_id)}})
-            result_contact_upd = numbers.update_one({'_id': ObjectId(result_contact.inserted_id)},
-                                                {'$addToSet': {'contracts': ObjectId(result_contract.inserted_id)}})
+            result_contract_upd = contracts.update_one({'_id': ObjectId(result_contract)},
+                                               {'$set': {'contact': ObjectId(result_contact)}})
+            result_contact_upd = numbers.update_one({'_id': ObjectId(result_contact)},
+                                                {'$addToSet': {'contracts': ObjectId(result_contract)}})
         else:
             # contact already exists
             contact_info.update_time = datetime.utcnow()
             web_logging.debug('inserting contact_info= {}'.format(contact_info.as_dict()))
             web_logging.debug('inserting contract_info= {}'.format(contract_info))
             flash('updating contact_info= {}, creating contract_info= {}'.format(contact_info.as_dict(), contract_info))
-            contract_info['contact'] = [ObjectId(contact_info.contact_id)]
-            result_contract = contracts.insert_one(contract_info)
+            result_contract = contract_info.mongo_insert()
             result_contact = numbers.update_one({'_id': ObjectId(contact_info.contact_id)},
-                                                {'$addToSet': {'contracts': ObjectId(result_contract.inserted_id)}})
+                                                {'$addToSet': {'contracts': ObjectId(result_contract)}})
 
         return redirect('/contracts')
 
@@ -350,6 +370,7 @@ def list_contracts():
         # deleted_count = 0
         deleted_count = contracts.delete_one(del_mongo_req).deleted_count
         flash('deleleted id= {}, count= {}'.format(del_mongo_req, deleted_count))
+        return redirect(url_for('list_contracts'))
 
     elif form.validate_on_submit() or request.method == 'GET':
         form_copy = dict(form.data)
@@ -413,18 +434,20 @@ def create_contract(_id='new'):
 
         contract = Contract()
         contract.done_time = kyiv_tz.localize(datetime.now())
+        contract.user = current_user.username
         form = SaveContract(**contract.to_form(doc))
 
     if request.method == 'POST':
         if form.validate_on_submit():
-            form_received: dict = Contract().from_form(form.data)
+            contract = Contract()
+            contract.from_form(form.data)
             if _id == 'new':
-                result = contracts.insert_one(form_received)
-                flash("inserted doc={}, _id={}".format(form_received, result.inserted_id))
-            else:
-                result = contracts.update_one({'_id': ObjectId(_id)}, {'$set': form_received})
-                flash("modified_count= {}, updated doc= {}, ".format(result.modified_count, form_received))
+                result = contract.mongo_insert()
+                flash("inserted doc={}, _id={}".format(contract.as_dict(), result))
 
+            else:
+                result = contract.mongo_update(_id)
+                flash("modified_count= {}, updated doc= {}, ".format(result, contract.as_dict()))
             return redirect(url_for('list_contracts'))
 
     return render_template('create_edit_contract.html', title=title, form=form)
