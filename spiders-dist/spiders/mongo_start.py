@@ -33,6 +33,7 @@ meta = aware_times('meta')
 swaps = DATABASE['swaps']
 aggregators = DATABASE['aggregators']
 commodities = DATABASE['commodities']
+main_currencies = DATABASE['main_currencies']
 numbers = aware_times('numbers')
 contracts = aware_times('contracts')
 
