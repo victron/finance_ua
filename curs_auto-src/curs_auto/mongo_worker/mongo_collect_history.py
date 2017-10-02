@@ -145,6 +145,7 @@ def create_hour_stat_doc2(currency: str, operation: str, collection: data_active
     command_cursor = collection.aggregate(pipeline)
     return [form_output_doc(doc) for doc in command_cursor]
 
+
 def hour_stat(collection: data_active) -> list:
     """
     forms hour statistics
@@ -178,6 +179,7 @@ def hour_stat(collection: data_active) -> list:
 
     def form_output_doc(document):
         document[document['operation']] = round(statistics.median(document['rates']), 2)
+        document[document['operation'] + '_val'] = sum(document['vales'])
         document[document['operation'] + '_rates'] = document['rates']
         document[document['operation'] + '_vales'] = document['vales']
         del document['operation']
@@ -236,9 +238,10 @@ def daily_stat(day: datetime, collection) -> dict:
     pipeline = [{'$match': {'source': 'h_int_stat',
                             '$and': [{'time': {'$gte': time[0]}}, {'time': {'$lt': time[1]}}]}},
                 {'$group': {'_id': None, 'sell': {'$avg': '$sell'}, 'sell_rates': {'$push':  '$sell'},
-                                         'buy': {'$avg': '$buy'}, 'buy_rates': {'$push':  '$buy'}}},
+                                         'buy': {'$avg': '$buy'}, 'buy_rates': {'$push':  '$buy'},
+                            'sell_val': {'$sum': '$sell_val'}, 'buy_val': {'$sum': '$buy_val'}}},
                 {'$project': {'_id': False, 'buy': '$buy', 'sell': '$sell', 'sell_rates': '$sell_rates',
-                              'buy_rates': '$buy_rates'}}]
+                              'buy_rates': '$buy_rates', 'sell_val': '$sell_val', 'buy_val': '$buy_val'}}]
     command_cursor = collection.aggregate(pipeline)
 
     def form_output_doc(document):
@@ -393,6 +396,10 @@ if __name__ == '__main__':
     # print('inserted= {}, duplicated= {}'.format(result[0], result[1]))
     # # ================================================
     # agg_daily_stat()
+    #
+    # add values to h_int_stat based on buy_vales and sell_values
+
+
     pass
 
 
