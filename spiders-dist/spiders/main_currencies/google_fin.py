@@ -14,7 +14,7 @@ from collections import namedtuple
 
 logger = logging.getLogger(__name__)
                     # symbols converter
-                    #   (GOOGLE, YAHO)
+                    #   (GOOGLE, YAHOO)
 sympols = {"USDCHF": ("USDCHF", "CHF=X"),
            "EURUSD": ("EURUSD", "EUR=X"),
            "USDJPY": ("USDJPY",),
@@ -42,11 +42,11 @@ def google_get(currency: str, period: int = 2, interval: int = 86400, only_date:
     # format ===> date, open, high, low, close, volume
     # format = "d,o,h,l,c,v"
     format = "d,c,v"
-    quote = sympols[currency][0]
-    if quote is None:
+    quarter = sympols[currency][0]
+    if quarter is None:
         logger.warning("no data for {} in GOOGLE".format(currency))
         return []
-    payload = {"p": period, "i": r_interval, "f": format, "q": quote}
+    payload = {"p": period, "i": r_interval, "f": format, "q": quarter}
     try:
         r = requests.get(url, params=payload)
     except requests.ConnectionError as e:
