@@ -9,3 +9,5 @@ beautifulsoup4
 uwsgi
 pyvirtualdisplay
 selenium
+lxml
+

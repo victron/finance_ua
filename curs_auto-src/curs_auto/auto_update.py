@@ -28,7 +28,8 @@ logger = logging.getLogger('curs_auto')
 
 UPDATE_COMMODITIES = ['corn', 'iron_ore', 'oats', 'oil_brent', 'soybean_meal', 'soybeans_oil', 'soybeans',
                       'sugar', 'wheat', 'sunflower_oil']
-MAIN_CURRENCIES = ["EURUSD", "XAUUSD", "XAGUSD", "USDJPY", "USDCHF", "USDCAD", "NZDUSD", "AUDUSD", "GBPUSD"]
+MAIN_CURRENCIES = ["EURUSD", "USDJPY", "USDCHF", "USDCAD", "NZDUSD", "AUDUSD", "GBPUSD"]
+INVESTING_COM = ["XAUUSD", "XAGUSD", "IRONORE"]
 
 kiev_tz = pytz.timezone('Europe/Kiev')
 jobstores = {'longTerm': MongoDBJobStore(),
@@ -77,6 +78,11 @@ main_currencies = scheduler.add_job(rest_client.update_dict, 'interval',
                                     args=[{**{'update': 'main_currencies'}, **{'list': MAIN_CURRENCIES}}],
                                     name='auto_' + 'main_currencies', hours=4, id='auto_' + 'main_currencies',
                                     next_run_time=datetime.now(kiev_tz) + timedelta(minutes=45))
+main_currencies2 = scheduler.add_job(rest_client.update_dict, 'interval',
+                                    args=[{**{'update': 'investing'}, **{'list': INVESTING_COM}}],
+                                    name='auto_' + 'investing', hours=4, id='auto_' + 'investing',
+                                    next_run_time=datetime.now(kiev_tz) + timedelta(minutes=48))
+
 
 # Todo: aspscheduler problem
 # problem with aspscheduler, try to move to another module

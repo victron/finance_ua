@@ -11,6 +11,7 @@ import spiders.parameters as parameters
 from spiders.parameters import simple_rest_secret
 from spiders.commodities.update_all import update_all
 from spiders.main_currencies.google_fin import main_currencies_collect
+from spiders.main_currencies.investing_com import main_currencies_collect as investing_collect
 from spiders.minfinua_contact import prepare_request, get_contacts
 from spiders.simple_encrypt_import import secret
 from spiders.minfinua_contact import return_contact
@@ -19,7 +20,7 @@ bid_to_payload = secret.bid_to_payload
 
 logger = logging.getLogger(__name__)
 
-UPDATE_ALLOWED = {'news', 'lists', 'commodities', 'main_currencies'}
+UPDATE_ALLOWED = {'news', 'lists', 'commodities', 'main_currencies', 'investing'}
 
 def check_mongo(req, resp, resource, params):
     """
@@ -226,6 +227,28 @@ content-type: application/json; charset=UTF-8
 
                 try:
                     for k, v in main_currencies_collect(lists).items():
+                        responce[k] = str(v)  # convert nametuple in str, for more information in REST
+                    responce['update'] = update
+                except NameError as e:
+                    msg = 'main_currensies: {} not in available list'.format(e)
+                    logger.error(msg)
+                    raise falcon.HTTPBadRequest('Bad request', msg)
+
+            elif update == 'investing':
+                logger.info('updating {}'.format(update))
+                try:
+                    lists = doc['list']
+                except KeyError as e:
+                    msg = 'request error; list is empty {}'.format(e)
+                    logger.error(msg)
+                    raise falcon.HTTPBadRequest('Bad request', msg)
+                except Exception as e:
+                    msg = 'unknown error; error= {}'.format(e)
+                    logger.error(msg)
+                    raise falcon.HTTPBadRequest('Bad request', msg)
+
+                try:
+                    for k, v in investing_collect(lists).items():
                         responce[k] = str(v)  # convert nametuple in str, for more information in REST
                     responce['update'] = update
                 except NameError as e:

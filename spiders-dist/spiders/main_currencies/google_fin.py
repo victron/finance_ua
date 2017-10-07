@@ -4,33 +4,22 @@
 
 # http "https://finance.google.com/finance/getprices?p=30d&f=d,c&q=USDCHF"
 
-import requests
 import csv
 import logging
 from datetime import datetime, timedelta, timezone
+import requests
+
+from spiders.main_currencies.commons import mongo_multi_column, sympols
 from spiders.mongo_start import main_currencies
-from pymongo import collection
-from collections import namedtuple
 
 logger = logging.getLogger(__name__)
-                    # symbols converter
-                    #   (GOOGLE, YAHOO)
-sympols = {"USDCHF": ("USDCHF", "CHF=X"),
-           "EURUSD": ("EURUSD", "EUR=X"),
-           "USDJPY": ("USDJPY",),
-           "USDCAD": ("USDCAD",),
-           "NZDUSD": ("NZDUSD",),
-           "AUDUSD": ("AUDUSD",),
-           "GBPUSD": ("GBPUSD"),
-           "XAUUSD": (None, "XAUUSD=X"),
-           "XAGUSD": (None, "XAGUSD=X"),
-           }
 
 
 
 def google_get(currency: str, period: int = 2, interval: int = 86400, only_date: bool = True) -> list:
     """
     get currency rate from finance.google.com
+    some old url url = strcat('http://www.google.com/finance/historical?q=',symbol,'&startdate=',startDateStr,'&enddate=',endDateStr,'&output=csv');
     :param currency:
     :param period: days
     :param r_interval: seconds
@@ -151,31 +140,6 @@ def collect_main_currency_stat(currency: str, interval: int = 86400,
                                                                                     intervals_to_collect))
 
     return google_get(currency, intervals_to_collect)
-
-
-def mongo_multi_column(docs: list, collect: collection) -> namedtuple:
-    """
-
-    :param docs:
-    :param collection:
-    :return:
-    """
-    duplicate_count = 0     # not used at that moment, need additional find before update
-    new_doc_count = 0
-    modified_count = 0
-    result = namedtuple('result', ['new_doc_count', 'modified_count', 'duplicate_count'])
-    if docs == []:
-        logger.warning("empty docs list")
-        return result(new_doc_count, modified_count, duplicate_count)
-    for doc in docs:
-        time = doc["time"]
-        document = dict(doc)
-        logger.debug("time= {}, document= {}".format(time, document))
-        update_result = collect.update_one({'time': time}, {'$set': document}, upsert=True)
-        if update_result.upserted_id is not None:
-            new_doc_count += 1
-        modified_count += update_result.modified_count
-    return result(new_doc_count, modified_count, duplicate_count)
 
 
 def main_currencies_collect(currencies: list):

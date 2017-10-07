@@ -7,7 +7,7 @@ simple_rest_secret = 'temp_secret'
 req_template = {'secret': simple_rest_secret,
               'responce': ['ok', 'nok'],
               }
-update_allowed = {'news', 'lists', 'commodities', 'main_currencies'}
+update_allowed = {'news', 'lists', 'commodities', 'main_currencies', 'investing'}
 url = 'http://localhost:9080/command'
 
 
