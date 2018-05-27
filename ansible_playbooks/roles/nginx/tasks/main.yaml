@@ -21,7 +21,7 @@
   - block:
     - name: generate nginx.conf (get letsencrypt)
       template: src=nginx_80.conf.j2 dest=/etc/nginx/nginx.conf
-    - name: reload ninx
+    - name: reload nginx
       service: name=nginx state=reloaded
     - name: Create a Configuration SSL Key and Certificate Snippet
       template: src=ssl-letsencrypt.j2 dest=/etc/nginx/snippets/ssl-{{ fqdn }}.conf

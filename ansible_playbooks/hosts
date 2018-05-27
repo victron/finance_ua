@@ -10,6 +10,9 @@
 [inna-fa]
 inna-fa
 
+[gcp]
+35.231.237.89
+
 [inna-remote]
 # ip address of gw on vagrant machine
 10.0.2.2
@@ -37,4 +40,6 @@ ansible_port=22221
 #ansible_connection=paramiko
 
 
-
+[gcp:vars]
+remote_user = vic
+ansible_python_interpreter=/usr/bin/python3
