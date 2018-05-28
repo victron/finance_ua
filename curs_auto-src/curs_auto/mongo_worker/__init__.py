@@ -6,5 +6,8 @@ if 'unittest' in list(sys.modules.keys()):
 else:
     DB_NAME = 'fin_ua'
 
-client = MongoClient(connect=False)
+mongo_host = 'localhost'
+
+client = MongoClient(mongo_host, 27017, connect=False,
+                     serverSelectionTimeoutMS=10000)
 DATABASE = client[DB_NAME]

@@ -6,14 +6,6 @@ import logging
 from spiders.common_spider import local_tz
 
 logger = logging.getLogger(__name__)
-# TODO:
-# - move DBs init in config
-
-# client = MongoClient()
-# client = MongoClient('localhost', 27017)
-# client = MongoClient('mongodb://localhost:27017/')
-
-# db = app.config['DATABASE_DATA']
 
 records = DATABASE['records']
 history = DATABASE['history']   # TODO: check if needed
@@ -78,5 +70,3 @@ try:
 
 except pymongo.errors.ServerSelectionTimeoutError as e:
     logger.error('MONGO not ready; sckip index creating in case clean start - {}'.format(e))
-finally:
-    pass
