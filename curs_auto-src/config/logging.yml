@@ -33,22 +33,16 @@ handlers:
     facility: local5
     formatter: log_format_syslog
 
+
 loggers:
-  curs_auto:
+  curs_auto.mongo_collector.mongo_collect_history:
     level: INFO
 #    handlers: [file, syslog]
     handlers: [syslog]
     propagate: yes
 
-#loggers:
-#  curs_auto.mongo_collector.mongo_collect_history:
-#    level: DEBUG
-##    handlers: [file, syslog]
-#    handlers: [syslog]
-#    propagate: yes
 
-
-#root:
-#  level: WARNING
-##  handlers: [console, file, syslog]
-#  handlers: [file, console]
+root:
+  level: WARNING
+#  handlers: [console, file, syslog]
+  handlers: [file, console]

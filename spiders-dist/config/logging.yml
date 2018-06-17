@@ -2,14 +2,14 @@ version: 1
 formatters:
 #  simple:
   file_format:
-    format: '{asctime} - {name} - {levelname:5s} {filename} LINE: {lineno} {message}'
+    format: '{asctime} - {name} [{levelname:5s}] {filename} LINE: {lineno} {message}'
     style: '{'
-    msg: curs
+    msg: spiders
 #    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
   syslog_format:
-    format: '{name} - {levelname:5s} LINE: {lineno} {message}'
+    format: '[{levelname:5s}] {filename} LINE: {lineno} {message}'
     style: '{'
-    msg: curs
+    msg: spiders
 
 handlers:
   console:
@@ -55,6 +55,10 @@ loggers:
 #    handlers: [file, syslog]
     handlers: [file]
     propagate: yes
+  spiders.news_minfin:
+    level: DEBUG
+    handlers: [syslog]
+
 root:
   level: INFO
   propagate: yes
