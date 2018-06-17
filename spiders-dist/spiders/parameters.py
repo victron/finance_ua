@@ -28,7 +28,9 @@ headers = {'user-agent': user_agent}
 
 # waite time before collect info
 sleep_time = 300
+# TODO : remove someday
 proxy_is_used = False
+proxies = ''
 news_type = 'currency'
 # table settings
 table_column_size = (5, 3, 4, 5, 7, 5, 30, 15, 1)
