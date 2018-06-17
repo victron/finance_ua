@@ -2,9 +2,15 @@ version: 1
 formatters:
 #  simple:
   log_format:
-    format: '{asctime} - {name} - {levelname:5s} {filename} LINE: {lineno} {message}'
+    format: '{asctime} - {name} [{levelname:5s}] {filename} LINE: {lineno} {message}'
     style: '{'
     msg: curs_auto
+
+  log_format_syslog:
+    format: '[{levelname:5s}] {filename} LINE: {lineno} {message}'
+    style: '{'
+    msg: curs_auto
+
 #    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 handlers:
   console:
@@ -25,15 +31,24 @@ handlers:
     class: logging.handlers.SysLogHandler
     address: /dev/log
     facility: local5
+    formatter: log_format_syslog
 
 loggers:
   curs_auto:
     level: INFO
 #    handlers: [file, syslog]
-    handlers: [file]
+    handlers: [syslog]
     propagate: yes
 
-root:
-  level: WARNING
-#  handlers: [console, file, syslog]
-  handlers: [file, console]
+#loggers:
+#  curs_auto.mongo_collector.mongo_collect_history:
+#    level: DEBUG
+##    handlers: [file, syslog]
+#    handlers: [syslog]
+#    propagate: yes
+
+
+#root:
+#  level: WARNING
+##  handlers: [console, file, syslog]
+#  handlers: [file, console]
