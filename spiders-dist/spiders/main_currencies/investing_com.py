@@ -25,7 +25,7 @@ def parse_investing(symbol: str) -> list:
         url = "https://www.investing.com/commodities/" + site_symbol + "-historical-data"
     else:
         site_symbol = None
-        
+
     if site_symbol is None:
         logger.warning("no data for {} in INVESTING".format(symbol))
         return []

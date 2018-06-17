@@ -24,7 +24,6 @@ conv_operation_orig = {0 : 'buy',
 operation = conv_operation[filters.operation]
 location = filters.location
 ################  filter data  ################
-proxies = parameters.proxies
 
 baseKey = secret.baseKey
 Vector = secret.Vector
