@@ -11,7 +11,7 @@ from curs_auto.spiders_legacy.nbu import auction_get_dates, NbuJson, auction_res
 from curs_auto.spiders_legacy.parse_minfin import minfin_history
 from curs_auto.spiders_legacy.ukrstat import import_stat
 
-logger = logging.getLogger('curs.mongo_collector.mongo_collect_history')
+logger = logging.getLogger('curs_auto.mongo_collector.mongo_collect_history')
 
 def insert_history_embedded(input_document: dict):
     """
@@ -59,6 +59,7 @@ def insert_history(input_document: dict):
     :return:
     """
     if input_document == {} or input_document['currency'] not in ['USD', 'EUR', 'RUB']:
+        logger.warning('empty document, nothing to insert')
         return None
     document = dict(input_document)
     db_update = DATABASE[document['currency']]
@@ -69,11 +70,20 @@ def insert_history(input_document: dict):
     time = document.pop('time')
     if (document['source'] == 'nbu_auction') or (document['source'] == 'nbu'):
         source = document.pop('source')
-        db_update.update_one({'time': time},
-                           {'$set': {source + '.' + field: document[field] for field in document}}, upsert=True)
+        logger.debug('source= {}, time= {}'.format(source, time))
+        logger.debug('document = {}'.format(document))
+        if any(document):
+            db_update.update_one({'time': time},
+                               {'$set': {source + '.' + field: document[field] for field in document}}, upsert=True)
     else:
         # source = document.pop('source')
-        db_update.update_one({'time': time}, {'$set': document}, upsert=True)
+        time = datetime.combine(time, datetime.min.time())
+        logger.debug('calling update collection= {}'.format(db_update))
+        logger.debug('time= {}, document= {}'.format(time, document))
+        result = db_update.update_one({'time': time}, {'$set': document}, upsert=True)
+        logger.debug('matched_count= {}, modified_count= {}'.format(result.matched_count,
+                                                                    result.modified_count))
+
 
 
 def insert_history_currency(input_document: dict):
@@ -249,6 +259,12 @@ def daily_stat(day: datetime, collection) -> dict:
             round_dig = 4
         else:
             round_dig = 2
+        logger.debug('document= {}'.format(document))
+        if not (any(document['sell_rates']) and any(document['buy_rates'])):
+            logger.warning('rates missing in stat; len(document[\'sell_rates\'])= {},'
+                           'len(document[\'buy_rates\']= {}'.format(document['sell_rates'],
+                                                                    document['buy_rates']))
+            return {}
         document['sell'] = round(document['sell'], round_dig)
         document['buy'] = round(document['buy'], round_dig)
         document['source'] = source
@@ -257,7 +273,12 @@ def daily_stat(day: datetime, collection) -> dict:
     # actually one document
     try:
         result_doc = [form_output_doc(doc) for doc in command_cursor][0]
-    except IndexError:
+    except IndexError or TypeError:
+        return {}
+    # TODO: need to correct (bad code)
+    logger.debug('result_doc= {}'.format(result_doc))
+    if result_doc == {}:
+        logger.warning('document empty nothing to insert, result_doc= {}'.format(result_doc))
         return {}
     document = dict(result_doc)
     time = document.pop('time')
@@ -266,7 +287,7 @@ def daily_stat(day: datetime, collection) -> dict:
 
 def agg_daily_stat():
     """
-    collects daily statistic for internal houly stat or external stat
+    collects daily statistic for internal hourly stat or external stat
     :return:
     """
     # find missing stat period
@@ -275,8 +296,10 @@ def agg_daily_stat():
         if currency == 'RUB':
             return None
         for doc in minfin_data:
-            if doc['time'] == date:
-                rersult = insert_history(dict(doc, source='d_ext_stat'))
+            if doc['time'].date() == date.date():
+                logger.debug('inserting doc = {}'.format(doc))
+                logger.info('inserting doc as \'d_ext_stat\'')
+                insert_history(dict(doc, source='d_ext_stat'))
                 break
 
     if datetime.now().hour >= 18:
@@ -291,15 +314,17 @@ def agg_daily_stat():
             # no ext data for RUB
             minfin_data = minfin_history(currency, stop_day)
 
-        filter = {'$or': [{'source':'d_ext_stat'}, {'source': 'd_int_stat'}]}
+        filter = {'$or': [{'source': 'd_ext_stat'}, {'source': 'd_int_stat'}]}
         projection = {'_id': False, 'time': True}
-        pipeline = [{'$match': {'$or': [{'source' :'d_ext_stat'}, {'source': 'd_int_stat'}]}},
+        pipeline = [{'$match': {'$or': [{'source': 'd_ext_stat'}, {'source': 'd_int_stat'}]}},
                     {'$group': {'_id': None, 'max_time': {'$max': '$time'}}},
                      {'$project': {'_id': False, 'max_time': '$max_time'}}]
         command_cursor = collection.aggregate(pipeline)
         if command_cursor.alive:
             last_daily_stat = command_cursor.next()['max_time']
             start_day = last_daily_stat + timedelta(days=1)
+            #  for manual insert external stat
+            # start_day = datetime(year=2017, month=9, day=19)
         elif currency == 'RUB':
             pipeline = [{'$match': {'$or': [{'source': 'h_int_stat'}]}},
                         {'$group': {'_id': None, 'min_time': {'$min': '$time'}}},
@@ -325,8 +350,10 @@ def agg_daily_stat():
             # overwrite internal daily stat by external stat data
             if day_stat:
                 if len(day_stat['sell_rates']) < 5:
+                    logger.debug('using ext_stat')
                     ext_stat(day)
             else:
+                logger.debug('using ext_stat')
                 ext_stat(day)
             # insert NBU rate
             insert_history_currency(NbuJson().rate_currency_date(currency, day))

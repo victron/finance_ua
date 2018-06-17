@@ -8,6 +8,6 @@ else:
 
 mongo_host = 'localhost'
 
-client = MongoClient(mongo_host, 27017, connect=False,
+client = MongoClient(mongo_host, 27017, connect=True,
                      serverSelectionTimeoutMS=10000)
 DATABASE = client[DB_NAME]

@@ -235,17 +235,3 @@ def minfin_history(currency: str, today: datetime) -> list:
         data.append(document)
     return data
 
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    # logging.basicConfig(level=logging.INFO)
-    table = reform_table_fix_columns_sizes(table_api_minfin(get_triple_data, get_contacts),
-                                           parameters.table_column_size)
-    print(json.dumps(data_api_minfin(get_triple_data('USD', 'sell')), sort_keys=True, indent=4, separators=(',', ': '),
-                     ensure_ascii=False, default=date_handler))
-    print(u'----- results for {currency} {contract} ------'.format(contract=location, currency=currency))
-    print(u'=== filter: location= {location}, filter= {filtered}'.format(location=location,
-                                                                          filtered=u' '.join(filter_or)))
-    print_table_as_is(table)
-    # # print(json.dumps(minfin_history('USD', datetime.now()), sort_keys=True, indent=4, separators=(',', ': '),
-    # #                  ensure_ascii=False, default=date_handler))
-    #
