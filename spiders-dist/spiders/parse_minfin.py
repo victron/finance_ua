@@ -9,9 +9,12 @@ from datetime import datetime, timedelta
 from time import sleep
 import logging
 from collections import namedtuple
-logger = logging.getLogger()
+from typing import Dict, Union
+
 
 import requests
+from hyper import HTTP20Connection as h2
+from hyper.contrib import HTTP20Adapter
 from bs4 import BeautifulSoup
 import sys
 # sys.path.append('./')
@@ -23,7 +26,8 @@ from spiders.check_proxy import proxy_is_used
 from spiders.simple_encrypt_import import secret
 from spiders.common_spider import current_datetime_tz, date_handler, kyiv_tz
 from spiders.tables import reform_table_fix_columns_sizes, print_table_as_is
-import requests
+
+logger = logging.getLogger('spiders.parse_minfin')
 
 # user settings
 currency = filters.currency.lower()
@@ -35,10 +39,6 @@ location = location_dict[location_orig]
 ################  filter data  ################
 filter_or = filters.filter_or
 
-# internet settings
-user_agent = parameters.user_agent
-headers = {'user-agent': user_agent}
-proxies = parameters.proxies
 
 # global vars to save vars
 bid_to_payload = secret.bid_to_payload
@@ -66,32 +66,35 @@ def get_triple_data(currency: str, operation: str, test_data: dict = None) -> tu
 
     """
 
-    url = 'http://minfin.com.ua/currency/auction/' + currency + '/' + operation + '/' + location + \
-          '/?presort=&sort=time&order=desc'
+    url = 'https://minfin.com.ua/currency/auction/' + currency + '/' + operation + '/' + location + '/'
+    sub_url = '/currency/auction/' + currency + '/' + operation + '/' + location + '/'
 
-    ####### TEST injection ###############
+    headers = {'Host': 'minfin.com.ua',
+               'User-Agent': 'Mozilla/5.0 (X11; Windows amd64; rv:60.0) Gecko/20100101 Firefox/60.0',
+               'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+               'Accept-Language': 'en,uk;q=0.7,ru;q=0.3',
+               'Accept-Encoding': 'gzip, deflate, br',
+               'DNT': '1',
+               'Connection': 'keep-alive',
+               'Pragma': 'no-cache',
+               'Cache-Control': 'max-age=0, no-cache',
+               'Upgrade-Insecure-Requests': '1'}
 
-    if test_data is not None:
-        logger.debug('TEST is active')
-        filemap = namedtuple('filemap', 'operation currency source')
-        filemap_key = filemap(currency=currency, operation=operation, source='m')
-        filename = test_data[filemap_key]
-        with open(filename.page, 'rb') as f:
-            logger.debug('reading file... {}'.format(filename.page))
-            page = f.read().decode()
-    else:
-        logger.debug('TEST is inactive')
-        responce_get = requests.get(url, headers=headers)
-        page = responce_get.text
+    s = requests.Session()
+    s.mount(url, HTTP20Adapter())
+    responce_get = s.get(url, headers=headers)
 
+    if responce_get.status_code != 200:
+        logger.error('could not fetch list from minfin.com.ua, resp.status= {}'.format(responce_get.status_code))
+        logger.error('url={}'.format(sub_url))
+        return ()
+    page = responce_get.text
     soup = BeautifulSoup(page, "html.parser")
-    # global cook
-    # cook['cookies'] = responce_get.cookies
-    # cook['url'] = url
     data = {}
     logger.debug('soup = {}'.format(soup))
+
     # regex = re.compile(r'[\t\n\r\x0b\x0c]')
-    for i in soup.find_all('div', attrs={'data-bid' : True,
+    for i in soup.find_all('div', attrs={'data-bid': True,
                                               'class':  ['js-au-deal', 'au-deal']
                                               }):
         logger.debug('get_triple_data> i= {}'.format(i))
@@ -101,30 +104,23 @@ def get_triple_data(currency: str, operation: str, test_data: dict = None) -> tu
             data[key]['time'] = i.small.string
             data[key]['currency'] = currency
             data[key]['operation'] = operation
-            data[key]['rate'] = i.find('span', class_ = "au-deal-currency").string
-            data[key]['amount'] = [text for text in i.find('span', class_ = "au-deal-sum").strings][0].replace(' ', '')
-            # data[key]['comment'] = i.find('span', class_ = "au-msg-wrapper js-au-msg-wrapper").string.strip()\
-            #     .replace('\n', '')
+            data[key]['rate'] = i.find('span', class_="au-deal-currency").string
+            data[key]['rate'] = data[key]['rate'].replace(',', '.')
+            data[key]['amount'] = [text for text in i.find('span', class_="au-deal-sum").strings][0].replace(' ', '')
             comment = i.find('span', class_ = "au-msg-wrapper js-au-msg-wrapper").get_text(strip=True)
             # data[key]['comment'] = regex.sub('', comment)
             # ' '.join(str.split()) works better then regex
             data[key]['comment'] = ' '.join(comment.split())
-            data[key]['phone'] = i.find('span', class_ = "au-dealer-phone").get_text(strip=True)
-            data[key]['id'] = i.find('span', class_ = "au-dealer-phone").a['data-bid-id']
+            data[key]['phone'] = i.find('span', class_="au-dealer-phone").get_text(strip=True)
+            data[key]['id'] = i.find('span', class_="au-dealer-phone").a['data-bid-id']
         except KeyError:
             logger.error('missing key data-bid i= {}'.format(i))
     # print('----------------- fetch -------------------------')
     # transfer session parameters
-    session_parm = {}
-    if test_data is not None:
-        with open(filename.cookie, 'rb') as f:
-            logger.debug('reading file... {}'.format(filename.cookie))
-            test_page_cookies = pickle.load(f)
-        session_parm['cookies'] = pickle.dumps(test_page_cookies)
-    else:
-        session_parm['cookies'] = pickle.dumps(responce_get.cookies)
-    session_parm['url'] = url
+    session_parm = {'cookies': pickle.dumps(responce_get.cookies), 'url': url}
+    # may be needed for reference
     return data, session_parm
+
 
 # @timer()
 def data_api_minfin(fn):
@@ -138,7 +134,7 @@ def data_api_minfin(fn):
         dic['session'] = False
         time = dic['time'].split(':')
         dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
-        dic['rate'] = float(dic['rate'].replace(',', '.'))
+        dic['rate'] = float(dic['rate'])
         dic['amount'] = int(''.join(filter(lambda x: x.isdigit(), dic['amount'])))
         if dic['time'] > current_date:
             dic['time'] = dic['time'] - timedelta(days=1)
@@ -148,7 +144,10 @@ def data_api_minfin(fn):
     sessions = []
     for cur in ['RUB', 'EUR', 'USD']:
         for oper in ['sell', 'buy']:
-            fn_result = fn(cur, oper)
+            fn_result = fn(cur.lower(), oper)
+            if len(fn_result) < 1:
+                logger.error('empty result for currency={}, operation= {}'.format(cur, oper))
+                continue
             data.update(fn_result[0])
             sessions.append({'currency': cur.upper(), 'source': 'm', 'operation': oper,
                              'url': fn_result[1]['url'], 'cookies': fn_result[1]['cookies'],

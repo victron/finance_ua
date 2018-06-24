@@ -10,4 +10,4 @@ uwsgi
 pyvirtualdisplay
 selenium
 lxml
-
+hyper
