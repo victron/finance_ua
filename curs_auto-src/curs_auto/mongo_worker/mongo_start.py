@@ -14,6 +14,7 @@ from curs_auto.spiders_legacy.common_spider import local_tz
 # db = app.config['DATABASE_DATA']
 
 records = DATABASE['records']
+rhistory = DATABASE['rhistory']
 history = DATABASE['history']   # TODO: check if needed
 
 # wraper for collection tz_aware and tzinfo

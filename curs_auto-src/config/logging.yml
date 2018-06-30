@@ -15,13 +15,13 @@ formatters:
 handlers:
   console:
     class: logging.StreamHandler
-    level: DEBUG
+    level: ERROR
     formatter: log_format
     stream: ext://sys.stdout
 #    filters: [allow_foo]
   file:
     class: logging.handlers.RotatingFileHandler
-    level: DEBUG
+    level: INFO
     formatter: log_format
     filename: curs_auto.log
     maxBytes: 10240
@@ -36,13 +36,13 @@ handlers:
 
 loggers:
   curs_auto.mongo_collector.mongo_collect_history:
-    level: INFO
+#    level: DEBUG
 #    handlers: [file, syslog]
     handlers: [syslog]
     propagate: yes
 
 
 root:
-  level: WARNING
+  level: INFO
 #  handlers: [console, file, syslog]
   handlers: [file, console]

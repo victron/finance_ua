@@ -1,15 +1,16 @@
 import logging
 import statistics
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
-from pymongo.errors import DuplicateKeyError
+from pymongo.errors import DuplicateKeyError, BulkWriteError
 
 from curs_auto.bonds import update_bonds
-from curs_auto.mongo_worker.mongo_start import history, data_active, DATABASE
+from curs_auto.mongo_worker.mongo_start import history, data_active, DATABASE, records, rhistory
 from curs_auto.spiders_legacy.common_spider import local_tz
 from curs_auto.spiders_legacy.nbu import auction_get_dates, NbuJson, auction_results
 from curs_auto.spiders_legacy.parse_minfin import minfin_history
 from curs_auto.spiders_legacy.ukrstat import import_stat
+from collections import namedtuple
 
 logger = logging.getLogger('curs_auto.mongo_collector.mongo_collect_history')
 
@@ -285,6 +286,51 @@ def daily_stat(day: datetime, collection) -> dict:
     collection.update_one({'time': time}, {'$set': document}, upsert=True)
     return result_doc
 
+
+def move_old_records(hours: int, limit: int=1000) -> namedtuple:
+    """
+    moving old docs into rhistory from records collection
+    :param limit: int; number of docs move in one bulk write
+    :param hours: int; leave last hours in records
+    :return: namedtuple('moved', ['deleted', 'inserted'])
+    """
+    moved = namedtuple('moved', ['deleted', 'inserted'])
+    utc_now = datetime.now(tz=timezone.utc)
+    filter = {'time': {'$lte': utc_now - timedelta(hours=hours)}}
+    deleted_sum, inserted_sum, loops = 0, 0, 10000
+    for i in range(loops):
+        """
+        in some reason (tiny machine), it's not possible to insert_many big number of docs(700000).
+        So, droped this operation with limit
+        """
+        old_docs = records.find(filter, limit)
+        spare_cursor = old_docs.clone()
+        if old_docs.count() == 0:
+            break
+        try:
+            insert_result = rhistory.insert_many(old_docs, ordered=False)
+        except BulkWriteError:
+            logger.warning('BulkWriteError exeption, trying to delete same _id in rhistory')
+            delete_result = rhistory.delete_many({'_id': {'$in': [doc['_id'] for doc in spare_cursor]}})
+            logger.warning('deleted in rhistory docs= {}'.format(delete_result.deleted_count))
+            continue
+        inserted = len(insert_result.inserted_ids)
+        logger.debug('loop num = {}, inserted in rhistory = {}'.format(i, inserted))
+        inserted_sum += inserted
+        delete_result = records.delete_many({'_id': {'$in': insert_result.inserted_ids}})
+        deleted = delete_result.deleted_count
+        deleted_sum += deleted
+        if delete_result.deleted_count != inserted:
+            logger.error('deleted not eq inserted, deleted= {}, inserted= {}'.format(deleted, inserted))
+            break
+        if i == loops - 1:
+            logger.warning('infinity loop prevented!!!!!!')
+
+    result = moved(deleted=deleted_sum, inserted=inserted_sum)
+    logger.info('moved old records into rhistory, result= {}'.format(result))
+    return result
+
+
 def agg_daily_stat():
     """
     collects daily statistic for internal hourly stat or external stat
@@ -324,7 +370,7 @@ def agg_daily_stat():
             last_daily_stat = command_cursor.next()['max_time']
             start_day = last_daily_stat + timedelta(days=1)
             #  for manual insert external stat
-            # start_day = datetime(year=2017, month=9, day=19)
+            # start_day = datetime(year=2018, month=5, day=19)
         elif currency == 'RUB':
             pipeline = [{'$match': {'$or': [{'source': 'h_int_stat'}]}},
                         {'$group': {'_id': None, 'min_time': {'$min': '$time'}}},
@@ -362,6 +408,10 @@ def agg_daily_stat():
                 insert_history(auction_results(day))
             day += timedelta(days=1)
 
+    # TODO: check if history inserted
+    moved_records = move_old_records(24)
+
+
 def ukrstat(start_date: datetime) -> tuple:
     duplicate_count = 0
     inserted_count = 0
@@ -382,6 +432,9 @@ def ukrstat(start_date: datetime) -> tuple:
         else:
             date = date.replace(year=(date.year + 1), month=1)
     return inserted_count, duplicate_count
+
+
+
 
 
 if __name__ == '__main__':
