@@ -133,11 +133,12 @@ def data_api_minfin(fn):
         dic['source'] = 'm'
         dic['session'] = False
         time = dic['time'].split(':')
-        dic['time'] = current_date.replace(hour= int(time[0]), minute= int(time[1]), second=0, microsecond=0)
+        dic['time'] = current_date.replace(hour=int(time[0]), minute=int(time[1]), second=0, microsecond=0)
         dic['rate'] = float(dic['rate'])
         dic['amount'] = int(''.join(filter(lambda x: x.isdigit(), dic['amount'])))
-        if dic['time'] > current_date:
-            dic['time'] = dic['time'] - timedelta(days=1)
+        # TODO: remove below strings
+        # if dic['time'] > current_date:
+        #     dic['time'] = dic['time'] - timedelta(days=1)
         return dic
 
     data = {}
@@ -164,7 +165,6 @@ def get_contacts(bid: str, data_func, session_parm: dict) -> requests:
     :param session_parm: get session parameters, such as 'Referer', 'cookies'
     :param content_json: return in json format
     :return: response or serialized json
-    """
     # --------- curl method -----------------
     # url_get_contacts = 'http://minfin.com.ua/modules/connector/connector.php?action=auction-get-contacts&bid=' \
     #                    + str(int(bid) + 1) + '&r=true'
@@ -184,6 +184,10 @@ def get_contacts(bid: str, data_func, session_parm: dict) -> requests:
     # r=true" bid=25195555 action=auction-get-contacts r=true 'Cookie: minfincomua_region=1' 'Referer: http://minfin.com.ua/currency
     # /auction/usd/sell/kiev/?presort=&sort=time&order=desc'
     # global cook
+    http - f POST
+    "https://minfin.com.ua/modules/connector/connector.php?action=auction-get-contacts&bid=73626264&
+    # r=true" bid=73626262 action=auction-get-contacts r=true 'Cookie: minfincomua_region=0;minfin_sessions=26d573e41c9b65af1dc72004b6cde5413346d783;__cfduid=d4f757511b27ef8da4931141b6336093e1529854768'
+    """
     form_urlencoded = 'http://minfin.com.ua/modules/connector/connector.php'
     payload, data = data_func(bid)
     headers = {'user-agent': 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)'}
