@@ -283,7 +283,8 @@ def daily_stat(day: datetime, collection) -> dict:
         return {}
     document = dict(result_doc)
     time = document.pop('time')
-    collection.update_one({'time': time}, {'$set': document}, upsert=True)
+    # looks not need, because lists comes from data_active
+    # collection.update_one({'time': time}, {'$set': document}, upsert=True)
     return result_doc
 
 
