@@ -11,7 +11,7 @@ from spiders.common_spider import current_datetime_tz, date_handler
 
 logger = logging.getLogger('curs.spiders.news_minfin')
 
-# TODO:
+# TODO: !!!!!!!!!!!!!!!!! it's LEGACY, PYCHARM could incorrectly link here !!!!!!!!!
 # - convert time into datetime
 
 # internet settings
@@ -42,6 +42,7 @@ def parse_minfin_headlines():
         dic['time'] = datetime.strptime(dic['time'], '%Y-%m-%d %H:%M:%S')
         dic['time'] = dic['time'].replace(tzinfo=current_date.tzinfo)
         data.append(dic)
+    logger.debug('minfin_headlines data= {}'.format(data))
     return data
 
 

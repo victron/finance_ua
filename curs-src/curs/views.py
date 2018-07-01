@@ -18,8 +18,8 @@ from spiders.common_spider import  main_currencies
 from curs.forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
 from curs.user import User
 from curs.views_func import reformat_for_js, reformat_for_js_bonds, bonds_json_lite, bonds_json_lite2, stock_events
-from mongo_collector.parallel import update_lists
-from mongo_collector.parallel import update_news
+# from mongo_collector.parallel import update_lists
+# from mongo_collector.parallel import update_news
 from datetime import datetime, timedelta
 from spiders.common_spider import local_tz
 from spiders.parse_minfin import get_contacts, bid_to_payload

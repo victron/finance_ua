@@ -15,7 +15,7 @@ from mongo_collector.mongo_start import DATABASE
 from mongo_collector.mongo_start import data_active, numbers
 from curs.forms import LoginForm, Update_db, FilterBase, FormField, SortForm, FieldList
 from curs.forms_numbers import FilterNumbers, SaveNumber, Transaction, DeleteNumber, SortNumbers
-from mongo_collector.parallel import update_lists
+# from mongo_collector.parallel import update_lists
 import logging
 from curs.rest_client import update
 
@@ -275,10 +275,11 @@ def lists_fun(**kwargs):
         # TODO: form validation !!!, currently buldin form validators=[Optional()]
     elif form_filter.validate_on_submit():
         web_logging.debug('filter pushed')
-        flash('filter: City={city}, currency={currency},  Operation={operation}, source={source},<br>'
+        flash('filter: City={city}, currency={currency},  Operation={operation}, source={source}, '
               'text={text}'.format(text=filter_recieved['$text'], city=filter_recieved['location'],
                                    operation=filter_recieved['operation'], currency=filter_recieved['currency'],
                                    source=filter_recieved['source']))
+        flash('filter={}'.format(mongo_request(filter_recieved)))
         flash('Sort: {sort_list}'.format(sort_list=sort_list))
         flash('top_filter: {}, top_sort: {}, top_limit: {}'.format(top_filter, top_sort, top_limit))
         result = data_active.find(mongo_request(filter_recieved), sort=sort_list)

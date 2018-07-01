@@ -1,4 +1,4 @@
-from spiders import news_minfin, minfin, parse_minfin, finance_ua, berlox
+# from spiders import news_minfin, minfin, parse_minfin, finance_ua, berlox
 from spiders.common_spider import current_datetime_tz
 import multiprocessing
 from multiprocessing.connection import wait
@@ -146,30 +146,3 @@ def parent(funcs: list, collection) -> tuple:
     return reduce(lambda x, y: (x[0] + y[0], x[1] + y[1]), result)
 
 
-def update_news():
-    """
-
-    :return: tuple (inserted_count, duplicate_count)
-    """
-    spiders_news = [(news_minfin.parse_minfin_headlines,),
-                    (minfin.minfin_headlines,),
-                    (minfin.announcement_ovdp,)]
-    result = parent(spiders_news, 'news')
-    # return reduce(lambda x, y: (x[0] + y[0], x[1] + y[1]), result)
-    return result
-
-# TODO: migrate from mongo_update on func below
-def update_lists():
-    """
-
-    :return: tuple inserted_count, deleted_count
-    """
-    spiders_lists = [(parse_minfin.data_api_minfin, parse_minfin.get_triple_data),
-                     (finance_ua.data_api_finance_ua, finance_ua.fetch_data),
-                     (berlox.data_api_berlox, berlox.fetch_data),]
-    result = parent(spiders_lists, 'records')
-    return result
-
-
-if __name__ == '__main__':
-    update_news()
