@@ -144,54 +144,6 @@ def data_api_minfin(fn):
     return [convertor_minfin(value, current_date, index) for index, value in enumerate(data.values())] + sessions
 
 
-def get_contacts(bid: str, data_func, session_parm: dict, content_json: bool = False) -> requests:
-    """
-
-    :param bid:
-    :param data_func:
-    :param session_parm: get session parameters, such as 'Referer', 'cookies'
-    :param content_json: return in json format
-    :return: response or serialized json
-    """
-    # --------- curl method -----------------
-    # url_get_contacts = 'http://minfin.com.ua/modules/connector/connector.php?action=auction-get-contacts&bid=' \
-    #                    + str(int(bid) + 1) + '&r=true'
-    # form_urlencoded = 'bid=' + bid + '&action=auction-get-contacts&r=true'
-    # header_Content_Type = 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'
-    # if proxy == None:
-    #     curl(url_get_contacts, '-c', cookies_file, '-b', cookies_file,  '--user-agent', user_agent, '-X', 'POST', '-e', url,
-    #          '-d', form_urlencoded, '-H', header_Content_Type)
-    # else:
-    #     curl(url_get_contacts, '-c', cookies_file, '-b', cookies_file,  '--user-agent', user_agent, '-X', 'POST', '-e', url,
-    #          '-d', form_urlencoded, '-H', header_Content_Type, '-x', proxy)
-# ---------------------------------------------
-
-    # ---------- requests ---------------------
-    # at that moment successful responce on
-    # http -f POST "http://minfin.com.ua/modules/connector/connector.php?action=auction-get-contacts&bid=25195556&
-    # r=true" bid=25195555 action=auction-get-contacts r=true 'Cookie: minfincomua_region=1' 'Referer: http://minfin.com.ua/currency
-    # /auction/usd/sell/kiev/?presort=&sort=time&order=desc'
-    # global cook
-    form_urlencoded = 'http://minfin.com.ua/modules/connector/connector.php'
-    payload, data = data_func(bid)
-    logger.info('payload= {}, data= {}'.format(payload, data))
-    headers = {'user-agent': 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)'}
-    headers.update({'Referer': session_parm['url']})
-
-    # headers.update({'Cookie': 'minfincomua_region=1'})
-    responce = requests.post(form_urlencoded, params=payload, headers=headers, data=data,
-                             cookies=pickle.loads(session_parm['cookies']))
-    if responce.status_code != 200:
-        logger.error('wrong responce from minfin= {}'.format(responce.status_code))
-        raise ValueError
-
-    if content_json == False:
-        return responce
-    else:
-        logger.info('minfin answer= {}'.format(responce.content))
-        return responce.content
-    # return r.json()['data']
-
 
 def table_api_minfin(fn_data, fn_contacts):
     def filter_data_json(data: dict, keyword: str) -> list:
@@ -250,17 +202,3 @@ def minfin_history(currency: str, today: datetime) -> list:
         data.append(document)
     return data
 
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    # logging.basicConfig(level=logging.INFO)
-    table = reform_table_fix_columns_sizes(table_api_minfin(get_triple_data, get_contacts),
-                                           parameters.table_column_size)
-    print(json.dumps(data_api_minfin(get_triple_data('USD', 'sell')), sort_keys=True, indent=4, separators=(',', ': '),
-                     ensure_ascii=False, default=date_handler))
-    print(u'----- results for {currency} {contract} ------'.format(contract=location, currency=currency))
-    print(u'=== filter: location= {location}, filter= {filtered}'.format(location=location,
-                                                                          filtered=u' '.join(filter_or)))
-    print_table_as_is(table)
-    # # print(json.dumps(minfin_history('USD', datetime.now()), sort_keys=True, indent=4, separators=(',', ': '),
-    # #                  ensure_ascii=False, default=date_handler))
-    #

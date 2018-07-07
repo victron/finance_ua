@@ -22,7 +22,6 @@ from curs.views_func import reformat_for_js, reformat_for_js_bonds, bonds_json_l
 # from mongo_collector.parallel import update_news
 from datetime import datetime, timedelta
 from spiders.common_spider import local_tz
-from spiders.parse_minfin import get_contacts, bid_to_payload
 from curs.views_func import lists_fun
 import json
 from curs.rest_client import update, req_template
