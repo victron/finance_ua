@@ -51,11 +51,14 @@ loggers:
     handlers: [file]
     propagate: yes
   spiders.rest:
-    level: INFO
+    level: DEBUG
 #    handlers: [file, syslog]
     handlers: [file]
     propagate: yes
-  spiders.news_minfin:
+#  spiders.news_minfin:
+#    level: INFO
+#    handlers: [syslog]
+  spiders.parse_minfin:
     level: DEBUG
     handlers: [syslog]
 

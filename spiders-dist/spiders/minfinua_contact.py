@@ -64,12 +64,10 @@ def get_contacts(bid: str, data_func, session_parm: dict) -> requests:
     # r=true" bid=25195555 action=auction-get-contacts r=true 'Cookie: minfincomua_region=1' 'Referer: http://minfin.com.ua/currency
     # /auction/usd/sell/kiev/?presort=&sort=time&order=desc'
     # global cook
-    form_urlencoded = 'http://minfin.com.ua/modules/connector/connector.php'
+    form_urlencoded = 'https://minfin.com.ua/modules/connector/connector.php'
     payload, data = data_func(bid)
     headers = {'user-agent': 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)'}
-    headers.update({'Referer': session_parm['url']})
 
-    # headers.update({'Cookie': 'minfincomua_region=1'})
     responce = requests.post(form_urlencoded, params=payload, headers=headers, data=data,
                              cookies=pickle.loads(session_parm['cookies']))
     if responce.status_code != 200:

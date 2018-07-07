@@ -12,9 +12,10 @@ from spiders.parameters import simple_rest_secret
 from spiders.commodities.update_all import update_all
 from spiders.main_currencies.google_fin import main_currencies_collect
 from spiders.main_currencies.investing_com import main_currencies_collect as investing_collect
-from spiders.minfinua_contact import prepare_request, get_contacts
+from spiders.minfinua_contact import prepare_request
 from spiders.simple_encrypt_import import secret
 from spiders.minfinua_contact import return_contact
+from spiders.parse_minfin import get_contacts
 
 bid_to_payload = secret.bid_to_payload
 
@@ -117,7 +118,7 @@ content-type: application/json; charset=UTF-8
         try:
             doc = json.load(req.stream)
         except json.JSONDecodeError:
-            logger.error('poblem to decoder; JSONDecodeError')
+            logger.error('problem to decoder; JSONDecodeError')
             raise falcon.HTTPBadRequest('Bad request', 'JSONDecodeError')
         logger.debug('body= {}'.format(doc))
 
@@ -133,7 +134,10 @@ content-type: application/json; charset=UTF-8
                     msg = 'request error; request {}'.format(get_contact)
                     logger.error(msg)
                     raise falcon.HTTPBadRequest('Bad request', msg)
-                contact = return_contact(get_contact['bid'], get_contact['currency'],
+                # for firefox + selenium
+                # return full number
+                # contact = return_contact(get_contact['bid'], get_contact['currency'],
+                contact = get_contacts(get_contact['bid'], get_contact['number'], get_contact['currency'],
                                          get_contact['operation'], get_contact.get('city', 'kiev'))
                 doc_resp = {'contact': contact}
                 # doc_resp = get_contacts(get_contact['bid'], bid_to_payload, prepare_request(get_contact))

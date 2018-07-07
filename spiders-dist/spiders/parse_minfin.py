@@ -10,6 +10,7 @@ from time import sleep
 import logging
 from collections import namedtuple
 from typing import Dict, Union
+import re
 
 
 import requests
@@ -44,6 +45,17 @@ filter_or = filters.filter_or
 bid_to_payload = secret.bid_to_payload
 cook = {}
 
+headers = {'Host': 'minfin.com.ua',
+           'User-Agent': 'Mozilla/5.0 (X11; Windows amd64; rv:60.0) Gecko/20100101 Firefox/60.0',
+           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+           'Accept-Language': 'en,uk;q=0.7,ru;q=0.3',
+           'Accept-Encoding': 'gzip, deflate, br',
+           'DNT': '1',
+           'Connection': 'keep-alive',
+           'Pragma': 'no-cache',
+           'Cache-Control': 'max-age=0, no-cache',
+           'Upgrade-Insecure-Requests': '1'}
+
 
 # @timer()
 def get_triple_data(currency: str, operation: str, test_data: dict = None) -> tuple:
@@ -67,26 +79,13 @@ def get_triple_data(currency: str, operation: str, test_data: dict = None) -> tu
     """
 
     url = 'https://minfin.com.ua/currency/auction/' + currency + '/' + operation + '/' + location + '/'
-    sub_url = '/currency/auction/' + currency + '/' + operation + '/' + location + '/'
-
-    headers = {'Host': 'minfin.com.ua',
-               'User-Agent': 'Mozilla/5.0 (X11; Windows amd64; rv:60.0) Gecko/20100101 Firefox/60.0',
-               'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-               'Accept-Language': 'en,uk;q=0.7,ru;q=0.3',
-               'Accept-Encoding': 'gzip, deflate, br',
-               'DNT': '1',
-               'Connection': 'keep-alive',
-               'Pragma': 'no-cache',
-               'Cache-Control': 'max-age=0, no-cache',
-               'Upgrade-Insecure-Requests': '1'}
-
     s = requests.Session()
     s.mount(url, HTTP20Adapter())
     responce_get = s.get(url, headers=headers)
 
     if responce_get.status_code != 200:
         logger.error('could not fetch list from minfin.com.ua, resp.status= {}'.format(responce_get.status_code))
-        logger.error('url={}'.format(sub_url))
+        logger.error('url={}'.format(url))
         return ()
     page = responce_get.text
     soup = BeautifulSoup(page, "html.parser")
@@ -157,9 +156,56 @@ def data_api_minfin(fn):
     return [convertor_minfin(value, current_date, index) for index, value in enumerate(data.values())] + sessions
 
 
-def get_contacts(bid: str, data_func, session_parm: dict) -> requests:
+def day_secret(currency: str, operation: str, location:str) -> int:
     """
 
+    :param currency:
+    :param operation:
+    :param location:
+    :return:
+    """
+    url = 'https://minfin.com.ua/currency/auction/' + currency.lower() + '/' + operation.lower() + '/' + location.lower() + '/'
+    logger.debug('url= {}'.format(url))
+    s = requests.Session()
+    s.mount(url, HTTP20Adapter())
+    responce_get = s.get(url, headers=headers)
+    if responce_get.status_code != 200:
+        logger.error('could not fetch list from minfin.com.ua, resp.status= {}'.format(responce_get.status_code))
+        logger.error('url={}'.format(url))
+        raise ValueError
+    page = responce_get.text
+    soup = BeautifulSoup(page, 'html.parser')
+    logger.debug('soup = {}'.format(soup))
+    url_js = soup.find('script', attrs={'type': 'text/javascript',
+                                        'src': re.compile('/js/currency/au-currency.js\\?.*')})['src'].strip()
+    if url_js == '':
+        logger.error('parser error')
+        raise ValueError
+
+    url = 'https://minfin.com.ua' + url_js
+    s = requests.Session()
+    s.mount(url, HTTP20Adapter())
+    responce_get = s.get(url, headers=headers)
+    if responce_get.status_code != 200:
+        logger.error('could not fetch list from minfin.com.ua, resp.status= {}'.format(responce_get.status_code))
+        logger.error('url={}'.format(url))
+        raise ValueError
+    page = responce_get.text
+    search_text = '(parseInt(bidID)'
+    first_leter = page.find(search_text)
+    try:
+        secret = int(page[first_leter + len(search_text): first_leter + len(search_text) + 2])
+    except Exception as e:
+        logger.error('can\'t get secret; exeption={}'.format(e))
+        raise e
+    return secret
+
+
+def get_contacts(bid: str, number: str, currency: str, operation: str, location: str) -> str:
+    """
+
+    :param operation:
+    :param currency:
     :param bid:
     :param data_func:
     :param session_parm: get session parameters, such as 'Referer', 'cookies'
@@ -179,7 +225,7 @@ def get_contacts(bid: str, data_func, session_parm: dict) -> requests:
 # ---------------------------------------------
 
     # ---------- requests ---------------------
-    # at that moment successful responce on
+    # at that moment successful response on
     # http -f POST "http://minfin.com.ua/modules/connector/connector.php?action=auction-get-contacts&bid=25195556&
     # r=true" bid=25195555 action=auction-get-contacts r=true 'Cookie: minfincomua_region=1' 'Referer: http://minfin.com.ua/currency
     # /auction/usd/sell/kiev/?presort=&sort=time&order=desc'
@@ -188,25 +234,30 @@ def get_contacts(bid: str, data_func, session_parm: dict) -> requests:
     "https://minfin.com.ua/modules/connector/connector.php?action=auction-get-contacts&bid=73626264&
     # r=true" bid=73626262 action=auction-get-contacts r=true 'Cookie: minfincomua_region=0;minfin_sessions=26d573e41c9b65af1dc72004b6cde5413346d783;__cfduid=d4f757511b27ef8da4931141b6336093e1529854768'
     """
-    form_urlencoded = 'http://minfin.com.ua/modules/connector/connector.php'
-    payload, data = data_func(bid)
-    headers = {'user-agent': 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)'}
-    headers.update({'Referer': session_parm['url']})
+    secret_bid = int(bid) + day_secret(currency, operation, location)
+    logger.debug('secret bid= {}, secret_bid= {}'.format(bid, secret_bid))
+    data = {'bid': bid, 'action': 'auction-get-contacts',  'r': 'true'}
+    url = 'https://minfin.com.ua/modules/connector/connector.php?action=auction-get-contacts&bid=' + \
+          str(secret_bid) + '&r=true'
+    logger.debug('final url= {}'.format(url))
+    s = requests.Session()
+    s.mount(url, HTTP20Adapter())
+    response = s.post(url, data=data, headers=headers)
 
-    # headers.update({'Cookie': 'minfincomua_region=1'})
-    responce = requests.post(form_urlencoded, params=payload, headers=headers, data=data,
-                             cookies=pickle.loads(session_parm['cookies']))
-    if responce.status_code != 200:
-        logger.error('wrong responce from minfin= {}'.format(responce.status_code))
+    if response.status_code != 200:
+        logger.error('wrong response from minfin= {}'.format(response.status_code))
         raise ValueError
 
     # if content_json == False:
-    logger.debug('minfin responce= {}'.format(responce.json()))
-    return responce
+    logger.debug('minfin response= {}'.format(response.json()))
+    # return response
     # else:
-    #     logger.info('minfin answer= {}'.format(responce.content))
-    #     return responce.content
-    # # return r.json()['data']
+    #     logger.info('minfin answer= {}'.format(response.content))
+    #     return response.content
+    contact = response.json()['data']
+    contact = number.replace('xxx-x', '-' + contact)
+    logger.info('contact= {}'.format(contact))
+    return contact
 
 
 def table_api_minfin(fn_data, fn_contacts):
