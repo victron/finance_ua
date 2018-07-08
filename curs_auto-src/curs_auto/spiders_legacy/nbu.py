@@ -1,3 +1,6 @@
+# file need in case need do correction in data,
+# for example from curs_auto/rebuild_d_int_stat.py
+
 import json
 import logging
 from datetime import datetime
@@ -52,6 +55,11 @@ def auction_get_dates(year: datetime) -> set:
 
 
 def auction_results(date: datetime) -> dict:
+    """
+    get result of auctions.
+    :param date:
+    :return:
+    """
     date = date.strftime('%d.%m.%Y')
     year = date.split('.')[2]
     # url = 'https://www.bank.gov.ua/control/uk/auction/details?date=' + date + '&year=' + year
@@ -78,26 +86,26 @@ def auction_results(date: datetime) -> dict:
             else:
                 document['currency'] = None
         elif type(field.next_element) == Comment:
-            if field.next_element == ' 1 # 1.0.1 || 1.0.2 ':
+            if field.next_element in [' 1 # 1.0.1 || 1.0.2 ', ' 1.0.1 || 1.0.2 ']:
                 if field.td.get_text(strip=True) == 'КУПІВЛЯ':
                     document['operation'] = 'buy'
                 elif field.td.get_text(strip=True) == 'ПРОДАЖ':
                     document['operation'] = 'sell'
-            elif field.next_element == ' 2 # 1.1 ':
+            elif field.next_element in [' 2 # 1.1 ', ' 1.1 ', ' 3 ']:
                 # Загальний обсяг заявок суб'єктів ринку, прийнятих на аукціон відповідно до умов його проведення (млн. од. валюти)
                 document['amount_requested'] = get_float(field)
-            elif field.next_element == ' 6 # 1.2.1 ':
+            elif field.next_element in [' 6 # 1.2.1 ', ' 1.2.1 ']:
                 # Курси гривні, заявлені учасниками аукціону (грн. за 1 од. валюти)
                 document['rate_r_max'] = get_float(field)
-            elif field.next_element == ' 7 # 1.2.2 ':
+            elif field.next_element in [' 7 # 1.2.2 ', '  1.2.2 ']:
                 document['rate_r_min'] = get_float(field)
-            elif field.next_element == ' 9 # 1.3.1 ':
+            elif field.next_element in [' 9 # 1.3.1 ', ' 1.3.1 ']:
                 document['rate_acc_med'] = get_float(field)
-            elif field.next_element == ' 10 # 1.3.2 ':
+            elif field.next_element in [' 10 # 1.3.2 ', ' 1.3.2 ']:
                 document['rate_acc_max'] = get_float(field)
-            elif field.next_element ==  ' 11 # 1.3.3 ':
+            elif field.next_element in [' 11 # 1.3.3 ', ' 1.3.3 ']:
                 document['rate_acc_min'] = get_float(field)
-            elif field.next_element == ' 12 # 1.4 ':
+            elif field.next_element in [' 12 # 1.4 ', ' 1.4 ', ' 7 ']:
                 # Загальний обсяг задоволених заявок учасників аукціону (млн. од. валюти)
                 document['amount_accepted_all'] = get_float(field)
             elif field.next_element == ' 13 - 1.5 || 1.6 ':
