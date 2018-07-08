@@ -50,20 +50,19 @@ loggers:
 #    handlers: [file, syslog]
     handlers: [file]
     propagate: yes
-  spiders.rest:
-    level: DEBUG
-#    handlers: [file, syslog]
-    handlers: [file]
-    propagate: yes
+#  spiders.rest:
+#    level: DEBUG
+#    handlers: [syslog]
+#    propagate: yes
 #  spiders.news_minfin:
 #    level: INFO
 #    handlers: [syslog]
-  spiders.parse_minfin:
-    level: DEBUG
-    handlers: [syslog]
+#  spiders.parse_minfin:
+#    level: DEBUG
+#    handlers: [syslog]
 
 root:
   level: INFO
   propagate: yes
 #  handlers: [console, file, syslog]
-  handlers: [syslog, errors]
+  handlers: [syslog]

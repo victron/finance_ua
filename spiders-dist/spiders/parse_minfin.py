@@ -178,6 +178,7 @@ def day_secret(currency: str, operation: str, location:str) -> int:
     logger.debug('soup = {}'.format(soup))
     url_js = soup.find('script', attrs={'type': 'text/javascript',
                                         'src': re.compile('/js/currency/au-currency.js\\?.*')})['src'].strip()
+    logger.info('url_js= {}'.format(url_js))
     if url_js == '':
         logger.error('parser error')
         raise ValueError
