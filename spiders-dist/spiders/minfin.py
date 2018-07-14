@@ -46,7 +46,9 @@ def parse_announcement_ovdp(responce_get: requests) -> list:
     current_date = datetime.utcnow()
     data = []
     for news in soup.body.table.tbody.find_all('tr'):
-        dic = {'time_auction': news.td.get_text(),
+        if news.td.next_sibling.a == None:
+            continue
+        dic = {'time_auction': news.td.get_text().strip().replace(' ', ''),
                'time': current_date,
                'href_announce': news.td.next_sibling.a['href'].replace(' ', '%20'),
                'source': 'mf',
@@ -56,7 +58,11 @@ def parse_announcement_ovdp(responce_get: requests) -> list:
             dic['href_results'] = news.td.next_sibling.next_sibling.a['href']
         except TypeError:
             dic['href_results'] = None
-        dic['time_auction'] = datetime.strptime(dic['time_auction'], '%d.%m.%Y')
+        try:
+            dic['time_auction'] = datetime.strptime(dic['time_auction'], '%d.%m.%Y')
+        except Exception as e:
+            logger.error('error in parsing date dic[\'time_auction\']= \"{}\"'.format(dic['time_auction']))
+            raise e
 
         if not dic['href_announce'].startswith('http://'):
             dic['href_announce'] = 'http://www.minfin.gov.ua' + dic['href_announce']
