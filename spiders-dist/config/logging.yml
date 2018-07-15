@@ -41,6 +41,9 @@ handlers:
     formatter: syslog_format
 
 loggers:
+  hyper.http20.connection:
+    # suppressing INFO from hyper
+    level: WARNING
 #  spiders:
 #    level: DEBUG
 #    propagate: yes
@@ -49,7 +52,7 @@ loggers:
     level: INFO
 #    handlers: [file, syslog]
     handlers: [file]
-    propagate: yes
+#    propagate: yes
 #  spiders.rest:
 #    level: DEBUG
 #    handlers: [syslog]
@@ -60,6 +63,7 @@ loggers:
 #  spiders.parse_minfin:
 #    level: DEBUG
 #    handlers: [syslog]
+
 
 root:
   level: INFO
