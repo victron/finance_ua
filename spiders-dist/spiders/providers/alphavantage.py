@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_data(symbol: str, apikey: str, function: str ='TIME_SERIES_DAILY', outputsize: str ='compact',
-             datatype: str ='json'):
+             datatype: str ='json') -> (str, dict):
     """
     get historic data
     :param symbol:
@@ -29,12 +29,19 @@ def get_data(symbol: str, apikey: str, function: str ='TIME_SERIES_DAILY', outpu
     params = {'symbol': symbol, 'apikey': apikey, 'function': function, 'outputsize': outputsize, 'datatype': datatype}
 
     response = requests.get(url, params=params)
+    if response.status_code != 200:
+        logger.error(f'provider return {response.status_code} for {symbol}')
+        return symbol, {}
     rdict = response.json()
-    meta = rdict['Meta Data']
+    try:
+        meta = rdict['Meta Data']
+    except KeyError:
+        logger.error(f'no data for \'{symbol}\'')
+        return symbol, {}
     data = rdict['Time Series (Daily)']
     if meta['2. Symbol'] != symbol:
         logger.warning('wrong metadata, \'2. Symbol\'= {}; expected symbol= {}'.format(meta['2. Symbol'], symbol))
-        return None
+        return symbol, data
 
     # tz = meta['5. Time Zone']
     return symbol, data
@@ -63,6 +70,8 @@ def dayily_stat_prepare(input: tuple, start: datetime, stop: datetime) -> list:
      {'time': datetime(2018, 2, 20), 'EURUSD': 1.2343}]
     """
     symbol, data = input
+    if data == {}:
+        return []
     data_formated = []
     while start < stop:
         day = {}
