@@ -1,6 +1,7 @@
 import logging
 import statistics
 from datetime import datetime, timedelta, timezone
+import pytz
 
 from pymongo.errors import DuplicateKeyError, BulkWriteError
 
@@ -13,6 +14,7 @@ from curs_auto.spiders_legacy.ukrstat import import_stat
 from collections import namedtuple
 
 logger = logging.getLogger('curs_auto.mongo_collector.mongo_collect_history')
+
 
 def insert_history_embedded(input_document: dict):
     """
@@ -78,12 +80,12 @@ def insert_history(input_document: dict):
                                {'$set': {source + '.' + field: document[field] for field in document}}, upsert=True)
     else:
         # source = document.pop('source')
-        time = datetime.combine(time, datetime.min.time())
-        logger.debug('calling update collection= {}'.format(db_update))
+        # time = datetime.combine(time, datetime.min.time())
+        logger.debug('calling update collection= {}'.format(db_update.name))
         logger.debug('time= {}, document= {}'.format(time, document))
         result = db_update.update_one({'time': time}, {'$set': document}, upsert=True)
-        logger.debug('matched_count= {}, modified_count= {}'.format(result.matched_count,
-                                                                    result.modified_count))
+        logger.debug(f'matched_count= {result.matched_count}, modified_count= {result.modified_count},'
+                     f' upserted_id= {result.upserted_id}')
 
 
 
@@ -102,7 +104,6 @@ def insert_history_currency(input_document: dict):
     source = document.pop('source')
     result = db_update.update_one({'time': time}, {'$set': document}, upsert=True)
     return result
-
 
 
 def create_hour_stat_doc(currency: str, operation: str, collection: data_active) -> dict:
@@ -240,7 +241,10 @@ def daily_stat(day: datetime, collection) -> dict:
     currently put in stat data for business hours
     :param day: datetime, date for aggregation hour statistic
     :param collection:
-    :return:
+    :return: {'buy': 0.41, 'sell': 0.41, 'sell_rates': [0.41, 0.41], 'buy_rates': [0.41],
+            'sell_val': 1030000, 'buy_val': 375000, 'source': 'd_int_stat',
+            'time': datetime.datetime(2018, 6, 17, 0, 0),
+            'currency': 'RUB'}
     """
     business_time = (day.replace(hour=9, minute=0), day.replace(hour=17, minute=59))
     full_time = (day.replace(hour=0, minute=0), day.replace(hour=23, minute=59))
@@ -270,21 +274,14 @@ def daily_stat(day: datetime, collection) -> dict:
         document['buy'] = round(document['buy'], round_dig)
         document['source'] = source
         document['time'] = time[1].replace(hour=0, minute=0)
+        document['currency'] = collection.name
         return document
     # actually one document
     try:
         result_doc = [form_output_doc(doc) for doc in command_cursor][0]
     except IndexError or TypeError:
         return {}
-    # TODO: need to correct (bad code)
     logger.debug('result_doc= {}'.format(result_doc))
-    if result_doc == {}:
-        logger.warning('document empty nothing to insert, result_doc= {}'.format(result_doc))
-        return {}
-    document = dict(result_doc)
-    time = document.pop('time')
-    # looks not need, because lists comes from data_active
-    # collection.update_one({'time': time}, {'$set': document}, upsert=True)
     return result_doc
 
 
@@ -304,7 +301,7 @@ def move_old_records(hours: int, limit: int=1000) -> namedtuple:
         in some reason (tiny machine), it's not possible to insert_many big number of docs(700000).
         So, droped this operation with limit
         """
-        old_docs = records.find(filter, limit)
+        old_docs = records.find(filter, limit=limit)
         spare_cursor = old_docs.clone()
         if old_docs.count() == 0:
             break
@@ -346,13 +343,14 @@ def agg_daily_stat():
             if doc['time'].date() == date.date():
                 logger.debug('inserting doc = {}'.format(doc))
                 logger.info('inserting doc as \'d_ext_stat\'')
-                insert_history(dict(doc, source='d_ext_stat'))
+                time = datetime.combine(doc['time'].date(), datetime.min.time())
+                insert_history(dict(doc, source='d_ext_stat', time=time))
                 break
-
-    if datetime.now().hour >= 18:
-        stop_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    local_time = datetime.now(tz=pytz.utc).astimezone(local_tz)
+    if local_time.hour >= 18:
+        stop_day = datetime.combine(local_time.date(), datetime.min.time())
     else:
-        stop_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+        stop_day = datetime.combine(local_time.date(), datetime.min.time()) - timedelta(days=1)
 
     for currency in ['USD', 'EUR', 'RUB']:
         collection = DATABASE[currency]
@@ -370,6 +368,7 @@ def agg_daily_stat():
         if command_cursor.alive:
             last_daily_stat = command_cursor.next()['max_time']
             start_day = last_daily_stat + timedelta(days=1)
+            logger.info(f'last info for {currency} in DB at {last_daily_stat}')
             #  for manual insert external stat
             # start_day = datetime(year=2018, month=5, day=19)
         elif currency == 'RUB':
@@ -386,22 +385,26 @@ def agg_daily_stat():
         # days = []
         start_day = start_day.replace(hour=0, minute=0, second=0, microsecond=0)
         day = start_day
+        logger.debug(f'start date= {start_day} stop_day= {stop_day} for currency= {currency}')
         while day <= stop_day:
             # days.append(start_day)
-
             logger.info('daily stat currency= {} day= {}'.format(currency, day))
         # for day in days:
             day_stat = daily_stat(day, collection)
 
-            # if hourly stat less then 5
-            # overwrite internal daily stat by external stat data
             if day_stat:
                 if len(day_stat['sell_rates']) < 5:
-                    logger.debug('using ext_stat')
-                    ext_stat(day)
+                    if currency != 'RUB':
+                        logger.debug('operating to \'d_ext_stat\'; using ext_stat')
+                        ext_stat(day)
+                else:
+                    logger.info(f'inserting \'d_int_stat\' for {currency}')
+                    logger.debug('trying to insert day_stat= {}'.format(day_stat))
+                    insert_history(dict(day_stat))
             else:
-                logger.debug('using ext_stat')
-                ext_stat(day)
+                if currency != 'RUB':
+                    logger.debug('day_stat empty, using ext_stat')
+                    ext_stat(day)
             # insert NBU rate
             insert_history_currency(NbuJson().rate_currency_date(currency, day))
             # insert auction_results
@@ -410,7 +413,7 @@ def agg_daily_stat():
             day += timedelta(days=1)
 
     # TODO: check if history inserted
-    moved_records = move_old_records(24)
+    # moved_records = move_old_records(24)
 
 
 def ukrstat(start_date: datetime) -> tuple:

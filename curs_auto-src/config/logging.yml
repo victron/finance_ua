@@ -39,10 +39,10 @@ loggers:
 #    level: DEBUG
 #    handlers: [file, syslog]
     handlers: [syslog]
-    propagate: yes
+#    propagate: yes
 
 
 root:
   level: INFO
-#  handlers: [console, file, syslog]
-  handlers: [file, console]
+  handlers: [syslog]
+#  handlers: [file, console]

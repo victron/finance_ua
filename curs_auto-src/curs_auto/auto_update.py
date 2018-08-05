@@ -60,7 +60,7 @@ auto_news_update = scheduler.add_job(rest_client.update, 'interval', args=['news
                                      next_run_time=datetime.now(kiev_tz) + timedelta(minutes=1, seconds=30))
 hour_stat = scheduler.add_job(hourly_history, 'cron', name='hour_stat', minute=55, id='hour_stat',
                               replace_existing=True, jobstore='longTerm')
-daily_stat = scheduler.add_job(agg_daily_stat, 'cron', name='daily_stat', hour=19, minute=36, id='daily_stat',
+daily_stat = scheduler.add_job(agg_daily_stat, 'cron', name='daily_stat', hour=18, minute=53, id='daily_stat',
                                replace_existing=True, jobstore='longTerm')
 daily_bonds = scheduler.add_job(update_bonds, 'cron', name='daily_bonds', hour=18, minute=50, id='daily_bonds',
                                 replace_existing=True, jobstore='longTerm', args=[True])
@@ -77,7 +77,7 @@ for commodity in UPDATE_COMMODITIES:
 main_currencies = scheduler.add_job(rest_client.update_dict, 'interval',
                                     args=[{**{'update': 'main_currencies'}, **{'list': MAIN_CURRENCIES}}],
                                     name='auto_' + 'main_currencies', hours=4, id='auto_' + 'main_currencies',
-                                    next_run_time=datetime.now(kiev_tz) + timedelta(minutes=45))
+                                    next_run_time=datetime.now(kiev_tz) + timedelta(minutes=45))  # for debug minutes=45
 main_currencies2 = scheduler.add_job(rest_client.update_dict, 'interval',
                                     args=[{**{'update': 'investing'}, **{'list': INVESTING_COM}}],
                                     name='auto_' + 'investing', hours=4, id='auto_' + 'investing',

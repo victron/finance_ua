@@ -3,6 +3,10 @@ import pytz
 from datetime import datetime, timezone, timedelta
 
 
+# global variables
+main_currencies = ['USD', 'EUR', 'RUB']
+operations = ['sell', 'buy']
+local_tz = pytz.timezone('Europe/Kiev')
 
 
 def current_datetime_tz() -> datetime:
@@ -14,6 +18,7 @@ def current_datetime_tz() -> datetime:
     # below variant get timezone from diff between utc and local time
     # return datetime.now(timezone(timedelta(hours=(datetime.now().hour - datetime.utcnow().hour))))
 
+
 def get_tzinfo() -> timedelta:
     # http://pytz.sourceforge.net/#tzinfo-api
     currnt_tz = pytz.timezone('Europe/Kiev')
@@ -21,9 +26,9 @@ def get_tzinfo() -> timedelta:
     return timezone(currnt_tz.utcoffset(curent_time))
 
 
-
 def date_handler(obj):
     return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+
 
 def flatten(dictionary):
     stack = [((), dictionary)]
@@ -39,13 +44,3 @@ def flatten(dictionary):
         else:
             result["/".join(path )] = current
     return result
-
-
-
-
-# global variables
-main_currencies = ['USD', 'EUR', 'RUB']
-operations = ['sell', 'buy']
-# local_tz = current_datetime_tz().tzinfo # gives wrong tzinfo, difference in one hour, reason in dst
-# local_tz = datetime.now(timezone(timedelta(hours=(datetime.now().hour - datetime.utcnow().hour)))).tzinfo
-local_tz = get_tzinfo()
