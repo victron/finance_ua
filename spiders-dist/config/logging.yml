@@ -67,6 +67,6 @@ loggers:
 
 root:
   level: INFO
-  propagate: yes
+  propagate: no
 #  handlers: [console, file, syslog]
   handlers: [syslog]
