@@ -11,6 +11,7 @@ import spiders.parameters as parameters
 from spiders.parameters import simple_rest_secret
 from spiders.commodities.update_all import update_all
 from spiders.main_currencies.google_fin import main_currencies_collect
+from spiders.providers.alphavantage import fill_main_currencies
 from spiders.main_currencies.investing_com import main_currencies_collect as investing_collect
 from spiders.minfinua_contact import prepare_request
 from spiders.simple_encrypt_import import secret
@@ -230,7 +231,8 @@ content-type: application/json; charset=UTF-8
                     raise falcon.HTTPBadRequest('Bad request', msg)
 
                 try:
-                    for k, v in main_currencies_collect(lists).items():
+                    # for k, v in main_currencies_collect(lists).items():
+                    for k, v in fill_main_currencies(lists).items():
                         responce[k] = str(v)  # convert nametuple in str, for more information in REST
                     responce['update'] = update
                 except NameError as e:
