@@ -55,3 +55,10 @@
 #      - start nginx
   become: yes
   become_method: sudo
+
+#
+## ------------- renew letsencrypt cert ----------------
+#35 15 18 * * /sbin/iptables -I INPUT -p tcp --dport http -j ACCEPT
+#36 15 18 * * /usr/bin/certbot renew >> /home/vic/certbot-cron.log 2>&1
+#38 15 18 * * /sbin/iptables -D INPUT -p tcp --dport http -j ACCEPT
+#38 15 18 * * /bin/systemctl restart nginx.service
