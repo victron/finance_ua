@@ -4,6 +4,7 @@
 
 import logging
 from datetime import datetime, timedelta, timezone, time, date
+import time as t
 import requests
 import pymongo
 
@@ -25,6 +26,7 @@ def get_data(symbol: str, apikey: str, function: str ='TIME_SERIES_DAILY', outpu
     :param datatype:
     :return:
     """
+    # t.sleep(1)
     url = 'https://www.alphavantage.co/query'
     params = {'symbol': symbol, 'apikey': apikey, 'function': function, 'outputsize': outputsize, 'datatype': datatype}
 

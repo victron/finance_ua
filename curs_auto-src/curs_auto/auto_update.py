@@ -28,7 +28,8 @@ logger = logging.getLogger('curs_auto')
 
 UPDATE_COMMODITIES = ['corn', 'iron_ore', 'oats', 'oil_brent', 'soybean_meal', 'soybeans_oil', 'soybeans',
                       'sugar', 'wheat', 'sunflower_oil']
-MAIN_CURRENCIES = ["EURUSD", "USDJPY", "USDCHF", "USDCAD", "NZDUSD", "AUDUSD", "GBPUSD"]
+MAIN_CURRENCIES11 = ["EURUSD", "USDJPY", "USDCHF", "USDCAD"]
+MAIN_CURRENCIES12 = ["NZDUSD", "AUDUSD", "GBPUSD"]
 INVESTING_COM = ["XAUUSD", "XAGUSD", "IRONORE"]
 
 kiev_tz = pytz.timezone('Europe/Kiev')
@@ -74,9 +75,13 @@ for commodity in UPDATE_COMMODITIES:
                                       next_run_time=datetime.now(kiev_tz) + timedelta(minutes=10 + i))
     i += 1
 
-main_currencies = scheduler.add_job(rest_client.update_dict, 'interval',
-                                    args=[{**{'update': 'main_currencies'}, **{'list': MAIN_CURRENCIES}}],
-                                    name='auto_' + 'main_currencies', hours=4, id='auto_' + 'main_currencies',
+main_currencies11 = scheduler.add_job(rest_client.update_dict, 'interval',
+                                    args=[{**{'update': 'main_currencies'}, **{'list': MAIN_CURRENCIES11}}],
+                                    name='auto_' + 'main_currencies11', hours=4, id='auto_' + 'main_currencies11',
+                                    next_run_time=datetime.now(kiev_tz) + timedelta(minutes=15))  # for debug minutes=45
+main_currencies12 = scheduler.add_job(rest_client.update_dict, 'interval',
+                                    args=[{**{'update': 'main_currencies'}, **{'list': MAIN_CURRENCIES12}}],
+                                    name='auto_' + 'main_currencies12', hours=4, id='auto_' + 'main_currencies12',
                                     next_run_time=datetime.now(kiev_tz) + timedelta(minutes=45))  # for debug minutes=45
 main_currencies2 = scheduler.add_job(rest_client.update_dict, 'interval',
                                     args=[{**{'update': 'investing'}, **{'list': INVESTING_COM}}],
