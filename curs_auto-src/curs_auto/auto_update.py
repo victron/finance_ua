@@ -93,7 +93,7 @@ main_currencies2 = scheduler.add_job(rest_client.update_dict, 'interval',
 # problem with aspscheduler, try to move to another module
 auto_ukrstat_month = scheduler.add_job(ukrstat_shadow, 'cron', id='auto_ukrstat_update', replace_existing=True,
                                        name='auto_ukrstat_update', hour=16, minute=15, jobstore='longTerm')
-monthly_aggregators = scheduler.add_job(collect_nbu_aggregators, 'cron', name='monthly_aggregators', hour=13, minute=45,
+monthly_aggregators = scheduler.add_job(collect_nbu_aggregators, 'cron', name='monthly_aggregators', hour=17, minute=35,
                                         id='monthly_aggregators', replace_existing=True, jobstore='longTerm')
 def main():
     logger.debug('start auto update')

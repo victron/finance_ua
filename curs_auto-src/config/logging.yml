@@ -40,6 +40,14 @@ loggers:
 #    handlers: [file, syslog]
     handlers: [syslog]
 #    propagate: yes
+#  spiders.nbu:
+#    level: DEBUG
+#    handlers: [syslog]
+#  curs.mongo_collector.money_aggregators:
+#    level: DEBUG
+#    handlers: [syslog]
+#  curs.mongo_collector.meta:
+#    level: DEBUG
 
 
 root:

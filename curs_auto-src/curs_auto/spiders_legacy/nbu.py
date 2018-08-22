@@ -1,5 +1,6 @@
 # file need in case need do correction in data,
 # for example from curs_auto/rebuild_d_int_stat.py
+# TODO: this is actual file
 
 import json
 import logging
@@ -206,20 +207,27 @@ class NbuJson():
         # депозитними корпораціями та належать на правах власності іншим фінансовим корпораціям,
         # нефінансовим корпораціям, домашнім господарствам та некомерційним організаціям, що
         # обслуговують домашні господарства. Залежно від зниження ступеня ліквідності фінансові активи
-        # групують у різні грошові агрегати М0, М1, М2 та М3. Грошовий агрегат М0 включає готівкові
-        # кошти в обігу поза депозитними корпораціями. Грошовий агрегат М1 – грошовий агрегат М0 та
-        # переказні депозити в національній валюті. Грошовий агрегат М2 – грошовий агрегат М1 і
-        # переказні депозити в іноземній валюті та інші депозити. Грошовий агрегат М3 (грошова маса) –
-        # грошовий агрегат М2 та цінні папери, крім акцій.
+        # групують у різні грошові агрегати М0, М1, М2 та М3.
+        # Грошовий агрегат М0 включає готівкові кошти в обігу поза депозитними корпораціями.
+        # Грошовий агрегат М1 – грошовий агрегат М0 та переказні депозити в національній валюті.
+        # Грошовий агрегат М2 – грошовий агрегат М1 і переказні депозити в іноземній валюті та інші депозити.
+        # Грошовий агрегат М3 (грошова маса) – грошовий агрегат М2 та цінні папери, крім акцій.
         def _date_object(obj: dict) -> dict:
             try:
-                obj['date'] = datetime.strptime(obj['dt'], '%m.%Y')
+                obj['date'] = datetime.strptime(obj['dt'], '%Y%m%d')
             except:
                 pass
             del obj['dt']
             return obj
-        params = {'date': date.strftime('%Y%m'), 'json': ''}
-        return requests.get(self.url + 'monetary', params=params).json(object_hook=_date_object)
+        params = {'date': date.strftime('%Y%m01'), 'json': ''}
+        url = self.url + 'monetary'
+        logger.debug(f'requested url= {url}, params= {params}')
+        resp = requests.get(url, params=params)
+        if resp.status_code != 200:
+            logger.error(f'server error= {resp.status_code}')
+            return {'error': resp.status_code}
+        logger.debug(f'resp.json(object_hook=_date_object)= {resp.json(object_hook=_date_object)}')
+        return resp.json(object_hook=_date_object)
 
 
 if __name__ == '__main__':
