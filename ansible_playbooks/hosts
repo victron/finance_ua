@@ -7,15 +7,8 @@
 [inna]
 192.168.1.125
 
-[inna-fa]
-inna-fa
-
 [gcp]
-35.231.237.89
-
-[inna-remote]
-# ip address of gw on vagrant machine
-10.0.2.2
+f1-monga
 
 [local:vars]
 ansible_connection = local
@@ -31,14 +24,7 @@ ansible_python_interpreter=/usr/bin/python
 #ansible_python_interpreter=/usr/bin/python
 remote_user = vic
 #ansible_connection = paramiko
-
-[inna-remote:vars]
-ansible_python_interpreter=/usr/bin/python
-# problem in ansible2.0
-remote_user = vic
-ansible_port=22221
-#ansible_connection=paramiko
-
+#ansible_port=22221
 
 [gcp:vars]
 remote_user = vic

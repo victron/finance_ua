@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+# get password from env
+# https://www.digitalocean.com/community/tutorials/how-to-use-vault-to-protect-sensitive-ansible-data-on-ubuntu-16-04
+
+
+import os
+print(os.environ['VAULT_PASSWORD'])
