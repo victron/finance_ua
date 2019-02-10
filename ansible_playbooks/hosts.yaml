@@ -2,12 +2,11 @@ all:
   children:
     gcp:
       hosts:
-        f1-monga:
-          ansible_host: "{{ f1_monga }}"
-          ansible_user: vic
-          ansible_python_interpreter: /usr/bin/python3
+        f1-monga
+    ec2:
+      hosts:
+        ec2
     local:
       hosts:
-        127.0.0.1:
-          ansible_connection: local
-          ansible_python_interpreter: /usr/bin/python3
+        127.0.0.1
+

@@ -1,0 +1,7 @@
+---
+# nonsensitive data
+ansible_python_interpreter: /usr/bin/python3
+ansible_host: "{{ vault_ansible_host }}"
+ansible_user: "{{ vault_ansible_user }}"
+mongo_admin_user: "{{ vault_mongo-admin }}"
+mongo_admin_pwd: "{{ vault_mongo_admin_pwd }}"
