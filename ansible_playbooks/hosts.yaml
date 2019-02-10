@@ -5,7 +5,7 @@ all:
         f1-monga
     ec2:
       hosts:
-        ec2
+        ec-2
     local:
       hosts:
         127.0.0.1

@@ -1,20 +1,28 @@
 ---
 - block:
   - name: install mongo keys
-    apt_key: keyserver=keyserver.ubuntu.com id=0C49F3730359A14518585931BC711F9BA15703C6
+    apt_key: keyserver=keyserver.ubuntu.com id=9DA31620334BD75D9DCB49F368818C72E52529D4
   - name: instal mongodb apt_repository
-    apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse'
+    apt_repository: repo='deb https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse'
       state=present
       update_cache=yes
-     filename=mongodb-org-3.4
-  # for linux only 64-bits available
-  # manual install https://fastdl.mongodb.org/linux/mongodb-linux-i686-3.2.10.tgz
-  # https://gkbrown.org/2016/03/31/installing-mongodb-on-32-bit-ubuntu-15-10/
+     filename=mongodb-org
+
+  - name: create directory for mongo
+    file:
+      path: /data/mongodb
+      state: directory
+      owner: mongodb
+      group: nogroup
+      mode: 0700
+
   - name: install  mongodb-org
     apt: name=mongodb-org state=present
     notify:
       - prepare config mongodb.service
+      - prepare config mongod.conf
       - start mongodb
+  
   become: yes
   become_method: sudo
   when: ansible_architecture != "i386"
