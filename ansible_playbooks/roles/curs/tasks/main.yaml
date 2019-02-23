@@ -4,8 +4,11 @@
   stat: path={{ home_dir }}/{{ venv_dir }}/bin/activate
   register: venv_result
 
-- name: Initiate virtualenv for {{ python_ver }}
-  command: "{{ python_ver }} -m venv {{ home_dir }}/{{ venv_dir }}"
+- block:
+  - name: Initiate virtualenv for {{ python_ver }}
+    command: "{{ python_ver }} -m venv --without-pip {{ home_dir }}/{{ venv_dir }}"
+  - name: install pip
+    command: "{{ home_dir }}/{{ venv_dir }}/bin/{{ python_ver }} {{ home_dir }}/get-pip.py"
   become: yes
   become_user: "{{ app_user }}"
   become_method: sudo

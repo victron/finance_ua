@@ -1,0 +1,44 @@
+---
+- block:
+  - name: open port 80;  file under /etc/cron.d
+    cron:
+      name: allow HTTP
+      day: "*/30"
+      minute: 35
+      hour: 15
+      user: root
+      job: "/sbin/iptables -I INPUT -p tcp --dport http -j ACCEPT"
+      cron_file: ansible_letsencrypt_update
+
+  - name: certbot renew;  file under /etc/cron.d
+    cron:
+      name: certbot renew
+      day: "*/30"
+      minute: 36
+      hour: 15
+      user: root
+      job: "/usr/bin/certbot renew >> /home/vic/certbot-cron.log 2>&1"
+      cron_file: ansible_letsencrypt_update
+
+  - name: close port 80;  file under /etc/cron.d
+    cron:
+      name: close HTTP
+      day: "*/30"
+      minute: 38
+      hour: 15
+      user: root
+      job: "/usr/bin/certbot renew >> /home/vic/certbot-cron.log 2>&1"
+      cron_file: ansible_letsencrypt_update
+
+  - name: restart nginx.service;  file under /etc/cron.d
+    cron:
+      name: restart nginx.service
+      day: "*/30"
+      minute: 38
+      hour: 15
+      user: root
+      job: "/bin/systemctl restart nginx.service"
+      cron_file: ansible_letsencrypt_update
+
+  become: yes
+  become_method: sudo

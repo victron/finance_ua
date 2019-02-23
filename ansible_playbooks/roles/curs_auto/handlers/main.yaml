@@ -1,9 +1,9 @@
 ---
-- name: start {{ service }}
-  service: name={{ service }}  state=restarted
-           enabled=yes
-  become: yes
-  become_method: sudo
+#- name: start {{ service }}
+#  service: name={{ service }}  state=restarted
+#           enabled=yes
+#  become: yes
+#  become_method: sudo
 
 - name: systemd {{ service }} start
   systemd:

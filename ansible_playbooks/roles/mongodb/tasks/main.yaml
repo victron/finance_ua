@@ -22,7 +22,7 @@
       - prepare config mongodb.service
       - prepare config mongod.conf
       - start mongodb
-  
+
   become: yes
   become_method: sudo
   when: ansible_architecture != "i386"

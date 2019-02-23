@@ -53,8 +53,12 @@
 #    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=UA/ST=Kyivska/L=Kyiv/O=priv/CN={{ ansible_fqdn }}" -keyout {{ ssl_certificate_key }} -out {{ ssl_certificate }}
 #    notify:
 #      - start nginx
+
   become: yes
   become_method: sudo
+
+- include_tasks: iptables.yaml
+- include_tasks: cron.yaml
 
 #
 ## ------------- renew letsencrypt cert ----------------

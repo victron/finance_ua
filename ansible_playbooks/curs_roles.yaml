@@ -1,5 +1,5 @@
 ---
-- hosts: gcp
+- hosts: ec2
   vars:
 #    ssl_certificate_key: /etc/nginx/ssl/nginx.key
   vars_files:

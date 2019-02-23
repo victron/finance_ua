@@ -12,25 +12,27 @@
 
 #  - name: install python's repos
 #    apt_repository: repo='ppa:fkrull/deadsnakes'
-#  - name: install {{ python_ver }}
-#    apt: name={{ python_ver }}  state=present
+  - name: install {{ python_ver }}
+    apt: name={{ python_ver }}  state=present
   - name: install {{ python_ver }}-dev
     apt: name={{ python_ver }}-dev   state=present
   - name: install gcc (for pycrypto compile)
     apt: name=gcc   state=present
   - name: install libdpkg-perl (needed for pycrypto compile)
     apt: name=libdpkg-perl state=present
-  - name: install python3-distutils
-    apt: name=python3-distutils
-  - name: install python3-venv
-    apt: name=python3-venv state=present
+#  - name: install python3-distutils
+#    apt: name=python3-distutils
+## On Debian/Ubuntu systems, you need to install the python3-venv\npackage
+#  - name: install python3-venv
+#    apt: name=python3-venv state=present
   - name: download get-pip.py
     get_url: url=https://bootstrap.pypa.io/get-pip.py
       dest={{ home_dir }}/get-pip.py
       force=no
   - name: install pip for {{ python_ver }}
     command: "{{ python_ver }} {{ home_dir }}/get-pip.py"
-
+#  - name: install pip
+#    apt: name=python3-pip state=present
 
   become: yes
   become_method: sudo
