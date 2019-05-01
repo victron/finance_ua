@@ -14,6 +14,7 @@ history = DATABASE['history']   # TODO: check if needed
 aware_times = lambda collection: DATABASE[collection].with_options(codec_options=CodecOptions(tz_aware=True,
                                                                                               tzinfo=local_tz))
 # data_active = db['data_active']
+# collections for active bids, used by curs app
 data_active = aware_times('data_active') # pymongo 3.2.2
 
 bonds = DATABASE['bonds']
