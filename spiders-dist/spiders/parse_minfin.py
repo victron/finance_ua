@@ -87,10 +87,11 @@ def get_triple_data(currency: str, operation: str, test_data: dict = None) -> tu
         logger.error('could not fetch list from minfin.com.ua, resp.status= {}'.format(responce_get.status_code))
         logger.error('url={}'.format(url))
         return ()
+    responce_get.encoding = 'utf-8' # set utf-8 as main coding (requests doc)
     page = responce_get.text
     soup = BeautifulSoup(page, "html.parser")
     data = {}
-    logger.debug('soup = {}'.format(soup))
+    logger.debug('soup size = {}'.format(len(soup.get_text())))
 
     # regex = re.compile(r'[\t\n\r\x0b\x0c]')
     for i in soup.find_all('div', attrs={'data-bid': True,
@@ -100,20 +101,23 @@ def get_triple_data(currency: str, operation: str, test_data: dict = None) -> tu
         try:
             key = i['data-bid']
             data[key] = {}
-            data[key]['time'] = i.small.string
+            data[key]['time'] = i.find('span', class_="au-deal-time").string
             data[key]['currency'] = currency
             data[key]['operation'] = operation
-            data[key]['rate'] = i.find('span', class_="au-deal-currency").string
+            data[key]['rate'] = i.find('span', class_="au-deal-currency").string.strip()
             data[key]['rate'] = data[key]['rate'].replace(',', '.')
-            data[key]['amount'] = [text for text in i.find('span', class_="au-deal-sum").strings][0].replace(' ', '')
-            comment = i.find('span', class_ = "au-msg-wrapper js-au-msg-wrapper").get_text(strip=True)
+            data[key]['amount'] = i.find('span', class_="au-deal-sum").contents[0].strip()
+            data[key]['amount'] = data[key]['amount'].replace(' ', '')
+            comment = i.find('div', class_ = "au-msg-wrapper js-au-msg-wrapper").get_text(strip=True)
             # data[key]['comment'] = regex.sub('', comment)
             # ' '.join(str.split()) works better then regex
             data[key]['comment'] = ' '.join(comment.split())
-            data[key]['phone'] = i.find('span', class_="au-dealer-phone").get_text(strip=True)
-            data[key]['id'] = i.find('span', class_="au-dealer-phone").a['data-bid-id']
+            data[key]['phone'] = i.find('div', class_="au-dealer-phone").get_text(strip=True)
+            data[key]['id'] = i.find('div', class_="au-dealer-phone").a['data-bid-id']
         except KeyError:
             logger.error('missing key data-bid i= {}'.format(i))
+        except Exception as e:
+            logger.error(e)
     # print('----------------- fetch -------------------------')
     # transfer session parameters
     session_parm = {'cookies': pickle.dumps(responce_get.cookies), 'url': url}
