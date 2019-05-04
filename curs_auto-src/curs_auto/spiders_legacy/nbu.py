@@ -7,12 +7,13 @@ import logging
 from datetime import datetime
 
 import requests
+import urllib3
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 
 from curs_auto.spiders_legacy.parameters import proxy_is_used, headers, proxies
 
-logger = logging.getLogger('spiders.nbu')
+logger = logging.getLogger('curs_auto.spiders_legacy.nbu')
 
 # from check_proxy import proxy_requests
 
@@ -146,7 +147,12 @@ class NbuJson():
     def rate_currency_date(self, currency: str, date: datetime) -> dict:
         params = {'valcode': currency, 'date': date.strftime('%Y%m%d'), 'json': ''}
         document = {}
-        recieved_doc = requests.get(self.url + 'exchange', params=params)
+        try:
+            recieved_doc = requests.get(self.url + 'exchange', params=params)
+        except urllib3.exceptions.NewConnectionError as e:
+            logger.error(f'for url= {self.url + "exchange"} parms= {params} got exeption:')
+            raise e
+
         if recieved_doc.status_code != 200:
             logger.error('NBU site stattus_code= {}'.format(recieved_doc.status_code))
             return {}
