@@ -59,9 +59,9 @@ auto_news_update = scheduler.add_job(rest_client.update, 'interval', args=['news
                                      #TODO: for test minutes=1
                                      minutes=30, id='auto_news_update',
                                      next_run_time=datetime.now(kiev_tz) + timedelta(minutes=1, seconds=30))
-hour_stat = scheduler.add_job(hourly_history, 'cron', name='hour_stat', minute=55, id='hour_stat',
+hour_stat = scheduler.add_job(hourly_history, 'cron', name='hour_stat', minute=54, id='hour_stat',
                               replace_existing=True, jobstore='longTerm')
-daily_stat = scheduler.add_job(agg_daily_stat, 'cron', name='daily_stat', hour=18, minute=53, id='daily_stat',
+daily_stat = scheduler.add_job(agg_daily_stat, 'cron', name='daily_stat', hour=18, minute=58, id='daily_stat',
                                replace_existing=True, jobstore='longTerm')
 daily_bonds = scheduler.add_job(update_bonds, 'cron', name='daily_bonds', hour=18, minute=50, id='daily_bonds',
                                 replace_existing=True, jobstore='longTerm', args=[True])
