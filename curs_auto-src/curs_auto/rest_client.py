@@ -12,6 +12,11 @@ url = 'http://localhost:9080/command'
 
 
 def update(object: str) -> dict :
+    """
+    http -j POST localhost:9080/command secret=<secret>  responce:='["ok", "nok"]' update=lists
+    :param object:
+    :return:
+    """
     logger.debug('update arg= {}'.format(object))
     if object not in update_allowed:
         msg = 'not allowed update ' + object
