@@ -384,6 +384,8 @@ def agg_daily_stat():
 
         # days = []
         start_day = start_day.replace(hour=0, minute=0, second=0, microsecond=0)
+        # below string to push recollect external data from date below
+        # start_day = datetime(2019, 2, 25, 0, 0, 0, 0)
         day = start_day
         logger.debug(f'start date= {start_day} stop_day= {stop_day} for currency= {currency}')
         while day <= stop_day:
@@ -405,11 +407,15 @@ def agg_daily_stat():
                 if currency != 'RUB':
                     logger.debug('day_stat empty, using ext_stat')
                     ext_stat(day)
-            # insert NBU rate
-            insert_history_currency(NbuJson().rate_currency_date(currency, day))
-            # insert auction_results
-            if day in auction_get_dates(day):
-                insert_history(auction_results(day))
+            try:
+                # insert NBU rate
+                insert_history_currency(NbuJson().rate_currency_date(currency, day))
+                # insert auction_results
+                if day in auction_get_dates(day):
+                    insert_history(auction_results(day))
+            except Exception as e:
+                logger.error('problem with getting rates from NBU')
+                logger.error(e)
             day += timedelta(days=1)
 
     # TODO: check if history inserted
