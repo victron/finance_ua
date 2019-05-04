@@ -5,7 +5,7 @@
 #  become: yes
 #  become_method: sudo
 
-- name: systemd {{ service }} start
+- name: start {{ service }}
   systemd:
     state: restarted
     daemon_reload: yes
