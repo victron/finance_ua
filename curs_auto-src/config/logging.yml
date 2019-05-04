@@ -38,9 +38,9 @@ loggers:
   curs_auto.mongo_collector.mongo_collect_history:
 #    level: DEBUG
 #    handlers: [file, syslog]
-    handlers: [syslog]
-#    propagate: yes
-#  spiders.nbu:
+#    handlers: [syslog]
+    propagate: no
+#  curs_auto.spiders_legacy.nbu:
 #    level: DEBUG
 #    handlers: [syslog]
 #  curs.mongo_collector.money_aggregators:
