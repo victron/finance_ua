@@ -81,7 +81,11 @@ def get_triple_data(currency: str, operation: str, test_data: dict = None) -> tu
     url = 'https://minfin.com.ua/currency/auction/' + currency + '/' + operation + '/' + location + '/'
     s = requests.Session()
     s.mount(url, HTTP20Adapter())
-    responce_get = s.get(url, headers=headers)
+    try:
+        responce_get = s.get(url, headers=headers, timeout=10)
+    except Exception as e:
+        logger.error(f'requested url={url}')
+        raise e
 
     if responce_get.status_code != 200:
         logger.error('could not fetch list from minfin.com.ua, resp.status= {}'.format(responce_get.status_code))
