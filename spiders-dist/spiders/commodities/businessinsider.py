@@ -85,7 +85,7 @@ http://markets.businessinsider.com/Ajax/CommodityController_HistoricPriceList/ir
            str(int(stop_date.strftime('%m'))) + '.' + \
            str(int(stop_date.strftime('%Y')))
     url = 'http://markets.businessinsider.com/commodities/historical-prices/' \
-          + commodity + '/' + start + '_' + stop
+          + commodity + '/usd/' + start + '_' + stop
     headers = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                  'Accept-Encoding': 'gzip, deflate',
                  'Accept-Language': 'uk,en-US;q=0.8,en;q=0.5,ru;q=0.3',
@@ -102,7 +102,7 @@ http://markets.businessinsider.com/Ajax/CommodityController_HistoricPriceList/ir
     logger.info('respoce_1= {}, from url= {}'.format(responce_post1.status_code, url))
     if responce_post1.status_code != 200:
         logger.error('wrong AUTH responce from businessinsider= {}'.format(responce_post1.status_code))
-        logger.info('requested url= {}'.format(url))
+        logger.error('requested url= {}'.format(url))
         raise ValueError('bad responce')
 
     soup1 = BeautifulSoup(responce_post1.text, 'html.parser')
