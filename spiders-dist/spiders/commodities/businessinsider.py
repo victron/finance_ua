@@ -84,7 +84,7 @@ http://markets.businessinsider.com/Ajax/CommodityController_HistoricPriceList/ir
     stop = str(int(stop_date.strftime('%d'))) + '.' + \
            str(int(stop_date.strftime('%m'))) + '.' + \
            str(int(stop_date.strftime('%Y')))
-    url = 'http://markets.businessinsider.com/commodities/historical-prices/' \
+    url = 'https://markets.businessinsider.com/commodities/historical-prices/' \
           + commodity + '/usd/' + start + '_' + stop
     headers = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                  'Accept-Encoding': 'gzip, deflate',
