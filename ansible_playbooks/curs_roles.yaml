@@ -1,5 +1,5 @@
 ---
-- hosts: ec2
+- hosts: ec2-inna
   vars:
 #    ssl_certificate_key: /etc/nginx/ssl/nginx.key
   vars_files:

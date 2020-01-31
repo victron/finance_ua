@@ -5,6 +5,8 @@
   # need for uwsgi https !!!!
     apt: name=libssl-dev  state=present
     register: libssl
+  - name: install python3.7-venv
+    apt: name=python3.7-venv   state=present
 #  - name: remove pip cache
 #
 #    when: libssl.changed
@@ -14,8 +16,11 @@
   become_method: sudo
 # create venv and install application
 
-- name: check venv "{{ venv_dir }}"
-  stat: path={{ home_dir }}/{{ venv_dir }}/bin/activate
+#- name: check venv "{{ venv_dir }}"
+#  stat: path={{ home_dir }}/{{ venv_dir }}/bin/activate
+#  register: venv_result
+- name: check pip in venv "{{ venv_dir }}"
+  stat: path={{ home_dir }}/{{ venv_dir }}/bin/pip3
   register: venv_result
 
 - block:
@@ -30,14 +35,14 @@
 
   - block:
     - name: Initiate virtualenv for {{ python_ver }}
-      command: "{{ python_ver }} -m venv --without-pip {{ home_dir }}/{{ venv_dir }}"
-#      command: "{{ python_ver }} -m venv {{ home_dir }}/{{ venv_dir }}"
+#      command: "{{ python_ver }} -m venv --without-pip {{ home_dir }}/{{ venv_dir }}"
+      command: "{{ python_ver }} -m venv {{ home_dir }}/{{ venv_dir }}"
 #    - name: download get-pip.py
 #      get_url: url=https://bootstrap.pypa.io/get-pip.py
 #        dest={{ home_dir }}/get-pip.py
 #        force=no
-    - name: install pip
-      command: "{{ home_dir }}/{{ venv_dir }}/bin/{{ python_ver }} {{ home_dir }}/get-pip.py"
+#    - name: install pip
+#      command: "{{ home_dir }}/{{ venv_dir }}/bin/{{ python_ver }} -m pip install pip"
     become: yes
     become_user: "{{ app_user }}"
     become_method: sudo

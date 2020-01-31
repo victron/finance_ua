@@ -8,6 +8,13 @@
       update_cache=yes
      filename=mongodb-org
 
+  - name: install  mongodb-org
+    apt: name=mongodb-org state=present
+    notify:
+      - prepare config mongodb.service
+      - prepare config mongod.conf
+      - start mongodb
+
   - name: create directory for mongo
     file:
       path: /data/mongodb
@@ -15,13 +22,6 @@
       owner: mongodb
       group: nogroup
       mode: 0700
-
-  - name: install  mongodb-org
-    apt: name=mongodb-org state=present
-    notify:
-      - prepare config mongodb.service
-      - prepare config mongod.conf
-      - start mongodb
 
   become: yes
   become_method: sudo

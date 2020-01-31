@@ -1,7 +1,7 @@
 ---
 - block:
   - name: install iptables-persistent
-    apt: name=nginx state=present
+    apt: name=iptables-persistent state=present
   - name: upload rules template
     template: src=rules.v4.j2 dest=/etc/iptables/rules.v4
   - name: reload rules

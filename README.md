@@ -65,17 +65,6 @@
         * `sudo service nginx start`
         * `bin/uwsgi_start.sh`
 
-#### ansible
-
-#### Notes for Vault 
-put password into env
-`export VAULT_PASSWORD=<password>`
-
-#### tags
-install / re-install only spiders service
-`ansible-playbook -t spiders curs_roles.yaml`
-
-
 ### test micro-services
 
 `http -j POST localhost:9080/command secret=<secret>  responce:='["ok", "nok"]' update=lists`

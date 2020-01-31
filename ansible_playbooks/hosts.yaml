@@ -1,8 +1,8 @@
 all:
+  hosts:
+    ec2-inna:
+
   children:
-    gcp:
-      hosts:
-        f1-monga
     ec2:
       hosts:
         ec-2

@@ -2,16 +2,16 @@
 
 # create venv and install application
 
-- name: check venv "{{ venv_dir }}"
-  stat: path={{ home_dir }}/{{ venv_dir }}/bin/activate
+- name: check pip3 in venv "{{ venv_dir }}"
+  stat: path={{ home_dir }}/{{ venv_dir }}/bin/pip3
   register: venv_result
 
 - block:
   - block:
     - name: Initiate virtualenv for {{ python_ver }}
-      command: "{{ python_ver }} -m venv --without-pip {{ home_dir }}/{{ venv_dir }}"
-    - name: install pip
-      command: "{{ home_dir }}/{{ venv_dir }}/bin/{{ python_ver }} {{ home_dir }}/get-pip.py"
+      command: "{{ python_ver }} -m venv {{ home_dir }}/{{ venv_dir }}"
+#    - name: install pip
+#      command: "{{ home_dir }}/{{ venv_dir }}/bin/{{ python_ver }} {{ home_dir }}/get-pip.py"
     become: yes
     become_user: "{{ app_user }}"
     become_method: sudo
@@ -75,16 +75,16 @@
 # configure app
 - block:
 #  # -------------- cursauto configs ---------------
-  - name: generate curs_auto  script into init.d
-    template: src=init-script.j2 dest=/etc/init.d/curs_auto mode="a+x"
-    # in ansible2 vars could be inside tasks
-    vars:
-      cmd: $dir/bin/curs_auto
-      provider: curs_auto
-      Required_Start: mongodb $network $syslog
-    when: ansible_service_mgr == "upstart"
-    notify:
-      - start {{ service }}
+#  - name: generate curs_auto  script into init.d
+#    template: src=init-script.j2 dest=/etc/init.d/curs_auto mode="a+x"
+#    # in ansible2 vars could be inside tasks
+#    vars:
+#      cmd: $dir/bin/curs_auto
+#      provider: curs_auto
+#      Required_Start: mongodb $network $syslog
+#    when: ansible_service_mgr == "upstart"
+#    notify:
+#      - start {{ service }}
   - name: generate cursauto systemd config
     template: src=cursauto.service.j2 dest=/etc/systemd/system/{{ service }}.service
     with_items:
@@ -92,7 +92,7 @@
     when: ansible_service_mgr == "systemd"
     notify:
       # reload systemd
-      - systemd {{ service }} start
+      - start {{ service }}
   become: yes
   become_method: sudo
 

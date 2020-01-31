@@ -25,12 +25,18 @@
 ## On Debian/Ubuntu systems, you need to install the python3-venv\npackage
 #  - name: install python3-venv
 #    apt: name=python3-venv state=present
-  - name: download get-pip.py
-    get_url: url=https://bootstrap.pypa.io/get-pip.py
-      dest={{ home_dir }}/get-pip.py
-      force=no
+#  - name: download get-pip.py
+#    get_url: url=https://bootstrap.pypa.io/get-pip.py
+#      dest={{ home_dir }}/get-pip.py
+#      force=no
+  - name: install "{{ python_ver }}-venv"
+    apt: name="{{ python_ver }}-venv"   state=present
+  - name: install python3-pip
+    apt: name=python3-pip  state=present
+
   - name: install pip for {{ python_ver }}
-    command: "{{ python_ver }} {{ home_dir }}/get-pip.py"
+    command: "{{ python_ver }} -m pip install pip"
+#    command: "{{ python_ver }} {{ home_dir }}/get-pip.py"
 #  - name: install pip
 #    apt: name=python3-pip state=present
 
