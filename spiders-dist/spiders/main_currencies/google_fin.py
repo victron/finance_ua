@@ -15,7 +15,6 @@ from spiders.mongo_start import main_currencies
 logger = logging.getLogger(__name__)
 
 
-
 def google_get(currency: str, period: int = 2, interval: int = 86400, only_date: bool = True) -> list:
     """
     get currency rate from finance.google.com
@@ -97,7 +96,7 @@ def collect_main_currency_stat(currency: str, interval: int = 86400,
     """
     today = datetime.now(timezone.utc)
     match = {'$or': [{'source': 'd_ext_stat'}, {'source': 'd_int_stat'}],
-              currency: True}
+              currency:{'$exists': True}}
     projection = {'_id': False, 'time': True}
     pipeline = [{'$match': match},
                 {'$group': {'_id': None, 'max_time': {'$max': '$time'}}},
