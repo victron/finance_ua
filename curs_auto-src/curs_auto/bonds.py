@@ -2,10 +2,10 @@ import logging
 from collections import namedtuple
 from datetime import datetime, timedelta
 
-from curs_auto.mongo_worker.mongo_update import mongo_insert_history
+from curs_auto.mongo_worker.mongo_update import mongo_insert_history, mongo_replace_docs
 
 from curs_auto.mongo_worker.mongo_start import DATABASE
-from curs_auto.mongo_worker.mongo_start import bonds_auction, bonds_payments, bonds
+from curs_auto.mongo_worker.mongo_start import bonds_auction, bonds_payments, bonds, ovdp_nbu
 from curs_auto.spiders_legacy.external_bonds import external_bonds
 from curs_auto.spiders_legacy.nbu import NbuJson
 
@@ -316,6 +316,16 @@ def generate_bonds(match_bonds):
         current_time = datetime.now()
         bonds.update_one({'_id': 'update'}, {'$set': {'update_time': current_time}}, upsert=True)
 
+def copy_bonds_nbu():
+    """
+    copy info about bonds from NBU as is
+    https://bank.gov.ua/depo_securities, format details in nbu.py
+    :return: from mongo_replace_docs: matched_count, modified_count, new_count (number of new doc)
+    """
+    docs = NbuJson().ovdp_nbu()
+    result = mongo_replace_docs(docs, ovdp_nbu)
+    logger.info("matched_count= {}, modified_count= {}, new_count= {}".format(result))
+    return result
 
 def update_bonds(triger=False):
     """

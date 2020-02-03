@@ -13,7 +13,7 @@ from curs_auto.mongo_worker.mongo_collect_history import agg_daily_stat, move_ol
 from curs_auto.mongo_worker.mongo_collect_history import hourly_history
 
 from curs_auto import rest_client
-from curs_auto.bonds import update_bonds
+from curs_auto.bonds import update_bonds, ovdp_nbu
 from curs_auto.money_aggregators import collect_nbu_aggregators
 from curs_auto.mongo_worker.mongo_periodic import ukrstat_shadow
 from curs_auto.swaps import collect_nbu_swaps
@@ -65,6 +65,8 @@ daily_stat = scheduler.add_job(agg_daily_stat, 'cron', name='daily_stat', hour=1
                                replace_existing=True, jobstore='longTerm')
 daily_bonds = scheduler.add_job(update_bonds, 'cron', name='daily_bonds', hour=18, minute=50, id='daily_bonds',
                                 replace_existing=True, jobstore='longTerm', args=[True])
+daily_bonds2 = scheduler.add_job(ovdp_nbu, 'cron', name='daily_ovdp_nbu', hour=15, minute=20, id='daily_bonds',
+                                replace_existing=True, jobstore='longTerm')
 daily_swaps = scheduler.add_job(collect_nbu_swaps, 'cron', name='daily_swaps', hour=18, minute=5, id='daily_swaps',
                                 replace_existing=True, jobstore='longTerm')
 i = 0

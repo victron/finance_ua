@@ -132,6 +132,15 @@ class NbuJson():
         # del obj['stockcode']
         return obj
 
+    @staticmethod
+    def _date_payments(obj: dict) -> dict:
+        # doing it in recursion
+        try:
+            obj["pay_date"] = datetime.strptime(obj["pay_date"], '%d.%m.%Y')
+        except:
+            pass
+        return obj
+
     def rates_current(self) -> json:
         return requests.get(self.url + 'exchange', params='json').json()
 
@@ -177,6 +186,44 @@ class NbuJson():
         # Розміщення облігацій щодо валюти на дату:
         params = {'date': date.strftime('%Y%m%d'), 'valcode': currency, 'json': ''}
         return requests.get(self.url + 'ovdp', params=params).json()
+
+
+    def ovdp_nbu(self):
+        """
+        https://bank.gov.ua/depo_securities
+        Довідник державних цінних паперів та облігацій місцевих позик
+        Відображає перелік держаних цінних паперів та облігацій місцевих позик,
+        що обслуговуються Національним банком України як Депозитарієм
+        :return:
+        [
+{
+“cpcode”: ISIN цінного паперу
+“nominal”: Номінал (грн.)
+“auk_proc”: процентна ставка
+“pgs_date”: дата погашення
+“razm_date”: дата первинного розміщення
+“pay_period”: період виплати відсотків (у днях)
+“val_code”: Код валюти
+“cptype”: Тип ЦП (DCP - ДЦП,OMP - муніціпальні)
+“cpdescr”: Опис ЦП
+“emit_okpo”: ЄДРПОУ емітента
+“emit_name”: Назва емітента
+“total_bonds”: кількість облігацій в обігу
+“payments”:
+[
+{
+“pay_date”: дата виплати відсотків
+“pay_type”: тип виплати (1–відсоткі,2-погаш.,3-достр.погаш)
+“pay_val”: купон виплати за 1 папір
+},
+. . . . . . . . .
+]
+},
+. . . . . . .
+]
+        """
+        return requests.get(self.url + 'depo_securities', params=self.params).json(object_hook=self._date_payments)
+
 
     def swaps_per_date(self, date: datetime, period: str) -> json:
         # Індекс міжбанківських ставок за період

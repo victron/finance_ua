@@ -42,6 +42,27 @@ def mongo_insert_history(docs: list, collection):
     return result(inserted_count, duplicate_count)
 
 
+def mongo_replace_docs(docs: list, collection, upsert=True) -> tuple:
+    """
+    :param docs:
+    :param collection:
+    :param upsert=True: If True, perform an insert if no documents match the filter.
+    :return: matched_count, modified_count, new_count (number of new doc)
+    """
+    matched_count = 0
+    modified_count = 0
+    new_count = 0
+    for doc in docs:
+        temp_doc = dict(doc)
+        result = collection.replace_one({'_id': temp_doc['_id']}, temp_doc, upsert)
+        matched_count += result.matched_count
+        modified_count += result.modified_count
+        if result.matched_count == result.modified_count != 1:
+            # INFO: it's need to test what mongo return if inserting new doc, this should works in any case
+            new_count += 1
+    return matched_count, modified_count, new_count
+
+
 # @timer(logging=logger)
 def mongo_add_fields(docs: list, collection=None):
     """
