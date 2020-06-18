@@ -11,8 +11,9 @@ pkg_curs: curs-17.3.8.dev1-py3-none-any.whl
 app_spiders: spiders-17.3.2.dev1-py3-none-any.whl
 pkg_curs_auto: curs_auto-17.3.7.dev1-py3-none-any.whl
 conf_dir: /etc/curs
-# TODO: replace in plays hardcoded python3.6 on python_ver
-python_ver: python3.7
+# vershion needs to get path to static files
+# in task `copy static files`
+python_ver: python3.8
 
 # nginx
 static_path: /var/www/curs/static

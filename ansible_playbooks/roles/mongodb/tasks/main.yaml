@@ -1,12 +1,21 @@
 ---
 - block:
   - name: install mongo keys
-    apt_key: keyserver=keyserver.ubuntu.com id=9DA31620334BD75D9DCB49F368818C72E52529D4
-  - name: instal mongodb apt_repository
-    apt_repository: repo='deb https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse'
-      state=present
+    shell:
+      cmd: wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
+  - name: Create a list file for MongoDB
+    shell:
+      cmd: echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+
+  - name: update repo
+    apt_repository:
+      repo='deb https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse'
       update_cache=yes
-     filename=mongodb-org
+      
+  - name: update and upgrade repo
+    apt:
+      upgrade: yes
+      update_cache: yes
 
   - name: install  mongodb-org
     apt: name=mongodb-org state=present

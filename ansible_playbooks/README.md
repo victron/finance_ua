@@ -6,7 +6,10 @@ put password into env
 `export VAULT_PASSWORD=<password>`
 
 view / edit vars
-`ansible-vault view group_vars/ec2/vault.yaml`
+`ansible-vault edit host_vars/ec2-inna/vault.yaml`  
+for group  
+`ansible-vault view group_vars/ec2/vault.yaml`  
+
 
 ## tags
 install / re-install only spiders service
