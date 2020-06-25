@@ -1,0 +1,20 @@
+---
+- name: create container
+  docker_container:
+    name: spiders
+    image: victron/finance_ua-spiders:latest
+    detach: yes
+    restart_policy: unless-stopped
+    network_mode: host
+    env:
+      secret_berlox: "{{ secret_berlox }}"
+      secret_api: "{{ secret_api }}"
+    ports:
+      - "127.0.0.1:9080:9080/tcp"
+#    state: started
+    state: present
+    pull: yes
+    recreate: yes
+  # become: yes
+  # become_user: "{{ app_user }}"
+  # become_method: sudo

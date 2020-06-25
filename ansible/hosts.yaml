@@ -1,0 +1,12 @@
+all:
+  hosts:
+    ec2-inna:
+#
+#  children:
+#    ec2:
+#      hosts:
+#        ec-2
+#    local:
+#      hosts:
+#        127.0.0.1
+

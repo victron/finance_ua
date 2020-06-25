@@ -69,4 +69,6 @@ root:
   level: INFO
   propagate: no
 #  handlers: [console, file, syslog]
-  handlers: [syslog]
+#  handlers: [syslog]
+#  for docker
+  handlers: [console]

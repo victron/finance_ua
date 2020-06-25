@@ -1,0 +1,30 @@
+---
+- hosts: ec2-inna
+  vars:
+#    ssl_certificate_key: /etc/nginx/ssl/nginx.key
+#  vars_files:
+#    - vars/main.yml
+  roles:
+# or put in meta into dependencies:
+    - role: spiders
+      tags:
+        - spiders
+
+#########################
+# not done
+########################
+    - role: mongodb
+      tags:
+        - mongo
+    - role: python3
+      tags:
+        - python3
+    - role: nginx
+      tags:
+        - nginx
+    - role: curs_auto
+      tags:
+        - curs_auto
+    - role: curs
+      tags:
+        - curs

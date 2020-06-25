@@ -1,0 +1,12 @@
+---
+# nonsensitive data
+ansible_python_interpreter: /usr/bin/python3
+
+# SENSITIVE data
+# ovewritting host info
+ansible_host: "{{ vault_ansible_host }}"
+ansible_user: "{{ vault_ansible_user }}"
+fqdn: "{{ vault_fqdn }}"
+
+
+
