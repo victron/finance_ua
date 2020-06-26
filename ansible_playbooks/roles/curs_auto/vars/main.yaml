@@ -8,8 +8,9 @@ required:
     - network.target
     - mongodb.service
   requires:
-    - spiders.service
     - mongodb.service
+#    removed in reason to keep compatibility with docker
+#    - spiders.service
   # /var/run need spesial write permitions
   pidfile: /tmp/{{ service }}.pid
   cmd: "{{ home_dir }}/{{ venv_dir }}/bin/curs_auto"
