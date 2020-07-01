@@ -171,8 +171,9 @@ def update_news():
     :return: tuple (inserted_count, duplicate_count)
     """
     spiders_news = [(news_minfin.parse_minfin_headlines,),
-                    (minfin.minfin_headlines,),
-                    (minfin.announcement_ovdp,)]
+                    # (minfin.minfin_headlines,), # url not working
+                    # (minfin.announcement_ovdp,), # url not working
+                    ]
     result = parent(spiders_news, 'news')
     # return reduce(lambda x, y: (x[0] + y[0], x[1] + y[1]), result)
     return result

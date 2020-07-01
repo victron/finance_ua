@@ -11,8 +11,8 @@
       secret_api: "{{ secret_api }}"
     ports:
       - "127.0.0.1:9080:9080/tcp"
-#    state: started
-    state: present
+    state: started
+#    state: present
     pull: yes
     recreate: yes
   # become: yes
