@@ -1,16 +1,18 @@
 ---
 - block:
-  - name: install mongo keys
-    shell:
-      cmd: wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
-  - name: Create a list file for MongoDB
-    shell:
-      cmd: echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+  - name: install  gnupg
+    apt: name=gnupg state=present
 
-  - name: update repo
-    apt_repository:
-      repo='deb https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse'
-      update_cache=yes
+  - name: install mongo keys
+    ansible.builtin.apt_key:
+      url: https://www.mongodb.org/static/pgp/server-4.4.asc
+      state: present
+
+  - name: Add repo
+    ansible.builtin.apt_repository:
+      repo: deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main
+      state: present
+      filename: mongodb-org-4.4
       
   - name: update and upgrade repo
     apt:
