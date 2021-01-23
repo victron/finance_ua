@@ -215,7 +215,7 @@ def bonds_json():
 def ukrstat_json():
     data = {}
     mongo_request = {}
-    projection = {'$time': '$id', 'import': True, 'export': True}
+    projection = {'time': '$id', 'import': True, 'export': True}
     cursor = DATABASE['ukrstat'].find(mongo_request, projection, sort=([('_id', pymongo.ASCENDING)]))
 
     # data.update({'ukrstat': cursor})
