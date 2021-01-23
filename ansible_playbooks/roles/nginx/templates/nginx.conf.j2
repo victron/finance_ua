@@ -33,14 +33,16 @@ http {
 
     }
 
-    # Configuration for Nginx
-server {
-    listen 80;
-    listen [::]:80 default_server;
-    server_name {{ fqdn }};
-# don't need to remove redirect for letsencrypt, need port forwarding 80 on router
-    return 301 https://{{ fqdn }}$request_uri;
-}
+# Configuration for Nginx
+
+# redirect config.
+# in sec reason disabled
+# server {
+#    listen 80;
+#    listen [::]:80 default_server;
+#    server_name {{ fqdn }};
+#    return 301 https://{{ fqdn }}$request_uri;
+#}
     server {
 
         # Running port
