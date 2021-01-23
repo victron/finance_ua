@@ -13,7 +13,7 @@ pkg_curs_auto: curs_auto-17.3.7.dev1-py3-none-any.whl
 conf_dir: /etc/curs
 # vershion needs to get path to static files
 # in task `copy static files`
-python_ver: python3.8
+python_ver: python3.7
 
 # nginx
 static_path: /var/www/curs/static
